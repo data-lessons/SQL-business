@@ -28,14 +28,6 @@ throughout this lesson. See [Setup](/sql-ecology-lesson/setup/) for
 instructions on how to download the data, and also how to install and open
 SQLite Manager.
 
-# Motivation
-
-To start, let's orient ourselves in our project workflow.  Previously, 
-we used Excel and OpenRefine to go from messy, human created data 
-to cleaned, computer-readable data.  Now we're going to move to the next piece 
-of the data workflow, using the computer to read in our data, and then 
-use it for analysis and visualization.  
-
 ## What is SQL?
 
 SQL stands for Structured Query Language. SQL allows us to interact with relational databases through queries. 
@@ -44,46 +36,39 @@ These queries can allow you to perform a number of actions such as: insert, upda
 
 ## Dataset Description
 
-The data we will be using is a time-series for a small mammal community in
-southern Arizona. This is part of a project studying the effects of rodents and
-ants on the plant community that has been running for almost 40 years.  The
-rodents are sampled on a series of 24 plots, with different experimental
-manipulations controlling which rodents are allowed to access which plots.
-
-This is a real dataset that has been used in over 100 publications. We've
-simplified it just a little bit for the workshop, but you can download the
-[full dataset](http://esapubs.org/archive/ecol/E090/118/) and work with it using
-exactly the same tools we'll learn about today.
+The data we will be using soda sells data. It contains invoice information about soda purchase from soda makers (vendors) by retail stores. 
+The data was originated from a real dataset. We have modofied the dataset for this workshop. For example, soda names are completely fictitious, and price was also normalized.   
 
 ## Questions
 
-First, let's download and look at some of the cleaned spreadsheets 
-from the 
-[Portal Project dataset](https://figshare.com/articles/Portal_Project_Teaching_Database/1314459).  
-We'll need the following three files: 
-
-* `surveys.csv`
-* `species.csv`
-* `plots.csv`
-
-> ## Challenge
+> ## Think about this situation
 >
-> Open each of these csv files and explore them. 
-> What information is contained in each file?  Specifically, if I had 
-> the following research questions: 
-> 
-> * How has the hindfoot length and weight of *Dipodomys* species changed over time?
-> * What is the average weight of each species, per year?  
-> * What information can I learn about *Dipodomys* species in the 2000s, over time?
-> 
-> What would I need to answer these questions?  Which files have the data I need? What 
-> operations would I need to perform if I were doing these analyses by hand?  
+> Imagine if you are a owner of a convenience store, and you are trying to record your soda purchase record <br>
+> In each invoice, it contains the following infortaion: <br>
+> Invoice id, Date, Category, Soda name, Volume, Cost, Retail Price, Vendor, Number of bottle purchased <br>
+> How would you store the data?  
 {: .challenge}
+
+## Traditional File Approach 
+If you store all these invoice information in one Excel file, 
+What problem could raise from this approach?  
+<b>Data redundency:</b> <br>
+![alt text](../img/00_1.png)
+Imagine if you consistantly purchased some Big Dog Cola from LCDM Beverage vendor every day for 5 days, 
+Notice these columns: Category, Soda_name, Volume, Cost, Retail_Price, Vendor, Vendor number
+With tranditional file approach, you have to record exact same information in these columns 5 times.  
+<b>Data inconsistancy:</b> <br>
+![alt text](../img/00_2.png)
+Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
+There are only 5 rows so it might be easy to change everything. If the data size gets large, mistakes are likely to occur.  
+
+If you thought about storing these information in few different Excel files, <b>great idea! You are on the right track </b><br>
+However, if you want information from all files at the same time, how do you combine them? If each file contains thoudans of rows, Ah...  
+![alt text](../img/tuxue.png){:height="100px" width="100px"}
 
 ## Goals
 
-In order to answer the questions described above, we'll need to do the 
-following basic data operations: 
+To sum up, these are frequent used data operations: 
 
 * select subsets of the data (rows and columns)
 * group subsets of data
@@ -98,7 +83,7 @@ In particular, we want to use a tool where it's easy to repeat our analysis
 in case our data changes. We also want to do all this searching without 
 actually modifying our source data.  
 
-Putting our data into a relational database and using SQL will help us achieve these goals.  
+Putting our data into a <b>relational database</b> and using SQL will help us achieve these goals.  
 
 > ## Definition: *Relational Database*
 >
@@ -124,7 +109,7 @@ Using a relational database serves several purposes.
 * It improves quality control of data entry (type constraints and use of forms in MS Access, Filemaker, Oracle Application Express etc.)
 * The concepts of relational database querying are core to understanding how to do similar things using programming languages such as R or Python.
 
-## Database Management Systems
+## Database Management Systems (DBMS)
 
 There are a number of different database management systems for working with
 relational data. We're going to use SQLite today, but basically everything we
@@ -133,11 +118,15 @@ PostgreSQL, MS Access, MS SQL Server, Oracle Database and Filemaker Pro). The
 only things that will differ are the details of exactly how to import and 
 export data and the [details of data types](#datatypediffs).
 
+Look at the [popularity of database](https://db-engines.com/en/ranking) <br>
+![alt text](../img/dbms.png){:height="170px"} <br>
+Top 4 are all Relational Database Management Systems (RDBMS). More and more companies choose to use relational database. 
+
 ## Relational databases
 
-Let's look at a pre-existing database, the `portal_mammals.sqlite`
-file from the Portal Project dataset that we downloaded during
-[Setup](/sql-ecology-lesson/setup/). Clicking on the "open file" icon, then
+Let's look at a pre-existing database, the `soda.db`
+file that we downloaded during
+[Setup](/sql-business/setup/). Clicking on the "open file" icon, then
 find that file and clicking on it will open the database.
 
 You can see the tables in the database by looking at the left hand side of the
@@ -180,39 +169,33 @@ To summarize:
 
 ## Import
 
-Before we get started with writing our own queries, we'll create our own 
-database.  We'll be creating this database from the three `csv` files 
-we downloaded earlier.  Close the currently open database and then 
-follow these instructions: 
+Before we get started with writing our own queries, we'll load the data into the database. 
+We'll need the following file: 
+* `soda.db`
+Here are all the attributes in the database:  
 
-1. Start a New Database 
-    - **Database -> New Database**
-    - Give a name **Ok -> Open**. Creates the database in the opened folder
-2. Start the import **Database -> Import**
-3. Select the `surveys.csv` file to import
-4. Give the table a name that matches the file name (`surveys`), or use the default
-5. If the first row has column headings, check the appropriate box
-6. Make sure the delimiter and quotation options are appropriate for the CSV files.  Ensure 'Ignore trailing Separator/Delimiter' is left *unchecked*.
-7. Press **OK**
-8. When asked if you want to modify the table, click **OK**
-9. Set the data types for each field using the suggestions in the table below (this includes fields from `plots` and `species` tables also):
-
-| Field             | Data Type      | Motivation                                                                       | Table(s)          |
-|-------------------|:---------------|----------------------------------------------------------------------------------|-------------------|
-| day               | INTEGER        | Having data as numeric allows for meaningful arithmetic and comparisons          | surveys           |
-| genus             | TEXT           | Field contains text data                                                 	| species           |
-| hindfoot_length   | REAL           | Field contains measured numeric data                                             | surveys           |
-| month             | INTEGER        | Having data as numeric allows for meaningful arithmetic and comparisons          | surveys           |
-| plot_id           | INTEGER        | Field contains numeric data	    						| plots, surveys    |
-| plot_type         | TEXT           | Field contains text data                                                 	| plots             |
-| record_id         | INTEGER        | Field contains numeric data 							| surveys           |
-| sex               | TEXT           | Field contains text data                                                 	| surveys           |
-| species_id        | TEXT           | Field contains text data								| species, surveys  |
-| species           | TEXT           | Field contains text data                                                 	| species           |
-| taxa              | TEXT           | Field contains text data                                                 	| species           |
-| weight            | REAL           | Field contains measured numerical data                                           | surveys           |
-| year              | INTEGER        | Allows for meaningful arithmetic and comparisons                                 | surveys           |
-
+| Attributes          | Data Type      | Description                                                | Table(s)                  |
+|---------------------|:---------------|------------------------------------------------------------|---------------------------|
+| County_id           | INTEGER        | Unique id for each county                                  | county, store_info        |
+| County_Name         | TEXT           | Name of county                                             | county                    |
+| City_Name           | TEXT           | Name of the city that the county is in                     | county                    |
+| Category_id         | VARCHAR(20)    | Unique id for each category                                | category, item_info       |
+| Category_Name       | TEXT           | Name of the category	    						        | category                  |
+| Vendor_id           | INTEGER        | Unique id for each vendor                                  | vendor, invoice_info      |
+| Vendor_Name         | TEXT           | Name of the vendor 							            | vendor                    |
+| Store_id            | INTEGER        | Unique id for each store                                   | store_info, invoice_info  |
+| Store_Name          | TEXT           | Name of the store								            | store_indo                |
+| Address             | TEXT           | Address of the store                                   	| store_info                |
+| Zip_Code            | INTEGER        | Zip code of the store                            	        | store_info                |
+| Item_id             | INTEGER        | Unique id for each item (soda)                             | item_info, invoice_id     |
+| Item_Description    | TEXT           | Name of the item (soda)                                    | item_info                 |
+| Pack                | INTEGER        | Number of bottles that the soda usually sells for          | item_info                 |
+| Bottle_Volume_ml    | DOUBLE         | Volumn of the soda in ml                                   | item_info                 |
+| Bottle_Cost         | DOUBLE         | Cost of one bottle                                         | item_info                 |
+| Bottle_Retail_Price | DOUBLE         | Retile price for one bottle                                | item_info                 |
+| Invoice_id          | VARCHAR(20)    | Unique id for each invoice                                 | invoice_info              |
+| Date                | TEXT           | Date of the invoice                                        | invoice_info              |
+| Bottle_Sold         | INTEGER        | Number of bottle sold in the invoice                       | invoice_info              |
 
 Finally, click **OK** one more time to confirm the operation.
 
@@ -248,15 +231,16 @@ You can also use this same approach to append new data to an existing table.
 | FLOAT(p)                           | Approximate numerical, mantissa precision p. A floating number in base 10 exponential notation.          |
 | REAL                               | Approximate numerical                                                                                    |
 | FLOAT                              | Approximate numerical                                                                                    |
-| DOUBLE PRECISION                   | Approximate numerical                                                                                    |
-| DATE                               | Stores year, month, and day values                                                                       |
-| TIME                               | Stores hour, minute, and second values                                                                   |
-| TIMESTAMP                          | Stores year, month, day, hour, minute, and second values                                                 |
+| DOUBLE                             | Approximate numerical                                                                                    |
+| DATE*                              | Stores year, month, and day values                                                                       |
+| TIME*                              | Stores hour, minute, and second values                                                                   |
+| TIMESTAMP*                         | Stores year, month, day, hour, minute, and second values                                                 |
 | INTERVAL                           | Composed of a number of integer fields, representing a period of time, depending on the type of interval |
 | ARRAY                              | A set-length and ordered collection of elements                                                          |
 | MULTISET                           | A variable-length and unordered collection of elements                                                   |
 | XML                                | Stores XML data                                                                                          |
 
+*SQLite does not have a separate storage class for storing dates and/or times, but SQLite is capable of storing dates and times as TEXT, REAL or INTEGER values. In the database we used today, the date attribute is stored as text in "YYYY-MM-DD" format. 
 
 ## <a name="datatypediffs"></a> SQL Data Type Quick Reference
 

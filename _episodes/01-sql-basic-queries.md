@@ -17,16 +17,23 @@ keypoints:
 
 ## Writing my first query
 
-Let's start by using the **surveys** table. Here we have data on every
-individual that was captured at the site, including when they were captured,
-what plot they were captured on, their species ID, sex and weight in grams.
+Let's start by using the **item_info** table. It includes information about all kinds of soda. 
 
-Let’s write an SQL query that selects only the year column from the
-surveys table. SQL queries can be written in the box located under 
-the "Execute SQL" tab. Click 'Run SQL' to execute the query in the box.
+| Attributes          | Data Type      | Description                                                |
+|---------------------|:---------------|------------------------------------------------------------|
+| Item_id             | INTEGER        | Unique id for each item (soda)                             |
+| Category_id         | VARCHAR(20)    | category id of the soda                                    |
+| Item_Description    | TEXT           | Name of the item (soda)                                    |
+| Pack                | INTEGER        | Number of bottles that the soda usually sells for          |
+| Bottle_Volume_ml    | DOUBLE         | Volumn of the soda in ml                                   |
+| Bottle_Cost         | DOUBLE         | Cost of one bottle                                         |
+| Bottle_Retail_Price | DOUBLE         | Retile price for one bottle                                |
 
-    SELECT year
-    FROM surveys;
+Let’s write an SQL query that selects only the Item_Description column from the
+item_info table. 
+
+    SELECT Item_Description 
+    FROM item_info;
 
 We have capitalized the words SELECT and FROM because they are SQL keywords.
 SQL is case insensitive, but it helps for readability, and is good style.
@@ -34,13 +41,13 @@ SQL is case insensitive, but it helps for readability, and is good style.
 If we want more information, we can just add a new column to the list of fields,
 right after SELECT:
 
-    SELECT year, month, day
-    FROM surveys;
+    SELECT Item_Description, Bottle_Volume_ml, Bottle_Cost  
+    FROM item_info;
 
 Or we can select all of the columns in a table using the wildcard *
 
     SELECT *
-    FROM surveys;
+    FROM item_info;
 
 ### Limiting results
 
@@ -49,83 +56,104 @@ of what's being returned. In that case you can use the LIMIT command. In particu
 you would want to do this if you were working with large databases.
 
     SELECT *
-    FROM surveys
+    FROM item_info
     LIMIT 10; 
 
 ### Unique values
 
-If we want only the unique values so that we can quickly see what species have
+If we want only the unique values so that we can quickly see what categories have
 been sampled we use `DISTINCT` 
 
-    SELECT DISTINCT species_id
-    FROM surveys;
+    SELECT DISTINCT Category_id
+    FROM item_info;
+
+Well, we can only see the unique ids, and that does not make any sense right? 
+Don't worry, you will learn how to return category names later.  
 
 If we select more than one column, then the distinct pairs of values are
 returned
 
-    SELECT DISTINCT year, species_id
-    FROM surveys;
+    SELECT DISTINCT Category_id, Pack
+    FROM item_info;
 
 ### Calculated values
 
 We can also do calculations with the values in a query.
-For example, if we wanted to look at the mass of each individual
-on different dates, but we needed it in kg instead of g we would use
+For example, if we wanted to look at the volume of soda in liters, instead of milliliters  
 
-    SELECT year, month, day, weight/1000
-    FROM surveys;
+    SELECT Item_Description, Bottle_Volume_ml/1000 AS Bottle_Volume_L
+    FROM item_info;
 
-When we run the query, the expression `weight / 1000` is evaluated for each
-row and appended to that row, in a new column. If we used the `INTEGER` data type
-for the weight field then integer division would have been done, to obtain the
-correct results in that case divide by `1000.0`. Expressions can use any fields,
-any arithmetic operators (`+`, `-`, `*`, and `/`) and a variety of built-in
-functions. For example, we could round the values to make them easier to read.
+Note that you can use "AS" to give an alias to a column name. 
 
-    SELECT plot_id, species_id, sex, weight, ROUND(weight / 1000, 2)
-    FROM surveys;
+When we run the query, the expression `Bottle_Volume_ml/1000` is evaluated for each
+row and appended to that row, in a new column. Since 'Bottle_Volume_ml' is already a 'DOUBLE',
+after it is divided by an `INTEGER`, the result will still be 'DOUBLE'. 
+If 'Bottle_Volume_ml' is an 'INTEGER' and we want the result to still be 'DOUBLE', we need to divide it by 1000.0  
+
+Expressions can use any fields, any arithmetic operators (`+`, `-`, `*`, and `/`) and a variety of built-in
+functions. For example, we could round the values.
+
+    SELECT Item_Description, ROUND(Bottle_Volume_ml/1000,1) AS Bottle_Volume_L
+    FROM item_info;
+
+    SELECT Item_Description, Bottle_Volume_ml, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin
+    FROM item_info;
 
 > ## Challenge
 >
-> - Write a query that returns The year, month, day, species_id and weight in mg
+> - We have the cost and price of each soda, write a query that returns the profit margin of each soda, 
+    give it alias as 'Margin' and round it to 2 decimal places.  
 {: .challenge}
 
 ## Filtering
 
 Databases can also filter data – selecting only the data meeting certain
-criteria.  For example, let’s say we only want data for the species
-_Dipodomys merriami_, which has a species code of DM.  We need to add a
-`WHERE` clause to our query:
+criteria.  For example, let’s say we only want data for an energy drink called
+_Nozomi Power Injection_.  We need to add a `WHERE` clause to our query: <br>
+![alt text](../img/np.gif){:height="100px"} <br>
 
-    SELECT *
-    FROM surveys
-    WHERE species_id='DM';
+    SELECT * 
+    FROM item_info
+    WHERE Item_Description = "Nozomi Power Injection";
 
 We can do the same thing with numbers.
-Here, we only want the data since 2000:
+Here, we only want the soda with more than 500ml:
 
-    SELECT * FROM surveys
-    WHERE year >= 2000;
+    SELECT * FROM item_info
+    WHERE Bottle_Volume_ml > 500;
+
+What if your favorite singer's name is 'Honoka' and you want to buy soda that contains 'Honoka' in the name? Use `LIKE` statement:
+
+    SELECT * 
+    FROM item_info
+    WHERE Item_Description LIKE "%Honoka%";
+
+You can use `%` as wild card to search. That means, all soda with name like "aaHonokaaaaa" or "00Honokaxxxx" will be returned. 
+You can use `_` as wild card for one character. For example, if you replace "%Honoka%" with "Honoka_", only names such as "Honokaa", "Honokax" will be returned. 
 
 If we used the `TEXT` data type for the year the `WHERE` clause should
-be `year >= '2000'`. We can use more sophisticated conditions by combining tests
-with `AND` and `OR`.  For example, suppose we want the data on *Dipodomys merriami*
-starting in the year 2000:
+be `Bottle_Volume_ml > '500'`. We can use more sophisticated conditions by combining tests
+with `AND` and `OR`.  
+For example, suppose we want all the energy drink (category id = 'C0006') with volume larger than 500ml:
 
-    SELECT *
-    FROM surveys
-    WHERE (year >= 2000) AND (species_id = 'DM');
+    ELECT * FROM item_info
+    WHERE Bottle_Volume_ml > 500 AND Category_id = 'C0006';  
 
 Note that the parentheses are not needed, but again, they help with
 readability.  They also ensure that the computer combines `AND` and `OR`
 in the way that we intend.
 
-If we wanted to get data for any of the *Dipodomys* species, which have
-species codes `DM`, `DO`, and `DS`, we could combine the tests using OR:
+If we wanted to get data for 3 categories of soda, which have
+category id of `C0006`, `C0001`, and `C0002`, we could combine the tests using OR:
 
-    SELECT *
-    FROM surveys
-    WHERE (species_id = 'DM') OR (species_id = 'DO') OR (species_id = 'DS');
+    ELECT * FROM item_info
+    WHERE Category_id = 'C0006' OR Category_id = 'C0001' OR Category_id = 'C0002';  
+
+This looks messy, right? We can do the same thing by using 'IN': 
+
+    SELECT * FROM item_info 
+    WHERE Category_id IN ('C0006', 'C0001', 'C0002'); 
 
 > ## Challenge
 >
