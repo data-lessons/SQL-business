@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="last-modified" content="2018-02-23 19:24:17 -0600">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- meta "search-domain" used for google site search function google_search() -->
+    <meta name="search-domain" value="">
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/lesson.css" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon-dc.ico" />
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+    <title>SQL for Business: Basic Queries</title>
+  </head>
+  <body>
+    <div class="container">
+      
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      
+      
+      <a href="http://datacarpentry.org" class="pull-left">
+        <img class="navbar-logo" src="../assets/img/dc-icon-black.svg" alt="Data Carpentry logo" />
+      </a>
+      
+
+      
+      <a class="navbar-brand" href="../">Home</a>
+
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+
+	
+        <li><a href="../conduct/">Code of Conduct</a></li>
+
+	
+        
+        <li><a href="../setup/">Setup</a></li>
+        <li class="dropdown">
+          <a href="../" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Episodes <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
+            
+            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
+            
+            <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
+            
+            <li><a href="../03-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            
+            <li><a href="../04-sql-joins/">Joins</a></li>
+            
+            <li><a href="../05-sql-tbd/">tbd</a></li>
+            
+          </ul>
+        </li>
+	
+
+	
+	
+        <li class="dropdown">
+          <a href="../" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extras <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="../reference/">Reference</a></li>
+            
+            <li><a href="../about/">About</a></li>
+            
+            <li><a href="../discuss/">Discussion</a></li>
+            
+            <li><a href="../guide/">Instructor Notes</a></li>
+            
+          </ul>
+        </li>
+	
+
+	
+        <li><a href="../license/">License</a></li>
+	
+	<li><a href="/edit/gh-pages/_episodes/02-sql-basic-queries.md">Improve this page <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+	
+      </ul>
+      <form class="navbar-form navbar-right" role="search" id="search" onsubmit="google_search(); return false;">
+        <div class="form-group">
+          <input type="text" id="google-search" placeholder="Search..." aria-label="Google site search">
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+<div class="row">
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../01-sql-intro2/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      
+    </h3>
+  </div>
+  <div class="col-md-10">
+    
+    <h3 class="maintitle"><a href="../">SQL for Business</a></h3>
+    <h1 class="maintitle">Basic Queries</h1>
+    
+  </div>
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../03-sql-aggregation/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      
+    </h3>
+  </div>
+</div>
+
+
+<blockquote class="objectives">
+  <h2>Overview</h2>
+
+  <div class="row">
+    <div class="col-md-3">
+      <strong>Teaching:</strong> 30 min
+      <br/>
+      <strong>Exercises:</strong> 5 min
+    </div>
+    <div class="col-md-9">
+      <strong>Questions</strong>
+      <ul>
+	
+	<li><p>How do I write a basic query in SQL?</p>
+</li>
+	
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-9">
+      <strong>Objectives</strong>
+      <ul>
+	
+	<li><p>Write and build queries.</p>
+</li>
+	
+	<li><p>Filter data given various criteria.</p>
+</li>
+	
+	<li><p>Sort the results of a query.</p>
+</li>
+	
+      </ul>
+    </div>
+  </div>
+
+</blockquote>
+
+<h2 id="writing-my-first-query">Writing my first query</h2>
+
+<p>Let’s start by using the <strong>item_info</strong> table. It includes information about all kinds of soda.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Attributes</th>
+      <th style="text-align: left">Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Item_id</td>
+      <td style="text-align: left">INTEGER</td>
+      <td>Unique id for each item (soda)</td>
+    </tr>
+    <tr>
+      <td>Category_id</td>
+      <td style="text-align: left">VARCHAR(20)</td>
+      <td>category id of the soda</td>
+    </tr>
+    <tr>
+      <td>Item_Description</td>
+      <td style="text-align: left">TEXT</td>
+      <td>Name of the item (soda)</td>
+    </tr>
+    <tr>
+      <td>Pack</td>
+      <td style="text-align: left">INTEGER</td>
+      <td>Number of bottles that the soda usually sells for</td>
+    </tr>
+    <tr>
+      <td>Bottle_Volume_ml</td>
+      <td style="text-align: left">DOUBLE</td>
+      <td>Volumn of the soda in ml</td>
+    </tr>
+    <tr>
+      <td>Bottle_Cost</td>
+      <td style="text-align: left">DOUBLE</td>
+      <td>Cost of one bottle</td>
+    </tr>
+    <tr>
+      <td>Bottle_Retail_Price</td>
+      <td style="text-align: left">DOUBLE</td>
+      <td>Retile price for one bottle</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Let’s write an SQL query that selects only the Item_Description column from the
+item_info table.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description 
+FROM item_info;
+</code></pre></div></div>
+
+<p>We have capitalized the words SELECT and FROM because they are SQL keywords.
+SQL is case insensitive, but it helps for readability, and is good style.</p>
+
+<p>If we want more information, we can just add a new column to the list of fields,
+right after SELECT:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Bottle_Volume_ml, Bottle_Cost  
+FROM item_info;
+</code></pre></div></div>
+
+<p>Or we can select all of the columns in a table using the wildcard *</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM item_info;
+</code></pre></div></div>
+
+<h3 id="limiting-results">Limiting results</h3>
+
+<p>Sometimes you don’t want to see all the results you just want to get a sense of
+of what’s being returned. In that case you can use the LIMIT command. In particular
+you would want to do this if you were working with large databases.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM item_info
+LIMIT 10; 
+</code></pre></div></div>
+
+<h3 id="unique-values">Unique values</h3>
+
+<p>If we want only the unique values so that we can quickly see what categories have
+been sampled we use <code class="highlighter-rouge">DISTINCT</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category_id
+FROM item_info;
+</code></pre></div></div>
+
+<p>Well, we can only see the unique ids, and that does not make any sense right? 
+Don’t worry, you will learn how to return category names later.</p>
+
+<p>If we select more than one column, then the distinct pairs of values are
+returned</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category_id, Pack
+FROM item_info;
+</code></pre></div></div>
+
+<h3 id="calculated-values">Calculated values</h3>
+
+<p>We can also do calculations with the values in a query.
+For example, if we wanted to look at the volume of soda in liters, instead of milliliters</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Bottle_Volume_ml/1000 AS Bottle_Volume_L
+FROM item_info;
+</code></pre></div></div>
+
+<p>Note that you can use “AS” to give an alias to a column name.</p>
+
+<p>When we run the query, the expression <code class="highlighter-rouge">Bottle_Volume_ml/1000</code> is evaluated for each
+row and appended to that row, in a new column. Since ‘Bottle_Volume_ml’ is already a ‘DOUBLE’,
+after it is divided by an <code class="highlighter-rouge">INTEGER</code>, the result will still be ‘DOUBLE’. 
+If ‘Bottle_Volume_ml’ is an ‘INTEGER’ and we want the result to still be ‘DOUBLE’, we need to divide it by 1000.0</p>
+
+<p>Expressions can use any fields, any arithmetic operators (<code class="highlighter-rouge">+</code>, <code class="highlighter-rouge">-</code>, <code class="highlighter-rouge">*</code>, and <code class="highlighter-rouge">/</code>) and a variety of built-in
+functions. For example, we could round the values.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, ROUND(Bottle_Volume_ml/1000,1) AS Bottle_Volume_L
+FROM item_info;
+
+SELECT Item_Description, Bottle_Volume_ml, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin
+FROM item_info;
+</code></pre></div></div>
+
+<blockquote class="challenge">
+  <h2 id="challenge">Challenge</h2>
+
+  <ul>
+    <li>We have the cost and price of each soda, write a query that returns the profit margin of each soda, 
+  give it alias as ‘Margin’ and round it to 2 decimal places.</li>
+  </ul>
+</blockquote>
+
+<h2 id="filtering">Filtering</h2>
+
+<p>Databases can also filter data – selecting only the data meeting certain
+criteria.  For example, let’s say we only want data for an energy drink called
+<em>Nozomi Power Injection</em>.  We need to add a <code class="highlighter-rouge">WHERE</code> clause to our query: <br />
+<img src="../img/np.gif" alt="alt text" height="100px" /> <br /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
+FROM item_info
+WHERE Item_Description = "Nozomi Power Injection";
+</code></pre></div></div>
+
+<p>We can do the same thing with numbers.
+Here, we only want the soda with more than 500ml:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info
+WHERE Bottle_Volume_ml &gt; 500;
+</code></pre></div></div>
+
+<p>What if your favorite singer’s name is ‘Honoka’ and you want to buy soda that contains ‘Honoka’ in the name? Use <code class="highlighter-rouge">LIKE</code> statement:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
+FROM item_info
+WHERE Item_Description LIKE "%Honoka%";
+</code></pre></div></div>
+
+<p>You can use <code class="highlighter-rouge">%</code> as wild card to search. That means, all soda with name like “aaHonokaaaaa” or “00Honokaxxxx” will be returned. 
+You can use <code class="highlighter-rouge">_</code> as wild card for one character. For example, if you replace “%Honoka%” with “Honoka_”, only names such as “Honokaa”, “Honokax” will be returned.</p>
+
+<p>If we used the <code class="highlighter-rouge">TEXT</code> data type for the year the <code class="highlighter-rouge">WHERE</code> clause should
+be <code class="highlighter-rouge">Bottle_Volume_ml &gt; '500'</code>. We can use more sophisticated conditions by combining tests
+with <code class="highlighter-rouge">AND</code> and <code class="highlighter-rouge">OR</code>.<br />
+For example, suppose we want all the energy drink (category id = ‘C0006’) with volume larger than 500ml:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ELECT * FROM item_info
+WHERE Bottle_Volume_ml &gt; 500 AND Category_id = 'C0006';  
+</code></pre></div></div>
+
+<p>Note that the parentheses are not needed, but again, they help with
+readability.  They also ensure that the computer combines <code class="highlighter-rouge">AND</code> and <code class="highlighter-rouge">OR</code>
+in the way that we intend.</p>
+
+<p>If we wanted to get data for 3 categories of soda, which have
+category id of <code class="highlighter-rouge">C0006</code>, <code class="highlighter-rouge">C0001</code>, and <code class="highlighter-rouge">C0002</code>, we could combine the tests using OR:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ELECT * FROM item_info
+WHERE Category_id = 'C0006' OR Category_id = 'C0001' OR Category_id = 'C0002';  
+</code></pre></div></div>
+
+<p>This looks messy, right? We can do the same thing by using ‘IN’:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info 
+WHERE Category_id IN ('C0006', 'C0001', 'C0002'); 
+</code></pre></div></div>
+
+<blockquote class="challenge">
+  <h2 id="challenge-1">Challenge</h2>
+
+  <ul>
+    <li>Produce a table listing the data for all individuals in Plot 1 
+that weighed more than 75 grams, telling us the date, species id code, and weight
+(in kg).</li>
+  </ul>
+</blockquote>
+
+<h2 id="building-more-complex-queries">Building more complex queries</h2>
+
+<p>Now, lets combine the above queries to get data for the 3 <em>Dipodomys</em> species from
+the year 2000 on.  This time, let’s use IN as one way to make the query easier
+to understand.  It is equivalent to saying <code class="highlighter-rouge">WHERE (species_id = 'DM') OR (species_id
+= 'DO') OR (species_id = 'DS')</code>, but reads more neatly:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM surveys
+WHERE (year &gt;= 2000) AND (species_id IN ('DM', 'DO', 'DS'));
+</code></pre></div></div>
+
+<p>We started with something simple, then added more clauses one by one, testing
+their effects as we went along.  For complex queries, this is a good strategy,
+to make sure you are getting what you want.  Sometimes it might help to take a
+subset of the data that you can easily see in a temporary database to practice
+your queries on before working on a larger or more complicated database.</p>
+
+<p>When the queries become more complex, it can be useful to add comments. In SQL,
+comments are started by <code class="highlighter-rouge">--</code>, and end at the end of the line. For example, a
+commented version of the above query can be written as:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- Get post 2000 data on Dipodomys' species
+-- These are in the surveys table, and we are interested in all columns
+SELECT * FROM surveys
+-- Sampling year is in the column `year`, and we want to include 2000
+WHERE (year &gt;= 2000)
+-- Dipodomys' species have the `species_id` DM, DO, and DS
+AND (species_id IN ('DM', 'DO', 'DS'));
+</code></pre></div></div>
+
+<p>Although SQL queries often read like plain English, it is <em>always</em> useful to add
+comments; this is especially true of more complex queries.</p>
+
+<h2 id="sorting">Sorting</h2>
+
+<p>We can also sort the results of our queries by using <code class="highlighter-rouge">ORDER BY</code>.
+For simplicity, let’s go back to the <strong>species</strong> table and alphabetize it by taxa.</p>
+
+<p>First, let’s look at what’s in the <strong>species</strong> table. It’s a table of the species_id and the full genus, species and taxa information for each species_id. Having this in a separate table is nice, because we didn’t need to include all
+this information in our main <strong>surveys</strong> table.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM species;
+</code></pre></div></div>
+
+<p>Now let’s order it by taxa.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM species
+ORDER BY taxa ASC;
+</code></pre></div></div>
+
+<p>The keyword <code class="highlighter-rouge">ASC</code> tells us to order it in Ascending order.
+We could alternately use <code class="highlighter-rouge">DESC</code> to get descending order.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM species
+ORDER BY taxa DESC;
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">ASC</code> is the default.</p>
+
+<p>We can also sort on several fields at once.
+To truly be alphabetical, we might want to order by genus then species.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM species
+ORDER BY genus ASC, species ASC;
+</code></pre></div></div>
+
+<blockquote class="challenge">
+  <h2 id="challenge-2">Challenge</h2>
+
+  <ul>
+    <li>Write a query that returns year, species_id, and weight in kg from
+the surveys table, sorted with the largest weights at the top.</li>
+  </ul>
+</blockquote>
+
+<h2 id="order-of-execution">Order of execution</h2>
+
+<p>Another note for ordering. We don’t actually have to display a column to sort by
+it.  For example, let’s say we want to order the birds by their species ID, but
+we only want to see genus and species.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT genus, species
+FROM species
+WHERE taxa = 'Bird'
+ORDER BY species_id ASC;
+</code></pre></div></div>
+
+<p>We can do this because sorting occurs earlier in the computational pipeline than
+field selection.</p>
+
+<p>The computer is basically doing this:</p>
+
+<ol>
+  <li>Filtering rows according to WHERE</li>
+  <li>Sorting results according to ORDER BY</li>
+  <li>Displaying requested columns or expressions.</li>
+</ol>
+
+<p>Clauses are written in a fixed order: <code class="highlighter-rouge">SELECT</code>, <code class="highlighter-rouge">FROM</code>, <code class="highlighter-rouge">WHERE</code>, then <code class="highlighter-rouge">ORDER
+BY</code>. It is possible to write a query as a single line, but for readability,
+we recommend to put each clause on its own line.</p>
+
+<blockquote class="challenge">
+  <h2 id="challenge-3">Challenge</h2>
+
+  <ul>
+    <li>Let’s try to combine what we’ve learned so far in a single
+query.  Using the surveys table write a query to display the three date fields,
+<code class="highlighter-rouge">species_id</code>, and weight in kilograms (rounded to two decimal places), for
+individuals captured in 1999, ordered alphabetically by the <code class="highlighter-rouge">species_id</code>.</li>
+    <li>Write the query as a single line, then put each clause on its own line, and
+see how more legible the query becomes!</li>
+  </ul>
+</blockquote>
+
+
+
+<blockquote class="keypoints">
+  <h2>Key Points</h2>
+  <ul>
+    
+    <li><p>It is useful to apply conventions when writing SQL queries to aid readability.</p>
+</li>
+    
+    <li><p>Use logical connectors such as AND or OR to create more complex queries.</p>
+</li>
+    
+    <li><p>Calculations using mathematical symbols can also be performed on SQL queries.</p>
+</li>
+    
+    <li><p>Adding comments in SQL helps keep complex queries understandable.</p>
+</li>
+    
+  </ul>
+</blockquote>
+
+
+<div class="row">
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../01-sql-intro2/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      
+    </h3>
+  </div>
+  <div class="col-md-10">
+    
+  </div>
+  <div class="col-md-1">
+    <h3>
+      
+      <a href="../03-sql-aggregation/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      
+    </h3>
+  </div>
+</div>
+
+
+      
+      
+<footer>
+  <div class="row">
+    <div class="col-md-6" align="left">
+      <h4>
+	Copyright &copy; 2016–2018
+	
+	<a href="http://datacarpentry.org">Data Carpentry</a>
+	
+      </h4>
+    </div>
+    <div class="col-md-6" align="right">
+      <h4>
+	
+	<a href="/edit/gh-pages/_episodes/02-sql-basic-queries.md">Edit on GitHub</a>
+	
+	/
+	<a href="/blob/gh-pages/CONTRIBUTING.md">Contributing</a>
+	/
+	<a href="/">Source</a>
+	/
+	<a href="/blob/gh-pages/CITATION">Cite</a>
+	/
+	<a href="mailto:lessons@software-carpentry.org">Contact</a>
+      </h4>
+    </div>
+  </div>
+</footer>
+
+      
+    </div>
+    
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/lesson.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-37305346-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

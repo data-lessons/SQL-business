@@ -4,7 +4,7 @@ root: .
 ---
 
 <p align="center">
-  <img src="../img/nyan.png" height="100px" title="Github Logo">
+  <img src="../img/nyan.png" height="100px" title="cat">
 </p>
 
 Databases are useful for both storing and using data effectively. Using a relational database serves several purposes.
@@ -27,11 +27,8 @@ into them and how you can query databases to extract just the information that y
 >
 > To get started, follow the directions in the "[Setup](setup/)" tab to 
 > download data to your computer and follow any installation instructions.
->
-> #### Prerequisites
->
-> This lesson requires a working copy of **SQLite Manager** for SQL.
-> <br>To most effectively use these materials, please make sure to install 
+> 
+> To most effectively use these materials, please make sure to install 
 > everything *before* working through this lesson.
 {: .prereq}
 

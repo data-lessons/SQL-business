@@ -6,7 +6,7 @@ permalink: /setup/
 
 > ## Data
 {: .prereq}
-**Download** this data to your computer: [tbd](https://www.nyan.cat). Click on **Download all** to download the zip file. Unzip it to a location that you can easily find on your computer.
+**Download** this data to your computer: [tbd](http://www.nyan.cat). Click on **Download all** to download the zip file. Unzip it to a location that you can easily find on your computer.
 
 #### About the data
 The data for this lesson is a part of the Data Carpentry Business workshop. 
@@ -14,49 +14,34 @@ It is a teaching version of the Portal Database data.
  
 The original data for this lesson and the workshop are collected from the 
 [State of Iowa](https://data.iowa.gov/browse?category=Economy) 
-available on FigShare, with a CC-BY license 
-available for reuse.
-
+It is open for public use, we have modified the data for the workshop  
 
 > ## Software
 {: .prereq}
 SQL is a specialized programming language used with databases.  We
-use a simple database manager called [SQLite](http://www.sqlite.org/)
-in our lessons.
-    
+use a simple database manager called [sqlite3](https://docs.python.org/2/library/sqlite3.html) in python for this workshop.
 
-We will use [SQLite Manager](https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/)
-    plugin for the [Firefox web browser](https://www.mozilla.org/en-US/firefox/organizations/all/). If you don't have Firefox installed, you need to install it first and
-    then you will be able to add the plugin.
-    
-Important note: The SQLite Manager plugin does not work with the latest versions of Firefox (v. 57 and later). If you need to download and install Firefox for this lesson, please install the Extended Service Release (ESR) version as described below. This version will be supported until mid-2018, at which point the SQLite Manager plugin will no longer be usable for this lesson. If you already have Firefox v. 57 or later installed on your machine, you will also need to download the ESR version in order to install the plugin.
+We will use jupyter notebook to run python. If you have not installed jupyter notebooks, please follow the [instructions](http://jupyter.org/install) to install. For both windows and Mac, the easiest way is to install [ANACODA](https://www.anaconda.com/download) (recomend download and install the python 3.6 version). ANACODA will automatically install python, jupyter and few packages that are frequently used in data analytics to your computer. You can also choose to use `python3 -m pip install jupyter` command to install if you already have python in your computer. 
+
+After installing anacoda or jupyter notebook, 
+### Windows 
+- go to "Start" or the windows button on your desktop, type "cmd" in your search bar, click "command prompt".   
+- Now we will make a folder for the workshop: 
+- Type `cd Desktop` and hit enter (this will go to your desktop. You can use other directory as well)
+- Type `mkdir sql_workshop` and hit enter (this will create an folder named "sql_workshop" on your desktop, you can change the name if you want)
+- Type `cd sql_workshop` and hit enter to go to the folder you just created  
+- Type `jupyter notebook` to open the notebook! It will automatically open your browser. If not, copy the link that shows up on the terminal and paste it into your browser. 
+
+### Macs  
+- go to "Go" -> "Utilities" -> "Terminal"  
+- Now we will make a folder for the workshop: 
+- Type `cd Desktop` and hit enter (this will go to your desktop. You can use other directory as well)
+- Type `mkdir sql_workshop` and hit enter (this will create an folder named "sql_workshop" on your desktop, you can change the name if you want)
+- Type `cd sql_workshop` and hit enter to go to the folder you just created  
+- Type `jupyter notebook` to open the notebook! It will automatically open your browser. If not, copy the link that shows up on the terminal and paste it into your browser. 
+
+**Now you successfully have the notebook open!**  
 
 
-### Windows
 
-- If you don't already have Firefox, download Firefox ESR from the [Firefox download page](https://www.mozilla.org/en-US/firefox/organizations/all/)
-- Install Firefox following the installer instructions
-- Install the SQLite Manager add on:  
-Within Firefox, go to [https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/](https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/). 
-- Click on the green 'Add to Firefox'
-- When a window pops up, click on 'Install'
-- When the next box pops up, click on 'Restart Now' to restart Firefox
-- Add SQLite Manager to the menu:  
-**Menu (the three horizontal lines
-near the top right corner of Firefox) -&gt; Customize, then drag the SQLite
-Manager icon to one of the empty menu squares on the right, Exit Customize**
-- Open SQLite Manager:  
-**Menu -&gt; SQLite Manager**
 
-### Mac
-
-- If you don't already have Firefox, download Firefox ESR from the [Firefox download page](https://www.mozilla.org/en-US/firefox/organizations/all/)
-- Install Firefox following the installer instructions
-- Install the SQLite Manager add on:  
-Within Firefox, go to [https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/](https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/). 
-- Click on the green 'Add to Firefox'
-- When a window pops up, click on 'Install'
-- When the next box pops up, click on 'Restart Now' to restart Firefox. 
-- After restart the SQLite Manager will be added ot the **Tools** menu
-- Open SQLite Manager:  
-**Tools -&gt; SQLite Manager**

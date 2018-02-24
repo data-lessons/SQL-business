@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-19 14:34:35 -0600">
+    <meta http-equiv="last-modified" content="2018-02-23 19:24:17 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -58,13 +58,17 @@
           <a href="../" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Episodes <span class="caret"></span></a>
           <ul class="dropdown-menu">
             
-            <li><a href="../00-sql-introduction/">Databases using SQL</a></li>
+            <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
             
-            <li><a href="../01-sql-basic-queries/">Basic Queries</a></li>
+            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
             
-            <li><a href="../02-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
-            <li><a href="../03-sql-joins/">Joins</a></li>
+            <li><a href="../03-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            
+            <li><a href="../04-sql-joins/">Joins</a></li>
+            
+            <li><a href="../05-sql-tbd/">tbd</a></li>
             
           </ul>
         </li>
@@ -108,7 +112,7 @@
 <blockquote class="prereq">
   <h2 id="data">Data</h2>
 </blockquote>
-<p><strong>Download</strong> this data to your computer: <a href="https://www.nyan.cat">tbd</a>. Click on <strong>Download all</strong> to download the zip file. Unzip it to a location that you can easily find on your computer.</p>
+<p><strong>Download</strong> this data to your computer: <a href="http://www.nyan.cat">tbd</a>. Click on <strong>Download all</strong> to download the zip file. Unzip it to a location that you can easily find on your computer.</p>
 
 <h4 id="about-the-data">About the data</h4>
 <p>The data for this lesson is a part of the Data Carpentry Business workshop. 
@@ -116,54 +120,39 @@ It is a teaching version of the Portal Database data.</p>
 
 <p>The original data for this lesson and the workshop are collected from the 
 <a href="https://data.iowa.gov/browse?category=Economy">State of Iowa</a> 
-available on FigShare, with a CC-BY license 
-available for reuse.</p>
+It is open for public use, we have modified the data for the workshop</p>
 
 <blockquote class="prereq">
   <h2 id="software">Software</h2>
 </blockquote>
 <p>SQL is a specialized programming language used with databases.  We
-use a simple database manager called <a href="http://www.sqlite.org/">SQLite</a>
-in our lessons.</p>
+use a simple database manager called <a href="https://docs.python.org/2/library/sqlite3.html">sqlite3</a> in python for this workshop.</p>
 
-<p>We will use <a href="https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/">SQLite Manager</a>
-    plugin for the <a href="https://www.mozilla.org/en-US/firefox/organizations/all/">Firefox web browser</a>. If you don’t have Firefox installed, you need to install it first and
-    then you will be able to add the plugin.</p>
+<p>We will use jupyter notebook to run python. If you have not installed jupyter notebooks, please follow the <a href="http://jupyter.org/install">instructions</a> to install. For both windows and Mac, the easiest way is to install <a href="https://www.anaconda.com/download">ANACODA</a> (recomend download and install the python 3.6 version). ANACODA will automatically install python, jupyter and few packages that are frequently used in data analytics to your computer. You can also choose to use <code class="highlighter-rouge">python3 -m pip install jupyter</code> command to install if you already have python in your computer.</p>
 
-<p>Important note: The SQLite Manager plugin does not work with the latest versions of Firefox (v. 57 and later). If you need to download and install Firefox for this lesson, please install the Extended Service Release (ESR) version as described below. This version will be supported until mid-2018, at which point the SQLite Manager plugin will no longer be usable for this lesson. If you already have Firefox v. 57 or later installed on your machine, you will also need to download the ESR version in order to install the plugin.</p>
-
+<p>After installing anacoda or jupyter notebook,</p>
 <h3 id="windows">Windows</h3>
-
 <ul>
-  <li>If you don’t already have Firefox, download Firefox ESR from the <a href="https://www.mozilla.org/en-US/firefox/organizations/all/">Firefox download page</a></li>
-  <li>Install Firefox following the installer instructions</li>
-  <li>Install the SQLite Manager add on:<br />
-Within Firefox, go to <a href="https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/">https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/</a>.</li>
-  <li>Click on the green ‘Add to Firefox’</li>
-  <li>When a window pops up, click on ‘Install’</li>
-  <li>When the next box pops up, click on ‘Restart Now’ to restart Firefox</li>
-  <li>Add SQLite Manager to the menu:<br />
-<strong>Menu (the three horizontal lines
-near the top right corner of Firefox) -&gt; Customize, then drag the SQLite
-Manager icon to one of the empty menu squares on the right, Exit Customize</strong></li>
-  <li>Open SQLite Manager:<br />
-<strong>Menu -&gt; SQLite Manager</strong></li>
+  <li>go to “Start” or the windows button on your desktop, type “cmd” in your search bar, click “command prompt”.</li>
+  <li>Now we will make a folder for the workshop:</li>
+  <li>Type <code class="highlighter-rouge">cd Desktop</code> and hit enter (this will go to your desktop. You can use other directory as well)</li>
+  <li>Type <code class="highlighter-rouge">mkdir sql_workshop</code> and hit enter (this will create an folder named “sql_workshop” on your desktop, you can change the name if you want)</li>
+  <li>Type <code class="highlighter-rouge">cd sql_workshop</code> and hit enter to go to the folder you just created</li>
+  <li>Type <code class="highlighter-rouge">jupyter notebook</code> to open the notebook! It will automatically open your browser. If not, copy the link that shows up on the terminal and paste it into your browser.</li>
 </ul>
 
-<h3 id="mac">Mac</h3>
-
+<h3 id="macs">Macs</h3>
 <ul>
-  <li>If you don’t already have Firefox, download Firefox ESR from the <a href="https://www.mozilla.org/en-US/firefox/organizations/all/">Firefox download page</a></li>
-  <li>Install Firefox following the installer instructions</li>
-  <li>Install the SQLite Manager add on:<br />
-Within Firefox, go to <a href="https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/">https://addons.mozilla.org/en-us/firefox/addon/sqlite-manager/</a>.</li>
-  <li>Click on the green ‘Add to Firefox’</li>
-  <li>When a window pops up, click on ‘Install’</li>
-  <li>When the next box pops up, click on ‘Restart Now’ to restart Firefox.</li>
-  <li>After restart the SQLite Manager will be added ot the <strong>Tools</strong> menu</li>
-  <li>Open SQLite Manager:<br />
-<strong>Tools -&gt; SQLite Manager</strong></li>
+  <li>go to “Go” -&gt; “Utilities” -&gt; “Terminal”</li>
+  <li>Now we will make a folder for the workshop:</li>
+  <li>Type <code class="highlighter-rouge">cd Desktop</code> and hit enter (this will go to your desktop. You can use other directory as well)</li>
+  <li>Type <code class="highlighter-rouge">mkdir sql_workshop</code> and hit enter (this will create an folder named “sql_workshop” on your desktop, you can change the name if you want)</li>
+  <li>Type <code class="highlighter-rouge">cd sql_workshop</code> and hit enter to go to the folder you just created</li>
+  <li>Type <code class="highlighter-rouge">jupyter notebook</code> to open the notebook! It will automatically open your browser. If not, copy the link that shows up on the terminal and paste it into your browser.</li>
 </ul>
+
+<p><strong>Now you successfully have the notebook open!</strong></p>
+
 
 
       

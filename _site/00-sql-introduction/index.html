@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-19 14:34:35 -0600">
+    <meta http-equiv="last-modified" content="2018-02-23 19:24:17 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -19,7 +19,7 @@
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
-    <title>SQL for Business: Databases using SQL</title>
+    <title>SQL for Business: Introduction to SQL</title>
   </head>
   <body>
     <div class="container">
@@ -58,13 +58,17 @@
           <a href="../" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Episodes <span class="caret"></span></a>
           <ul class="dropdown-menu">
             
-            <li><a href="../00-sql-introduction/">Databases using SQL</a></li>
+            <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
             
-            <li><a href="../01-sql-basic-queries/">Basic Queries</a></li>
+            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
             
-            <li><a href="../02-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
-            <li><a href="../03-sql-joins/">Joins</a></li>
+            <li><a href="../03-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            
+            <li><a href="../04-sql-joins/">Joins</a></li>
+            
+            <li><a href="../05-sql-tbd/">tbd</a></li>
             
           </ul>
         </li>
@@ -114,13 +118,13 @@
   <div class="col-md-10">
     
     <h3 class="maintitle"><a href="../">SQL for Business</a></h3>
-    <h1 class="maintitle">Databases using SQL</h1>
+    <h1 class="maintitle">Introduction to SQL</h1>
     
   </div>
   <div class="col-md-1">
     <h3>
       
-      <a href="../01-sql-basic-queries/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      <a href="../01-sql-intro2/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
       
     </h3>
   </div>
@@ -132,7 +136,7 @@
 
   <div class="row">
     <div class="col-md-3">
-      <strong>Teaching:</strong> 60 min
+      <strong>Teaching:</strong> 30 min
       <br/>
       <strong>Exercises:</strong> 5 min
     </div>
@@ -157,19 +161,16 @@
       <strong>Objectives</strong>
       <ul>
 	
-	<li><p>Describe why relational databases are useful.</p>
+	<li><p>Limitations of excel</p>
 </li>
 	
-	<li><p>Create and populate a database from a text file.</p>
+	<li><p>What is SQL</p>
 </li>
 	
-	<li><p>Define SQLite data types.</p>
+	<li><p>What is relational database and Database Management Systems (DBMS)</p>
 </li>
 	
-	<li><p>Select, group, add to, and analyze subsets of data.</p>
-</li>
-	
-	<li><p>Combine data across multiple tables.</p>
+	<li><p>Describe why relational databases are useful</p>
 </li>
 	
       </ul>
@@ -193,11 +194,6 @@ SQLite Manager.</p>
 
 <p>SQL stands for Structured Query Language. SQL allows us to interact with relational databases through queries. 
 These queries can allow you to perform a number of actions such as: insert, update and delete information in a database.</p>
-
-<h2 id="dataset-description">Dataset Description</h2>
-
-<p>The data we will be using soda sells data. It contains invoice information about soda purchase from soda makers (vendors) by retail stores. 
-The data was originated from a real dataset. We have modofied the dataset for this workshop. For example, soda names are completely fictitious, and price was also normalized.</p>
 
 <h2 id="questions">Questions</h2>
 
@@ -343,346 +339,6 @@ the same type (<a href="#datatypes">list of data types</a>)</li>
   </li>
 </ul>
 
-<h2 id="import">Import</h2>
-
-<p>Before we get started with writing our own queries, we’ll load the data into the database. 
-We’ll need the following file:</p>
-<ul>
-  <li><code class="highlighter-rouge">soda.db</code>
-Here are all the attributes in the database:</li>
-</ul>
-
-<table>
-  <thead>
-    <tr>
-      <th>Attributes</th>
-      <th style="text-align: left">Data Type</th>
-      <th>Description</th>
-      <th>Table(s)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>County_id</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Unique id for each county</td>
-      <td>county, store_info</td>
-    </tr>
-    <tr>
-      <td>County_Name</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Name of county</td>
-      <td>county</td>
-    </tr>
-    <tr>
-      <td>City_Name</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Name of the city that the county is in</td>
-      <td>county</td>
-    </tr>
-    <tr>
-      <td>Category_id</td>
-      <td style="text-align: left">VARCHAR(20)</td>
-      <td>Unique id for each category</td>
-      <td>category, item_info</td>
-    </tr>
-    <tr>
-      <td>Category_Name</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Name of the category</td>
-      <td>category</td>
-    </tr>
-    <tr>
-      <td>Vendor_id</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Unique id for each vendor</td>
-      <td>vendor, invoice_info</td>
-    </tr>
-    <tr>
-      <td>Vendor_Name</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Name of the vendor</td>
-      <td>vendor</td>
-    </tr>
-    <tr>
-      <td>Store_id</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Unique id for each store</td>
-      <td>store_info, invoice_info</td>
-    </tr>
-    <tr>
-      <td>Store_Name</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Name of the store</td>
-      <td>store_indo</td>
-    </tr>
-    <tr>
-      <td>Address</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Address of the store</td>
-      <td>store_info</td>
-    </tr>
-    <tr>
-      <td>Zip_Code</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Zip code of the store</td>
-      <td>store_info</td>
-    </tr>
-    <tr>
-      <td>Item_id</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Unique id for each item (soda)</td>
-      <td>item_info, invoice_id</td>
-    </tr>
-    <tr>
-      <td>Item_Description</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Name of the item (soda)</td>
-      <td>item_info</td>
-    </tr>
-    <tr>
-      <td>Pack</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Number of bottles that the soda usually sells for</td>
-      <td>item_info</td>
-    </tr>
-    <tr>
-      <td>Bottle_Volume_ml</td>
-      <td style="text-align: left">DOUBLE</td>
-      <td>Volumn of the soda in ml</td>
-      <td>item_info</td>
-    </tr>
-    <tr>
-      <td>Bottle_Cost</td>
-      <td style="text-align: left">DOUBLE</td>
-      <td>Cost of one bottle</td>
-      <td>item_info</td>
-    </tr>
-    <tr>
-      <td>Bottle_Retail_Price</td>
-      <td style="text-align: left">DOUBLE</td>
-      <td>Retile price for one bottle</td>
-      <td>item_info</td>
-    </tr>
-    <tr>
-      <td>Invoice_id</td>
-      <td style="text-align: left">VARCHAR(20)</td>
-      <td>Unique id for each invoice</td>
-      <td>invoice_info</td>
-    </tr>
-    <tr>
-      <td>Date</td>
-      <td style="text-align: left">TEXT</td>
-      <td>Date of the invoice</td>
-      <td>invoice_info</td>
-    </tr>
-    <tr>
-      <td>Bottle_Sold</td>
-      <td style="text-align: left">INTEGER</td>
-      <td>Number of bottle sold in the invoice</td>
-      <td>invoice_info</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Finally, click <strong>OK</strong> one more time to confirm the operation.</p>
-
-<blockquote class="challenge">
-  <h2 id="challenge">Challenge</h2>
-
-  <ul>
-    <li>Import the <code class="highlighter-rouge">plots</code> and <code class="highlighter-rouge">species</code> tables</li>
-  </ul>
-</blockquote>
-
-<p>You can also use this same approach to append new data to an existing table.</p>
-
-<h2 id="adding-data-to-existing-tables">Adding data to existing tables</h2>
-
-<ol>
-  <li>“Browse and Search” tab -&gt; Add</li>
-  <li>Enter data into a csv file and append</li>
-</ol>
-
-<h2 id="-data-types"><a name="datatypes"></a> Data types</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Data type</th>
-      <th style="text-align: left">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>CHARACTER(n)</td>
-      <td style="text-align: left">Character string. Fixed-length n</td>
-    </tr>
-    <tr>
-      <td>VARCHAR(n) or CHARACTER VARYING(n)</td>
-      <td style="text-align: left">Character string. Variable length. Maximum length n</td>
-    </tr>
-    <tr>
-      <td>BINARY(n)</td>
-      <td style="text-align: left">Binary string. Fixed-length n</td>
-    </tr>
-    <tr>
-      <td>BOOLEAN</td>
-      <td style="text-align: left">Stores TRUE or FALSE values</td>
-    </tr>
-    <tr>
-      <td>VARBINARY(n) or BINARY VARYING(n)</td>
-      <td style="text-align: left">Binary string. Variable length. Maximum length n</td>
-    </tr>
-    <tr>
-      <td>INTEGER(p)</td>
-      <td style="text-align: left">Integer numerical (no decimal).</td>
-    </tr>
-    <tr>
-      <td>SMALLINT</td>
-      <td style="text-align: left">Integer numerical (no decimal).</td>
-    </tr>
-    <tr>
-      <td>INTEGER</td>
-      <td style="text-align: left">Integer numerical (no decimal).</td>
-    </tr>
-    <tr>
-      <td>BIGINT</td>
-      <td style="text-align: left">Integer numerical (no decimal).</td>
-    </tr>
-    <tr>
-      <td>DECIMAL(p,s)</td>
-      <td style="text-align: left">Exact numerical, precision p, scale s.</td>
-    </tr>
-    <tr>
-      <td>NUMERIC(p,s)</td>
-      <td style="text-align: left">Exact numerical, precision p, scale s. (Same as DECIMAL)</td>
-    </tr>
-    <tr>
-      <td>FLOAT(p)</td>
-      <td style="text-align: left">Approximate numerical, mantissa precision p. A floating number in base 10 exponential notation.</td>
-    </tr>
-    <tr>
-      <td>REAL</td>
-      <td style="text-align: left">Approximate numerical</td>
-    </tr>
-    <tr>
-      <td>FLOAT</td>
-      <td style="text-align: left">Approximate numerical</td>
-    </tr>
-    <tr>
-      <td>DOUBLE</td>
-      <td style="text-align: left">Approximate numerical</td>
-    </tr>
-    <tr>
-      <td>DATE*</td>
-      <td style="text-align: left">Stores year, month, and day values</td>
-    </tr>
-    <tr>
-      <td>TIME*</td>
-      <td style="text-align: left">Stores hour, minute, and second values</td>
-    </tr>
-    <tr>
-      <td>TIMESTAMP*</td>
-      <td style="text-align: left">Stores year, month, day, hour, minute, and second values</td>
-    </tr>
-    <tr>
-      <td>INTERVAL</td>
-      <td style="text-align: left">Composed of a number of integer fields, representing a period of time, depending on the type of interval</td>
-    </tr>
-    <tr>
-      <td>ARRAY</td>
-      <td style="text-align: left">A set-length and ordered collection of elements</td>
-    </tr>
-    <tr>
-      <td>MULTISET</td>
-      <td style="text-align: left">A variable-length and unordered collection of elements</td>
-    </tr>
-    <tr>
-      <td>XML</td>
-      <td style="text-align: left">Stores XML data</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>*SQLite does not have a separate storage class for storing dates and/or times, but SQLite is capable of storing dates and times as TEXT, REAL or INTEGER values. In the database we used today, the date attribute is stored as text in “YYYY-MM-DD” format.</p>
-
-<h2 id="-sql-data-type-quick-reference"><a name="datatypediffs"></a> SQL Data Type Quick Reference</h2>
-
-<p>Different databases offer different choices for the data type definition.</p>
-
-<p>The following table shows some of the common names of data types between the various database platforms:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">Data type</th>
-      <th style="text-align: left">Access</th>
-      <th style="text-align: left">SQLServer</th>
-      <th style="text-align: left">Oracle</th>
-      <th style="text-align: left">MySQL</th>
-      <th style="text-align: left">PostgreSQL</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">boolean</td>
-      <td style="text-align: left">Yes/No</td>
-      <td style="text-align: left">Bit</td>
-      <td style="text-align: left">Byte</td>
-      <td style="text-align: left">N/A</td>
-      <td style="text-align: left">Boolean</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">integer</td>
-      <td style="text-align: left">Number (integer)</td>
-      <td style="text-align: left">Int</td>
-      <td style="text-align: left">Number</td>
-      <td style="text-align: left">Int / Integer</td>
-      <td style="text-align: left">Int / Integer</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">float</td>
-      <td style="text-align: left">Number (single)</td>
-      <td style="text-align: left">Float / Real</td>
-      <td style="text-align: left">Number</td>
-      <td style="text-align: left">Float</td>
-      <td style="text-align: left">Numeric</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">currency</td>
-      <td style="text-align: left">Currency</td>
-      <td style="text-align: left">Money</td>
-      <td style="text-align: left">N/A</td>
-      <td style="text-align: left">N/A</td>
-      <td style="text-align: left">Money</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">string (fixed)</td>
-      <td style="text-align: left">N/A</td>
-      <td style="text-align: left">Char</td>
-      <td style="text-align: left">Char</td>
-      <td style="text-align: left">Char</td>
-      <td style="text-align: left">Char</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">string (variable)</td>
-      <td style="text-align: left">Text (&lt;256) / Memo (65k+)</td>
-      <td style="text-align: left">Varchar</td>
-      <td style="text-align: left">Varchar2</td>
-      <td style="text-align: left">Varchar</td>
-      <td style="text-align: left">Varchar</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">binary object	OLE Object Memo	Binary (fixed up to 8K)</td>
-      <td style="text-align: left">Varbinary (&lt;8K)</td>
-      <td style="text-align: left">Image (&lt;2GB)	Long</td>
-      <td style="text-align: left">Raw	Blob</td>
-      <td style="text-align: left">Text	Binary</td>
-      <td style="text-align: left">Varbinary</td>
-    </tr>
-  </tbody>
-</table>
 
 
 <blockquote class="keypoints">
@@ -716,7 +372,7 @@ Here are all the attributes in the database:</li>
   <div class="col-md-1">
     <h3>
       
-      <a href="../01-sql-basic-queries/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
+      <a href="../01-sql-intro2/"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><span class="sr-only">next episode</span></a>
       
     </h3>
   </div>
