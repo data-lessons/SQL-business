@@ -1,14 +1,13 @@
 ---
-title: "SQL Aggregation and aliases"
+title: "SQL Aggregation"
 teaching: 50
 exercises: 10
 questions:
 - "How can I summarize my data by aggregating, filtering, or ordering query results?"
-- "How can I make sure column names from my queries make sense and aren't too long?"
+- "How to save query result?"
 objectives:
 - "Apply aggregation to group records in SQL."
 - "Filter and order results of a query based on aggregate functions."
-- "Employ aliases to assign new names to items in a query."
 - "Save a query to make a new table."
 - "Apply filters to find missing values in SQL."
 keypoints:
@@ -24,53 +23,36 @@ keypoints:
 Aggregation allows us to combine results by grouping records based on value, also it is useful for
 calculating combined values in groups.
 
-Let’s go to the surveys table and find out how many individuals there are.
+Let’s go to the **invoice_info** table and find out how many invoices there are.
 Using the wildcard * simply counts the number of records (rows):
 
     SELECT COUNT(*)
-    FROM surveys;
+    FROM invoice_info;
 
-We can also find out how much all of those individuals weigh:
+We can also find out how many total bottles sold:
 
-    SELECT COUNT(*), SUM(weight)
-    FROM surveys;
-
-We can output this value in kilograms (dividing the value to 1000.0), then rounding to 3 decimal places:
-(Notice the divisor has numbers after the decimal point, which forces the answer to have a decimal fraction)
-
-    SELECT ROUND(SUM(weight)/1000.00, 3)
-    FROM surveys;
+    SELECT COUNT(*), SUM(Bottles_Sold)
+    FROM invoice_info;
 
 There are many other aggregate functions included in SQL, for example:
 `MAX`, `MIN`, and `AVG`.
 
-> ## Challenge
->
-> Write a query that returns: total weight, average weight, and the min and max weights
-> for all animals caught over the duration of the survey.
-> Can you modify it so that it outputs these values only for weights between 5 and 10?
-{: .challenge}
-
-Now, let's see how many individuals were counted in each species. We do this
+Now, let's see how many invoices were for each Store. We do this
 using a `GROUP BY` clause
 
-    SELECT species_id, COUNT(*)
-    FROM surveys
-    GROUP BY species_id;
+    SELECT Store_id, COUNT(*)
+    FROM invoice_info
+    GROUP BY Store_id;
 
 `GROUP BY` tells SQL what field or fields we want to use to aggregate the data.
 If we want to group by multiple fields, we give `GROUP BY` a comma separated list.
 
 > ## Challenge
 >
-> Write queries that return:
+> What is the most expensive soda in each category? 
+> Use the item_info table, write queries that return:
+> Item_Description, Category_id, max Bottle_Retail_Price 
 >
-> 1. How many individuals were counted in each year
->    *   in total
->    *   per each species
-> 2. Average weight of each species in each year.
->
-> Can you modify the above queries combining them into one?
 {: .challenge}
 
 ## Ordering Aggregated Results
@@ -79,27 +61,10 @@ We can order the results of our aggregation by a specific column, including
 the aggregated column.  Let’s count the number of individuals of each
 species captured, ordered by the count:
 
-    SELECT species_id, COUNT(*)
-    FROM surveys
-    GROUP BY species_id
-    ORDER BY COUNT(species_id);
-
-## Aliases
-
-As queries get more complex names can get long and unwieldy. To help make things
-clearer we can use aliases to assign new names to things in the query.
-
-We can use aliases in column names or table names using `AS`:
-
-    SELECT MAX(year) AS last_surveyed_year
-    FROM surveys;
-
-The `AS` isn't technically required, so you could do
-
-    SELECT MAX(year) yr
-    FROM surveys surv;
-
-but using `AS` is much clearer so it is good style to include it.
+    SELECT Store_id, COUNT(*)
+    FROM invoice_info
+    GROUP BY Store_id
+    ORDER BY COUNT(*);
 
 ## The `HAVING` keyword
 
@@ -107,26 +72,22 @@ In the previous episode, we have seen the keyword `WHERE`, allowing to
 filter the results according to some criteria. SQL offers a mechanism to
 filter the results based on **aggregate functions**, through the `HAVING` keyword.
 
-For example, we can request to only return information
-about species with a count higher than 10:
+If you use `AS` in your query to rename a column, `HAVING` you can use this
+information to make the query more readable. For example, in the above
+query, we can call the `COUNT(*)` by another name, like
+`num_invoices`. 
 
-    SELECT species_id, COUNT(species_id)
-    FROM surveys
-    GROUP BY species_id
-    HAVING COUNT(species_id) > 10;
+For example, we can request to only return information
+about stores that has more than 1000 invoices. 
+
+    SELECT Store_id, COUNT(*) AS num_invoice
+    FROM invoice_info
+    GROUP BY Store_id
+    HAVING num_invoices > 1000
+    ORDER BY num_invoices;
 
 The `HAVING` keyword works exactly like the `WHERE` keyword, but uses
 aggregate functions instead of database fields to filter.
-
-If you use `AS` in your query to rename a column, `HAVING` you can use this
-information to make the query more readable. For example, in the above
-query, we can call the `COUNT(species_id)` by another name, like
-`occurrences`. This can be written this way:
-
-    SELECT species_id, COUNT(species_id) AS occurrences
-    FROM surveys
-    GROUP BY species_id
-    HAVING occurrences > 10;
 
 Note that in both queries, `HAVING` comes *after* `GROUP BY`. One way to
 think about this is: the data are retrieved (`SELECT`), which can be filtered
@@ -150,77 +111,80 @@ from several places before showing it to you.
 
 Creating a view from a query requires to add `CREATE VIEW viewname AS`
 before the query itself. For example, imagine that my project only covers
-the data gathered during the summer (May - September) of 2000.  That
+the data gathered during the May of 2017.  That
 query would look like:
 
-    SELECT *
-    FROM surveys
-    WHERE year = 2000 AND (month > 4 AND month < 10);
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;
 
 But we don't want to have to type that every time we want to ask a
 question about that particular subset of data. Hence, we can benefit from a view:
 
-    CREATE VIEW summer_2000 AS
-    SELECT *
-    FROM surveys
-    WHERE year = 2000 AND (month > 4 AND month < 10);
+    CREATE VIEW May_2017 AS
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;
 
-You can also add a view using *Create View* in the *View* menu and see the
-results in the *Views* tab, the same way as creating a table from the menu.
+Now if you execute the query with `pd.read_sql()`, what happened? It does not work! <br>
+WHY? 
+![alt text](../img/q.png){:height="100px"} <br>
+It is saving something to database, instead of returing the query result. So nothing can be store to the dataframe.<br>
+Instead, what you can do is to create a cursor object, and execute the statement:  
+```
+q2 = '''CREATE VIEW May_2017 AS
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;'''
+c = conn.cursor()
+c.execute(q2)
+```  
 
-Using a view we will be able to access these results with a much shorter notation:
-
-    SELECT *
-    FROM summer_2000
-    WHERE species_id == 'PE';
+Now, you have successfully created the view. `May_2017` view is almost like a table in the database. You can do something like this:  
+```
+SELECT * FROM May_2017;
+```
 
 ## What About NULL?
+Let's try the following two queries:  
 
-From the last example, there should only be six records.  If you look at the `weight` column, it's
-easy to see what the average weight would be. If we use SQL to find the
-average weight, SQL behaves like we would hope, ignoring the NULL values:
+```
+SELECT COUNT(*) FROM item_info;
+```
+```
+SELECT COUNT(Category_id) FROM item_info;
+```
 
-    SELECT AVG(weight)
-    FROM summer_2000
-    WHERE species_id == 'PE';
-
-But if we try to be extra clever, and find the average ourselves,
-we might get tripped up:
-
-    SELECT SUM(weight), COUNT(*), SUM(weight)/COUNT(*)
-    FROM summer_2000
-    WHERE species_id == 'PE';
-
-Here the `COUNT` command includes all six records (even those with NULL
-values), but the `SUM` only includes the 4 records with data in the
-`weight` field, giving us an incorrect average. However,
-our strategy *will* work if we modify the `COUNT` command slightly:
-
-    SELECT SUM(weight), COUNT(weight), SUM(weight)/COUNT(weight)
-    FROM summer_2000
-    WHERE species_id == 'PE';
+Why did they return different result? <br>
+You probablly noticed from previous exercises that there are one category called "None". Yes, there are few sodas that does not have a category. 
 
 When we count the weight field specifically, SQL ignores the records with data
 missing in that field.  So here is one example where NULLs can be tricky:
 `COUNT(*)` and `COUNT(field)` can return different values.
 
+To find the soda that does not have a category, you can use `IS NULL` statement. Note that you cannot do `== NULL`.  
+```
+SELECT * FROM item_info 
+WHERE Category_id IS NULL;
+```
+
 Another case is when we use a "negative" query.  Let's count all the
-non-female animals:
+soda with category id "C0001":
 
-    SELECT COUNT(*)
-    FROM summer_2000
-    WHERE sex != 'F';
+    SELECT COUNT(*) 
+    FROM item_info 
+    WHERE Category_id == "C0001";
 
-Now let's count all the non-male animals:
+Now let's count all the soda with categories other than "C0001":
 
-    SELECT COUNT(*)
-    FROM summer_2000
-    WHERE sex != 'M';
+    SELECT COUNT(*) 
+    FROM item_info 
+    WHERE Category_id != "C0001";
 
 But if we compare those two numbers with the total:
 
     SELECT COUNT(*)
-    FROM summer_2000;
+    FROM item_info;
 
 We'll see that they don't add up to the total! That's because SQL
 doesn't automatically include NULL values in a negative conditional
@@ -231,5 +195,5 @@ but sometimes we may want the missing values included as well! In that
 case, we'd need to change our query to:
 
     SELECT COUNT(*)
-    FROM summer_2000
-    WHERE sex != 'M' OR sex IS NULL;
+    FROM item_info 
+    WHERE Category_id != "C0001" OR Category_id IS NULL;

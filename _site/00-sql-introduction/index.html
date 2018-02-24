@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-23 19:24:17 -0600">
+    <meta http-equiv="last-modified" content="2018-02-24 14:40:24 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -64,11 +64,9 @@
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
-            <li><a href="../03-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            <li><a href="../03-sql-aggregation/">SQL Aggregation</a></li>
             
             <li><a href="../04-sql-joins/">Joins</a></li>
-            
-            <li><a href="../05-sql-tbd/">tbd</a></li>
             
           </ul>
         </li>
@@ -201,7 +199,7 @@ These queries can allow you to perform a number of actions such as: insert, upda
   <h2 id="think-about-this-situation">Think about this situation</h2>
 
   <p>Imagine if you are a owner of a convenience store, and you are trying to record your soda purchase record <br />
-In each invoice, it contains the following infortaion: <br />
+In each invoice, it contains the following information: <br />
 Invoice id, Date, Category, Soda name, Volume, Cost, Retail Price, Vendor, Number of bottle purchased <br />
 How would you store the data?</p>
 </blockquote>
@@ -211,11 +209,13 @@ How would you store the data?</p>
 What problem could raise from this approach?<br />
 <b>Data redundency:</b> <br />
 <img src="../img/00_1.png" alt="alt text" />
+<br /><br />
 Imagine if you consistantly purchased some Big Dog Cola from LCDM Beverage vendor every day for 5 days, 
 Notice these columns: Category, Soda_name, Volume, Cost, Retail_Price, Vendor, Vendor number
 With tranditional file approach, you have to record exact same information in these columns 5 times.<br />
 <b>Data inconsistancy:</b> <br />
 <img src="../img/00_2.png" alt="alt text" />
+<br /><br />
 Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
 There are only 5 rows so it might be easy to change everything. If the data size gets large, mistakes are likely to occur.</p>
 

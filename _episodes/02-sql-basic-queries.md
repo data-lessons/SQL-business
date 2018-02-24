@@ -15,7 +15,7 @@ keypoints:
 - "Adding comments in SQL helps keep complex queries understandable."
 ---
 
-## Writing my first query
+## Select statements
 
 Let's start by using the **item_info** table. It includes information about all kinds of soda. 
 
@@ -111,6 +111,8 @@ functions. For example, we could round the values.
 Databases can also filter data – selecting only the data meeting certain
 criteria.  For example, let’s say we only want data for an energy drink called
 _Nozomi Power Injection_.  We need to add a `WHERE` clause to our query: <br>
+Note that we can use `=` or `==` for equal, `!=` or `<>` for not equal.  
+
 ![alt text](../img/np.gif){:height="100px"} <br>
 
     SELECT * 
@@ -157,92 +159,51 @@ This looks messy, right? We can do the same thing by using 'IN':
 
 > ## Challenge
 >
-> - Produce a table listing the data for all individuals in Plot 1 
-> that weighed more than 75 grams, telling us the date, species id code, and weight
-> (in kg). 
+> - Produce a table listing the data for all soda that cost less than $2 and
+> contains the word "lime" in the name, telling us the name, cost, and volume
+> (in litters). 
 {: .challenge}
-
-## Building more complex queries
-
-Now, lets combine the above queries to get data for the 3 _Dipodomys_ species from
-the year 2000 on.  This time, let’s use IN as one way to make the query easier
-to understand.  It is equivalent to saying `WHERE (species_id = 'DM') OR (species_id
-= 'DO') OR (species_id = 'DS')`, but reads more neatly:
-
-    SELECT *
-    FROM surveys
-    WHERE (year >= 2000) AND (species_id IN ('DM', 'DO', 'DS'));
-
-We started with something simple, then added more clauses one by one, testing
-their effects as we went along.  For complex queries, this is a good strategy,
-to make sure you are getting what you want.  Sometimes it might help to take a
-subset of the data that you can easily see in a temporary database to practice
-your queries on before working on a larger or more complicated database.
-
-When the queries become more complex, it can be useful to add comments. In SQL,
-comments are started by `--`, and end at the end of the line. For example, a
-commented version of the above query can be written as:
-
-    -- Get post 2000 data on Dipodomys' species
-    -- These are in the surveys table, and we are interested in all columns
-    SELECT * FROM surveys
-    -- Sampling year is in the column `year`, and we want to include 2000
-    WHERE (year >= 2000)
-    -- Dipodomys' species have the `species_id` DM, DO, and DS
-    AND (species_id IN ('DM', 'DO', 'DS'));
-
-Although SQL queries often read like plain English, it is *always* useful to add
-comments; this is especially true of more complex queries.
 
 ## Sorting
 
 We can also sort the results of our queries by using `ORDER BY`.
-For simplicity, let’s go back to the **species** table and alphabetize it by taxa.
+For simplicity, let’s go back to the **item_info** table and alphabetize it by soda name.
 
-First, let's look at what's in the **species** table. It's a table of the species_id and the full genus, species and taxa information for each species_id. Having this in a separate table is nice, because we didn't need to include all
-this information in our main **surveys** table.
-
-    SELECT *
-    FROM species;
-
-Now let's order it by taxa.
+Now let's order it by name (ascending by default).
 
     SELECT *
-    FROM species
-    ORDER BY taxa ASC;
+    FROM item_info
+    ORDER BY Item_Description;
 
-The keyword `ASC` tells us to order it in Ascending order.
 We could alternately use `DESC` to get descending order.
 
     SELECT *
-    FROM species
-    ORDER BY taxa DESC;
-
-`ASC` is the default.
+    FROM item_info
+    ORDER BY Item_Description DESC; 
 
 We can also sort on several fields at once.
 To truly be alphabetical, we might want to order by genus then species.
 
     SELECT *
-    FROM species
-    ORDER BY genus ASC, species ASC;
+    FROM item_info
+    ORDER BY Item_Description, Bottle_Cost;
 
 > ## Challenge
 >
-> - Write a query that returns year, species_id, and weight in kg from
-> the surveys table, sorted with the largest weights at the top.
+> - Write a query that returns Item_Description, Bottle_Cost, volume and retail price
+> of the soda, sorted firstly with retail price in ascending order, then with volume in descending order.  
 {: .challenge}
 
 ## Order of execution
 
 Another note for ordering. We don’t actually have to display a column to sort by
-it.  For example, let’s say we want to order the birds by their species ID, but
-we only want to see genus and species.
+it.  For example, let’s say we want the soda with Bottle_Retail_Price under $3 and sort by their id, but
+we only want to see Item_Description and Bottle_Cost.
 
-    SELECT genus, species
-    FROM species
-    WHERE taxa = 'Bird'
-    ORDER BY species_id ASC;
+    SELECT Item_Description, Bottle_Cost
+    FROM item_info
+    WHERE Bottle_Retail_Price < 3
+    ORDER BY item_id;
 
 We can do this because sorting occurs earlier in the computational pipeline than
 field selection.
@@ -260,10 +221,10 @@ we recommend to put each clause on its own line.
 > ## Challenge
 >
 > - Let's try to combine what we've learned so far in a single
-> query.  Using the surveys table write a query to display the three date fields,
-> `species_id`, and weight in kilograms (rounded to two decimal places), for
-> individuals captured in 1999, ordered alphabetically by the `species_id`.
+> query.  Using the **item_info** table write a query to display the three date fields,
+> `Item_Description`, `Bottle_Volume_ml` and Retail Price for 6 packs (give it an alias `Six_Pack_Price`), for
+> all sodas that are usually sold in 6 packs, ordered firstly by `Six_Pack_Price`, then alphabetically by the `Item_Description`.
 > - Write the query as a single line, then put each clause on its own line, and
-> see how more legible the query becomes!
+> see how more legible the query becomes!  
 {: .challenge}
 

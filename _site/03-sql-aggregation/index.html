@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-23 19:24:17 -0600">
+    <meta http-equiv="last-modified" content="2018-02-24 14:40:24 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -19,7 +19,7 @@
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
-    <title>SQL for Business: SQL Aggregation and aliases</title>
+    <title>SQL for Business: SQL Aggregation</title>
   </head>
   <body>
     <div class="container">
@@ -64,11 +64,9 @@
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
-            <li><a href="../03-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            <li><a href="../03-sql-aggregation/">SQL Aggregation</a></li>
             
             <li><a href="../04-sql-joins/">Joins</a></li>
-            
-            <li><a href="../05-sql-tbd/">tbd</a></li>
             
           </ul>
         </li>
@@ -118,7 +116,7 @@
   <div class="col-md-10">
     
     <h3 class="maintitle"><a href="../">SQL for Business</a></h3>
-    <h1 class="maintitle">SQL Aggregation and aliases</h1>
+    <h1 class="maintitle">SQL Aggregation</h1>
     
   </div>
   <div class="col-md-1">
@@ -147,7 +145,7 @@
 	<li><p>How can I summarize my data by aggregating, filtering, or ordering query results?</p>
 </li>
 	
-	<li><p>How can I make sure column names from my queries make sense and aren’t too long?</p>
+	<li><p>How to save query result?</p>
 </li>
 	
       </ul>
@@ -167,9 +165,6 @@
 	<li><p>Filter and order results of a query based on aggregate functions.</p>
 </li>
 	
-	<li><p>Employ aliases to assign new names to items in a query.</p>
-</li>
-	
 	<li><p>Save a query to make a new table.</p>
 </li>
 	
@@ -187,64 +182,40 @@
 <p>Aggregation allows us to combine results by grouping records based on value, also it is useful for
 calculating combined values in groups.</p>
 
-<p>Let’s go to the surveys table and find out how many individuals there are.
+<p>Let’s go to the <strong>invoice_info</strong> table and find out how many invoices there are.
 Using the wildcard * simply counts the number of records (rows):</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
-FROM surveys;
+FROM invoice_info;
 </code></pre></div></div>
 
-<p>We can also find out how much all of those individuals weigh:</p>
+<p>We can also find out how many total bottles sold:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*), SUM(weight)
-FROM surveys;
-</code></pre></div></div>
-
-<p>We can output this value in kilograms (dividing the value to 1000.0), then rounding to 3 decimal places:
-(Notice the divisor has numbers after the decimal point, which forces the answer to have a decimal fraction)</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT ROUND(SUM(weight)/1000.00, 3)
-FROM surveys;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*), SUM(Bottles_Sold)
+FROM invoice_info;
 </code></pre></div></div>
 
 <p>There are many other aggregate functions included in SQL, for example:
 <code class="highlighter-rouge">MAX</code>, <code class="highlighter-rouge">MIN</code>, and <code class="highlighter-rouge">AVG</code>.</p>
 
-<blockquote class="challenge">
-  <h2 id="challenge">Challenge</h2>
-
-  <p>Write a query that returns: total weight, average weight, and the min and max weights
-for all animals caught over the duration of the survey.
-Can you modify it so that it outputs these values only for weights between 5 and 10?</p>
-</blockquote>
-
-<p>Now, let’s see how many individuals were counted in each species. We do this
+<p>Now, let’s see how many invoices were for each Store. We do this
 using a <code class="highlighter-rouge">GROUP BY</code> clause</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT species_id, COUNT(*)
-FROM surveys
-GROUP BY species_id;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Store_id, COUNT(*)
+FROM invoice_info
+GROUP BY Store_id;
 </code></pre></div></div>
 
 <p><code class="highlighter-rouge">GROUP BY</code> tells SQL what field or fields we want to use to aggregate the data.
 If we want to group by multiple fields, we give <code class="highlighter-rouge">GROUP BY</code> a comma separated list.</p>
 
 <blockquote class="challenge">
-  <h2 id="challenge-1">Challenge</h2>
+  <h2 id="challenge">Challenge</h2>
 
-  <p>Write queries that return:</p>
+  <p>What is the most expensive soda in each category? 
+Use the item_info table, write queries that return:
+Item_Description, Category_id, max Bottle_Retail_Price</p>
 
-  <ol>
-    <li>How many individuals were counted in each year
-      <ul>
-        <li>in total</li>
-        <li>per each species</li>
-      </ul>
-    </li>
-    <li>Average weight of each species in each year.</li>
-  </ol>
-
-  <p>Can you modify the above queries combining them into one?</p>
 </blockquote>
 
 <h2 id="ordering-aggregated-results">Ordering Aggregated Results</h2>
@@ -253,30 +224,11 @@ If we want to group by multiple fields, we give <code class="highlighter-rouge">
 the aggregated column.  Let’s count the number of individuals of each
 species captured, ordered by the count:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT species_id, COUNT(*)
-FROM surveys
-GROUP BY species_id
-ORDER BY COUNT(species_id);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Store_id, COUNT(*)
+FROM invoice_info
+GROUP BY Store_id
+ORDER BY COUNT(*);
 </code></pre></div></div>
-
-<h2 id="aliases">Aliases</h2>
-
-<p>As queries get more complex names can get long and unwieldy. To help make things
-clearer we can use aliases to assign new names to things in the query.</p>
-
-<p>We can use aliases in column names or table names using <code class="highlighter-rouge">AS</code>:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT MAX(year) AS last_surveyed_year
-FROM surveys;
-</code></pre></div></div>
-
-<p>The <code class="highlighter-rouge">AS</code> isn’t technically required, so you could do</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT MAX(year) yr
-FROM surveys surv;
-</code></pre></div></div>
-
-<p>but using <code class="highlighter-rouge">AS</code> is much clearer so it is good style to include it.</p>
 
 <h2 id="the-having-keyword">The <code class="highlighter-rouge">HAVING</code> keyword</h2>
 
@@ -284,28 +236,23 @@ FROM surveys surv;
 filter the results according to some criteria. SQL offers a mechanism to
 filter the results based on <strong>aggregate functions</strong>, through the <code class="highlighter-rouge">HAVING</code> keyword.</p>
 
-<p>For example, we can request to only return information
-about species with a count higher than 10:</p>
+<p>If you use <code class="highlighter-rouge">AS</code> in your query to rename a column, <code class="highlighter-rouge">HAVING</code> you can use this
+information to make the query more readable. For example, in the above
+query, we can call the <code class="highlighter-rouge">COUNT(*)</code> by another name, like
+<code class="highlighter-rouge">num_invoices</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT species_id, COUNT(species_id)
-FROM surveys
-GROUP BY species_id
-HAVING COUNT(species_id) &gt; 10;
+<p>For example, we can request to only return information
+about stores that has more than 1000 invoices.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Store_id, COUNT(*) AS num_invoice
+FROM invoice_info
+GROUP BY Store_id
+HAVING num_invoices &gt; 1000
+ORDER BY num_invoices;
 </code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">HAVING</code> keyword works exactly like the <code class="highlighter-rouge">WHERE</code> keyword, but uses
 aggregate functions instead of database fields to filter.</p>
-
-<p>If you use <code class="highlighter-rouge">AS</code> in your query to rename a column, <code class="highlighter-rouge">HAVING</code> you can use this
-information to make the query more readable. For example, in the above
-query, we can call the <code class="highlighter-rouge">COUNT(species_id)</code> by another name, like
-<code class="highlighter-rouge">occurrences</code>. This can be written this way:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT species_id, COUNT(species_id) AS occurrences
-FROM surveys
-GROUP BY species_id
-HAVING occurrences &gt; 10;
-</code></pre></div></div>
 
 <p>Note that in both queries, <code class="highlighter-rouge">HAVING</code> comes <em>after</em> <code class="highlighter-rouge">GROUP BY</code>. One way to
 think about this is: the data are retrieved (<code class="highlighter-rouge">SELECT</code>), which can be filtered
@@ -313,7 +260,7 @@ think about this is: the data are retrieved (<code class="highlighter-rouge">SEL
 of these groups (<code class="highlighter-rouge">HAVING</code>).</p>
 
 <blockquote class="challenge">
-  <h2 id="challenge-2">Challenge</h2>
+  <h2 id="challenge-1">Challenge</h2>
 
   <p>Write a query that returns, from the <code class="highlighter-rouge">species</code> table, the number of
 <code class="highlighter-rouge">genus</code> in each <code class="highlighter-rouge">taxa</code>, only for the <code class="highlighter-rouge">taxa</code> with more than 10 <code class="highlighter-rouge">genus</code>.</p>
@@ -330,85 +277,79 @@ from several places before showing it to you.</p>
 
 <p>Creating a view from a query requires to add <code class="highlighter-rouge">CREATE VIEW viewname AS</code>
 before the query itself. For example, imagine that my project only covers
-the data gathered during the summer (May - September) of 2000.  That
+the data gathered during the May of 2017.  That
 query would look like:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM surveys
-WHERE year = 2000 AND (month &gt; 4 AND month &lt; 10);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info
+WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+ORDER BY Date;
 </code></pre></div></div>
 
 <p>But we don’t want to have to type that every time we want to ask a
 question about that particular subset of data. Hence, we can benefit from a view:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE VIEW summer_2000 AS
-SELECT *
-FROM surveys
-WHERE year = 2000 AND (month &gt; 4 AND month &lt; 10);
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE VIEW May_2017 AS
+SELECT * FROM invoice_info
+WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+ORDER BY Date;
 </code></pre></div></div>
 
-<p>You can also add a view using <em>Create View</em> in the <em>View</em> menu and see the
-results in the <em>Views</em> tab, the same way as creating a table from the menu.</p>
+<p>Now if you execute the query with <code class="highlighter-rouge">pd.read_sql()</code>, what happened? It does not work! <br />
+WHY? 
+<img src="../img/q.png" alt="alt text" height="100px" /> <br />
+It is saving something to database, instead of returing the query result. So nothing can be store to the dataframe.<br />
+Instead, what you can do is to create a cursor object, and execute the statement:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>q2 = '''CREATE VIEW May_2017 AS
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;'''
+c = conn.cursor()
+c.execute(q2)
+</code></pre></div></div>
 
-<p>Using a view we will be able to access these results with a much shorter notation:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM summer_2000
-WHERE species_id == 'PE';
+<p>Now, you have successfully created the view. <code class="highlighter-rouge">May_2017</code> view is almost like a table in the database. You can do something like this:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM May_2017;
 </code></pre></div></div>
 
 <h2 id="what-about-null">What About NULL?</h2>
+<p>Let’s try the following two queries:</p>
 
-<p>From the last example, there should only be six records.  If you look at the <code class="highlighter-rouge">weight</code> column, it’s
-easy to see what the average weight would be. If we use SQL to find the
-average weight, SQL behaves like we would hope, ignoring the NULL values:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT AVG(weight)
-FROM summer_2000
-WHERE species_id == 'PE';
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) FROM item_info;
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(Category_id) FROM item_info;
 </code></pre></div></div>
 
-<p>But if we try to be extra clever, and find the average ourselves,
-we might get tripped up:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT SUM(weight), COUNT(*), SUM(weight)/COUNT(*)
-FROM summer_2000
-WHERE species_id == 'PE';
-</code></pre></div></div>
-
-<p>Here the <code class="highlighter-rouge">COUNT</code> command includes all six records (even those with NULL
-values), but the <code class="highlighter-rouge">SUM</code> only includes the 4 records with data in the
-<code class="highlighter-rouge">weight</code> field, giving us an incorrect average. However,
-our strategy <em>will</em> work if we modify the <code class="highlighter-rouge">COUNT</code> command slightly:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT SUM(weight), COUNT(weight), SUM(weight)/COUNT(weight)
-FROM summer_2000
-WHERE species_id == 'PE';
-</code></pre></div></div>
+<p>Why did they return different result? <br />
+You probablly noticed from previous exercises that there are one category called “None”. Yes, there are few sodas that does not have a category.</p>
 
 <p>When we count the weight field specifically, SQL ignores the records with data
 missing in that field.  So here is one example where NULLs can be tricky:
 <code class="highlighter-rouge">COUNT(*)</code> and <code class="highlighter-rouge">COUNT(field)</code> can return different values.</p>
 
-<p>Another case is when we use a “negative” query.  Let’s count all the
-non-female animals:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
-FROM summer_2000
-WHERE sex != 'F';
+<p>To find the soda that does not have a category, you can use <code class="highlighter-rouge">IS NULL</code> statement. Note that you cannot do <code class="highlighter-rouge">== NULL</code>.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info 
+WHERE Category_id IS NULL;
 </code></pre></div></div>
 
-<p>Now let’s count all the non-male animals:</p>
+<p>Another case is when we use a “negative” query.  Let’s count all the
+soda with category id “C0001”:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
-FROM summer_2000
-WHERE sex != 'M';
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) 
+FROM item_info 
+WHERE Category_id == "C0001";
+</code></pre></div></div>
+
+<p>Now let’s count all the soda with categories other than “C0001”:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) 
+FROM item_info 
+WHERE Category_id != "C0001";
 </code></pre></div></div>
 
 <p>But if we compare those two numbers with the total:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
-FROM summer_2000;
+FROM item_info;
 </code></pre></div></div>
 
 <p>We’ll see that they don’t add up to the total! That’s because SQL
@@ -420,8 +361,8 @@ but sometimes we may want the missing values included as well! In that
 case, we’d need to change our query to:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
-FROM summer_2000
-WHERE sex != 'M' OR sex IS NULL;
+FROM item_info 
+WHERE Category_id != "C0001" OR Category_id IS NULL;
 </code></pre></div></div>
 
 

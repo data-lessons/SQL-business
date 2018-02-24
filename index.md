@@ -4,7 +4,7 @@ root: .
 ---
 
 <p align="center">
-  <img src="../img/nyan.png" height="100px" title="cat">
+  <img src="../img/nyan.gif" height="100px" title="cat">
 </p>
 
 Databases are useful for both storing and using data effectively. Using a relational database serves several purposes.

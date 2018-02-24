@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-23 19:24:17 -0600">
+    <meta http-equiv="last-modified" content="2018-02-24 14:40:24 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -64,11 +64,9 @@
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
-            <li><a href="../03-sql-aggregation/">SQL Aggregation and aliases</a></li>
+            <li><a href="../03-sql-aggregation/">SQL Aggregation</a></li>
             
             <li><a href="../04-sql-joins/">Joins</a></li>
-            
-            <li><a href="../05-sql-tbd/">tbd</a></li>
             
           </ul>
         </li>
@@ -173,7 +171,7 @@
 
 </blockquote>
 
-<h2 id="writing-my-first-query">Writing my first query</h2>
+<h2 id="select-statements">Select statements</h2>
 
 <p>Let’s start by using the <strong>item_info</strong> table. It includes information about all kinds of soda.</p>
 
@@ -317,7 +315,9 @@ FROM item_info;
 <p>Databases can also filter data – selecting only the data meeting certain
 criteria.  For example, let’s say we only want data for an energy drink called
 <em>Nozomi Power Injection</em>.  We need to add a <code class="highlighter-rouge">WHERE</code> clause to our query: <br />
-<img src="../img/np.gif" alt="alt text" height="100px" /> <br /></p>
+Note that we can use <code class="highlighter-rouge">=</code> or <code class="highlighter-rouge">==</code> for equal, <code class="highlighter-rouge">!=</code> or <code class="highlighter-rouge">&lt;&gt;</code> for not equal.</p>
+
+<p><img src="../img/np.gif" alt="alt text" height="100px" /> <br /></p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
 FROM item_info
@@ -371,102 +371,58 @@ WHERE Category_id IN ('C0006', 'C0001', 'C0002');
   <h2 id="challenge-1">Challenge</h2>
 
   <ul>
-    <li>Produce a table listing the data for all individuals in Plot 1 
-that weighed more than 75 grams, telling us the date, species id code, and weight
-(in kg).</li>
+    <li>Produce a table listing the data for all soda that cost less than $2 and
+contains the word “lime” in the name, telling us the name, cost, and volume
+(in litters).</li>
   </ul>
 </blockquote>
-
-<h2 id="building-more-complex-queries">Building more complex queries</h2>
-
-<p>Now, lets combine the above queries to get data for the 3 <em>Dipodomys</em> species from
-the year 2000 on.  This time, let’s use IN as one way to make the query easier
-to understand.  It is equivalent to saying <code class="highlighter-rouge">WHERE (species_id = 'DM') OR (species_id
-= 'DO') OR (species_id = 'DS')</code>, but reads more neatly:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM surveys
-WHERE (year &gt;= 2000) AND (species_id IN ('DM', 'DO', 'DS'));
-</code></pre></div></div>
-
-<p>We started with something simple, then added more clauses one by one, testing
-their effects as we went along.  For complex queries, this is a good strategy,
-to make sure you are getting what you want.  Sometimes it might help to take a
-subset of the data that you can easily see in a temporary database to practice
-your queries on before working on a larger or more complicated database.</p>
-
-<p>When the queries become more complex, it can be useful to add comments. In SQL,
-comments are started by <code class="highlighter-rouge">--</code>, and end at the end of the line. For example, a
-commented version of the above query can be written as:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- Get post 2000 data on Dipodomys' species
--- These are in the surveys table, and we are interested in all columns
-SELECT * FROM surveys
--- Sampling year is in the column `year`, and we want to include 2000
-WHERE (year &gt;= 2000)
--- Dipodomys' species have the `species_id` DM, DO, and DS
-AND (species_id IN ('DM', 'DO', 'DS'));
-</code></pre></div></div>
-
-<p>Although SQL queries often read like plain English, it is <em>always</em> useful to add
-comments; this is especially true of more complex queries.</p>
 
 <h2 id="sorting">Sorting</h2>
 
 <p>We can also sort the results of our queries by using <code class="highlighter-rouge">ORDER BY</code>.
-For simplicity, let’s go back to the <strong>species</strong> table and alphabetize it by taxa.</p>
+For simplicity, let’s go back to the <strong>item_info</strong> table and alphabetize it by soda name.</p>
 
-<p>First, let’s look at what’s in the <strong>species</strong> table. It’s a table of the species_id and the full genus, species and taxa information for each species_id. Having this in a separate table is nice, because we didn’t need to include all
-this information in our main <strong>surveys</strong> table.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM species;
-</code></pre></div></div>
-
-<p>Now let’s order it by taxa.</p>
+<p>Now let’s order it by name (ascending by default).</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM species
-ORDER BY taxa ASC;
+FROM item_info
+ORDER BY Item_Description;
 </code></pre></div></div>
 
-<p>The keyword <code class="highlighter-rouge">ASC</code> tells us to order it in Ascending order.
-We could alternately use <code class="highlighter-rouge">DESC</code> to get descending order.</p>
+<p>We could alternately use <code class="highlighter-rouge">DESC</code> to get descending order.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM species
-ORDER BY taxa DESC;
+FROM item_info
+ORDER BY Item_Description DESC; 
 </code></pre></div></div>
-
-<p><code class="highlighter-rouge">ASC</code> is the default.</p>
 
 <p>We can also sort on several fields at once.
 To truly be alphabetical, we might want to order by genus then species.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM species
-ORDER BY genus ASC, species ASC;
+FROM item_info
+ORDER BY Item_Description, Bottle_Cost;
 </code></pre></div></div>
 
 <blockquote class="challenge">
   <h2 id="challenge-2">Challenge</h2>
 
   <ul>
-    <li>Write a query that returns year, species_id, and weight in kg from
-the surveys table, sorted with the largest weights at the top.</li>
+    <li>Write a query that returns Item_Description, Bottle_Cost, volume and retail price
+of the soda, sorted firstly with retail price in ascending order, then with volume in descending order.</li>
   </ul>
 </blockquote>
 
 <h2 id="order-of-execution">Order of execution</h2>
 
 <p>Another note for ordering. We don’t actually have to display a column to sort by
-it.  For example, let’s say we want to order the birds by their species ID, but
-we only want to see genus and species.</p>
+it.  For example, let’s say we want the soda with Bottle_Retail_Price under $3 and sort by their id, but
+we only want to see Item_Description and Bottle_Cost.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT genus, species
-FROM species
-WHERE taxa = 'Bird'
-ORDER BY species_id ASC;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Bottle_Cost
+FROM item_info
+WHERE Bottle_Retail_Price &lt; 3
+ORDER BY item_id;
 </code></pre></div></div>
 
 <p>We can do this because sorting occurs earlier in the computational pipeline than
@@ -489,9 +445,9 @@ we recommend to put each clause on its own line.</p>
 
   <ul>
     <li>Let’s try to combine what we’ve learned so far in a single
-query.  Using the surveys table write a query to display the three date fields,
-<code class="highlighter-rouge">species_id</code>, and weight in kilograms (rounded to two decimal places), for
-individuals captured in 1999, ordered alphabetically by the <code class="highlighter-rouge">species_id</code>.</li>
+query.  Using the <strong>item_info</strong> table write a query to display the three date fields,
+<code class="highlighter-rouge">Item_Description</code>, <code class="highlighter-rouge">Bottle_Volume_ml</code> and Retail Price for 6 packs (give it an alias <code class="highlighter-rouge">Six_Pack_Price</code>), for
+all sodas that are usually sold in 6 packs, ordered firstly by <code class="highlighter-rouge">Six_Pack_Price</code>, then alphabetically by the <code class="highlighter-rouge">Item_Description</code>.</li>
     <li>Write the query as a single line, then put each clause on its own line, and
 see how more legible the query becomes!</li>
   </ul>

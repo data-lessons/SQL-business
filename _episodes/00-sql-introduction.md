@@ -37,7 +37,7 @@ These queries can allow you to perform a number of actions such as: insert, upda
 > ## Think about this situation
 >
 > Imagine if you are a owner of a convenience store, and you are trying to record your soda purchase record <br>
-> In each invoice, it contains the following infortaion: <br>
+> In each invoice, it contains the following information: <br>
 > Invoice id, Date, Category, Soda name, Volume, Cost, Retail Price, Vendor, Number of bottle purchased <br>
 > How would you store the data?  
 {: .challenge}
@@ -47,11 +47,13 @@ If you store all these invoice information in one Excel file,
 What problem could raise from this approach?  
 <b>Data redundency:</b> <br>
 ![alt text](../img/00_1.png)
+<br><br>
 Imagine if you consistantly purchased some Big Dog Cola from LCDM Beverage vendor every day for 5 days, 
 Notice these columns: Category, Soda_name, Volume, Cost, Retail_Price, Vendor, Vendor number
 With tranditional file approach, you have to record exact same information in these columns 5 times.  
 <b>Data inconsistancy:</b> <br>
 ![alt text](../img/00_2.png)
+<br><br>
 Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
 There are only 5 rows so it might be easy to change everything. If the data size gets large, mistakes are likely to occur.  
 
