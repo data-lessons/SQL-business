@@ -140,6 +140,10 @@ q2 = '''CREATE VIEW May_2017 AS
 c = conn.cursor()
 c.execute(q2)
 ```  
+To save changes, you do
+```
+conn.commit() 
+```
 
 Now, you have successfully created the view. `May_2017` view is almost like a table in the database. You can do something like this:  
 ```

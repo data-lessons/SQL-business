@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-27 20:53:18 -0600">
+    <meta http-equiv="last-modified" content="2018-02-28 12:14:48 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -306,6 +306,9 @@ Instead, what you can do is to create a cursor object, and execute the statement
     ORDER BY Date;'''
 c = conn.cursor()
 c.execute(q2)
+</code></pre></div></div>
+<p>To save changes, you do</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conn.commit() 
 </code></pre></div></div>
 
 <p>Now, you have successfully created the view. <code class="highlighter-rouge">May_2017</code> view is almost like a table in the database. You can do something like this:</p>

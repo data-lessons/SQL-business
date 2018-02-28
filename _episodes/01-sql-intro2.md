@@ -43,7 +43,7 @@ import pandas as pd
 ```
 2. in the next cell, create a connection to the database called conn  
 ```
-conn = sqlite3.connect('soda.db')
+conn = sql.connect('soda.db')
 ```
 3. In the next cell, write your query as string called "q" (you can call it whatever you want). The follwing example is to select everything in a table called item:  
 ```
