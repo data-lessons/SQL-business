@@ -1,5 +1,5 @@
 # SQL-business
-![alt text](../img/mark.png)
+![alt text](img/mark.png)
 The SQL lessons for business module '[SQL Lessons for Business](https://github.com/data-lessons/SQL-business)' is developed and maintained by [Robert J. Brunner](https://github.com/ProfessorBrunner) and [Hao Xi](https://github.com/TacNayn). It is founded by Deloitte Foundation Center for Business Analytics at Gies College of Business, University of Illinois at Urbana, Champaign.  
 
 ## Background
