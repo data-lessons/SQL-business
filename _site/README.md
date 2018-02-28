@@ -2,7 +2,7 @@
 
 # SQL-business
 
-The '[SQL Lessons for Business](https://github.com/data-lessons/SQL-business)' workshop is developed and maintained by [Robert J. Brunner](https://github.com/ProfessorBrunner) and [Hao Xi](https://github.com/TacNayn). It is founded by Deloitte Foundation Center for Business Analytics at Gies College of Business, University of Illinois at Urbana, Champaign.  
+The '[SQL Lessons for Business](https://github.com/data-lessons/SQL-business)' workshop is developed and maintained by [Robert J. Brunner](https://github.com/ProfessorBrunner) and [Hao Xi](https://github.com/TacNayn). It is funded by Deloitte Foundation Center for Business Analytics at Gies College of Business, University of Illinois at Urbana, Champaign.  
 
 ## Background
 
