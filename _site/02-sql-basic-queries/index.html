@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-24 14:40:24 -0600">
+    <meta http-equiv="last-modified" content="2018-02-27 20:44:07 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -190,9 +190,9 @@
       <td>Unique id for each item (soda)</td>
     </tr>
     <tr>
-      <td>Category_id</td>
+      <td>Category</td>
       <td style="text-align: left">VARCHAR(20)</td>
-      <td>category id of the soda</td>
+      <td>category of soda</td>
     </tr>
     <tr>
       <td>Item_Description</td>
@@ -261,7 +261,7 @@ LIMIT 10;
 <p>If we want only the unique values so that we can quickly see what categories have
 been sampled we use <code class="highlighter-rouge">DISTINCT</code></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category_id
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category
 FROM item_info;
 </code></pre></div></div>
 
@@ -271,7 +271,7 @@ Don’t worry, you will learn how to return category names later.</p>
 <p>If we select more than one column, then the distinct pairs of values are
 returned</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category_id, Pack
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category, Pack
 FROM item_info;
 </code></pre></div></div>
 
@@ -317,8 +317,6 @@ criteria.  For example, let’s say we only want data for an energy drink called
 <em>Nozomi Power Injection</em>.  We need to add a <code class="highlighter-rouge">WHERE</code> clause to our query: <br />
 Note that we can use <code class="highlighter-rouge">=</code> or <code class="highlighter-rouge">==</code> for equal, <code class="highlighter-rouge">!=</code> or <code class="highlighter-rouge">&lt;&gt;</code> for not equal.</p>
 
-<p><img src="../img/np.gif" alt="alt text" height="100px" /> <br /></p>
-
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
 FROM item_info
 WHERE Item_Description = "Nozomi Power Injection";
@@ -344,10 +342,10 @@ You can use <code class="highlighter-rouge">_</code> as wild card for one charac
 <p>If we used the <code class="highlighter-rouge">TEXT</code> data type for the year the <code class="highlighter-rouge">WHERE</code> clause should
 be <code class="highlighter-rouge">Bottle_Volume_ml &gt; '500'</code>. We can use more sophisticated conditions by combining tests
 with <code class="highlighter-rouge">AND</code> and <code class="highlighter-rouge">OR</code>.<br />
-For example, suppose we want all the energy drink (category id = ‘C0006’) with volume larger than 500ml:</p>
+For example, suppose we want all the energy drink (category id = ‘Energy Drink’) with volume larger than 500ml:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ELECT * FROM item_info
-WHERE Bottle_Volume_ml &gt; 500 AND Category_id = 'C0006';  
+WHERE Bottle_Volume_ml &gt; 500 AND Category = 'Energy Drink';  
 </code></pre></div></div>
 
 <p>Note that the parentheses are not needed, but again, they help with
@@ -355,16 +353,16 @@ readability.  They also ensure that the computer combines <code class="highlight
 in the way that we intend.</p>
 
 <p>If we wanted to get data for 3 categories of soda, which have
-category id of <code class="highlighter-rouge">C0006</code>, <code class="highlighter-rouge">C0001</code>, and <code class="highlighter-rouge">C0002</code>, we could combine the tests using OR:</p>
+category id of <code class="highlighter-rouge">Energy Drink</code>, <code class="highlighter-rouge">Blueberry Soda</code>, and <code class="highlighter-rouge">Cherry Soda</code>, we could combine the tests using OR:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ELECT * FROM item_info
-WHERE Category_id = 'C0006' OR Category_id = 'C0001' OR Category_id = 'C0002';  
+WHERE Category = 'Energy Drink' OR Category = 'Blueberry Soda' OR Category = 'Cherry Soda';  
 </code></pre></div></div>
 
 <p>This looks messy, right? We can do the same thing by using ‘IN’:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info 
-WHERE Category_id IN ('C0006', 'C0001', 'C0002'); 
+WHERE Category IN (`Energy Drink`, `Blueberry Soda`, `Cherry Soda`); 
 </code></pre></div></div>
 
 <blockquote class="challenge">

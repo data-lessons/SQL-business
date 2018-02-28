@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-24 14:40:24 -0600">
+    <meta http-equiv="last-modified" content="2018-02-27 20:44:07 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -214,7 +214,7 @@ If we want to group by multiple fields, we give <code class="highlighter-rouge">
 
   <p>What is the most expensive soda in each category? 
 Use the item_info table, write queries that return:
-Item_Description, Category_id, max Bottle_Retail_Price</p>
+Item_Description, Category, max Bottle_Retail_Price</p>
 
 </blockquote>
 
@@ -262,8 +262,9 @@ of these groups (<code class="highlighter-rouge">HAVING</code>).</p>
 <blockquote class="challenge">
   <h2 id="challenge-1">Challenge</h2>
 
-  <p>Write a query that returns, from the <code class="highlighter-rouge">species</code> table, the number of
-<code class="highlighter-rouge">genus</code> in each <code class="highlighter-rouge">taxa</code>, only for the <code class="highlighter-rouge">taxa</code> with more than 10 <code class="highlighter-rouge">genus</code>.</p>
+  <p>What sodas were sold more than 100000 bottles from 2012 to 2017?<br />
+In another word, write a query that returns item_id in invoice_info table
+Where the total bottles sold is more than 100000</p>
 </blockquote>
 
 <h2 id="saving-queries-for-future-use">Saving Queries for Future Use</h2>
@@ -316,7 +317,7 @@ c.execute(q2)
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) FROM item_info;
 </code></pre></div></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(Category_id) FROM item_info;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(Category) FROM item_info;
 </code></pre></div></div>
 
 <p>Why did they return different result? <br />
@@ -328,22 +329,22 @@ missing in that field.  So here is one example where NULLs can be tricky:
 
 <p>To find the soda that does not have a category, you can use <code class="highlighter-rouge">IS NULL</code> statement. Note that you cannot do <code class="highlighter-rouge">== NULL</code>.</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info 
-WHERE Category_id IS NULL;
+WHERE Category IS NULL;
 </code></pre></div></div>
 
 <p>Another case is when we use a “negative” query.  Let’s count all the
-soda with category id “C0001”:</p>
+soda with category “Blueberry Soda”:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) 
 FROM item_info 
-WHERE Category_id == "C0001";
+WHERE Category == "Blueberry Soda";
 </code></pre></div></div>
 
 <p>Now let’s count all the soda with categories other than “C0001”:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) 
 FROM item_info 
-WHERE Category_id != "C0001";
+WHERE Category != "Blueberry Soda";
 </code></pre></div></div>
 
 <p>But if we compare those two numbers with the total:</p>
@@ -362,7 +363,7 @@ case, we’d need to change our query to:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
 FROM item_info 
-WHERE Category_id != "C0001" OR Category_id IS NULL;
+WHERE Category != "Blueberry Soda" OR Category IS NULL;
 </code></pre></div></div>
 
 

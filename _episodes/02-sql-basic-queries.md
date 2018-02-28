@@ -22,7 +22,7 @@ Let's start by using the **item_info** table. It includes information about all 
 | Attributes          | Data Type      | Description                                                |
 |---------------------|:---------------|------------------------------------------------------------|
 | Item_id             | INTEGER        | Unique id for each item (soda)                             |
-| Category_id         | VARCHAR(20)    | category id of the soda                                    |
+| Category            | VARCHAR(20)    | category of soda                                           |
 | Item_Description    | TEXT           | Name of the item (soda)                                    |
 | Pack                | INTEGER        | Number of bottles that the soda usually sells for          |
 | Bottle_Volume_ml    | DOUBLE         | Volumn of the soda in ml                                   |
@@ -64,7 +64,7 @@ you would want to do this if you were working with large databases.
 If we want only the unique values so that we can quickly see what categories have
 been sampled we use `DISTINCT` 
 
-    SELECT DISTINCT Category_id
+    SELECT DISTINCT Category
     FROM item_info;
 
 Well, we can only see the unique ids, and that does not make any sense right? 
@@ -73,7 +73,7 @@ Don't worry, you will learn how to return category names later.
 If we select more than one column, then the distinct pairs of values are
 returned
 
-    SELECT DISTINCT Category_id, Pack
+    SELECT DISTINCT Category, Pack
     FROM item_info;
 
 ### Calculated values
@@ -113,7 +113,7 @@ criteria.  For example, let’s say we only want data for an energy drink called
 _Nozomi Power Injection_.  We need to add a `WHERE` clause to our query: <br>
 Note that we can use `=` or `==` for equal, `!=` or `<>` for not equal.  
 
-![alt text](../img/np.gif){:height="100px"} <br>
+[//]: <> (![alt text](../img/np.gif){:height="100px"} <br>) 
 
     SELECT * 
     FROM item_info
@@ -137,25 +137,25 @@ You can use `_` as wild card for one character. For example, if you replace "%Ho
 If we used the `TEXT` data type for the year the `WHERE` clause should
 be `Bottle_Volume_ml > '500'`. We can use more sophisticated conditions by combining tests
 with `AND` and `OR`.  
-For example, suppose we want all the energy drink (category id = 'C0006') with volume larger than 500ml:
+For example, suppose we want all the energy drink (category id = 'Energy Drink') with volume larger than 500ml:
 
     ELECT * FROM item_info
-    WHERE Bottle_Volume_ml > 500 AND Category_id = 'C0006';  
+    WHERE Bottle_Volume_ml > 500 AND Category = 'Energy Drink';  
 
 Note that the parentheses are not needed, but again, they help with
 readability.  They also ensure that the computer combines `AND` and `OR`
 in the way that we intend.
 
 If we wanted to get data for 3 categories of soda, which have
-category id of `C0006`, `C0001`, and `C0002`, we could combine the tests using OR:
+category id of `Energy Drink`, `Blueberry Soda`, and `Cherry Soda`, we could combine the tests using OR:
 
     ELECT * FROM item_info
-    WHERE Category_id = 'C0006' OR Category_id = 'C0001' OR Category_id = 'C0002';  
+    WHERE Category = 'Energy Drink' OR Category = 'Blueberry Soda' OR Category = 'Cherry Soda';  
 
 This looks messy, right? We can do the same thing by using 'IN': 
 
     SELECT * FROM item_info 
-    WHERE Category_id IN ('C0006', 'C0001', 'C0002'); 
+    WHERE Category IN (`Energy Drink`, `Blueberry Soda`, `Cherry Soda`); 
 
 > ## Challenge
 >

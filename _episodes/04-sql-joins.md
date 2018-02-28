@@ -1,6 +1,6 @@
 ---
 title: "Joins"
-teaching: 15
+teaching: 40
 exercises: 10
 questions:
 - "How do I bring data together from separate tables?"
@@ -25,46 +25,37 @@ The `JOIN` command on its own will result in a cross product, where each row in
 the first table is paired with each row in the second table. Usually this is not
 what is desired when combining two tables with data that is related in some way.
 
+An example of cross product: <br>
+Not very helpful right? <br>
+![alt text](../img/join.png){:height="300px"}
+
 For that, we need to tell the computer which columns provide the link between the two
 tables using the word `ON`.  What we want is to join the data with the same
-species id.
+item id. Try join the invoice_info and item_info table:  
 
     SELECT *
-    FROM surveys
-    JOIN species
-    ON surveys.species_id = species.species_id;
+    FROM invoice_info
+    JOIN item_info
+    ON invoice_info.Item_id = item_info.Item_id;
 
 `ON` is like `WHERE`, it filters things out according to a test condition.  We use
 the `table.colname` format to tell the manager what column in which table we are
 referring to.
 
 The output of the `JOIN` command will have columns from the first table plus the
-columns from the second table. For the above command, the output will be a table
-that has the following column names:
-
-| record_id | month | day | year | plot_id | species_id | sex | hindfoot_length | weight | species_id | genus | species | taxa |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| ... |||||||||||||   
-| 96  | 8  | 20  | 1997  | 12  | **DM**  |  M |  36  |  41  | **DM** | Dipodomys  | merriami  | Rodent  |
-| ... |||||||||||||| 
+columns from the second table. For the above command, you will see two item_id columns. 
 
 Alternatively, we can use the word `USING`, as a short-hand. `USING` only 
 works on columns which share the same name. In this case we are
-telling the manager that we want to combine `surveys` with `species` and that
-the common column is `species_id`.
+telling the manager that we want to combine `invoice_info` with `item_info` and that
+the common column is `item_id`.
 
     SELECT *
-    FROM surveys
-    JOIN species
-    USING (species_id);
+    FROM invoice_info
+    JOIN item_info
+    USING (item_id);
 
-The output will only have one **species_id** column
-
-| record_id | month | day | year | plot_id | species_id | sex | hindfoot_length | weight  | genus | species | taxa |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| ... ||||||||||||
-| 96  | 8  | 20  | 1997  | 12  | DM  |  M |  36  |  41  | Dipodomys  | merriami  | Rodent  |
-| ... |||||||||||||
+The output will only have one **item_id** column
 
 We often won't want all of the fields from both tables, so anywhere we would
 have used a field name in a non-join query, we can use `table.colname`.
@@ -77,13 +68,6 @@ actual species names.
     FROM surveys
     JOIN species
     ON surveys.species_id = species.species_id;
-
-| year | month | day | genus | species |
-|---|---|---|---|---|
-| ... |||||
-| 1977 | 7 | 16 | Neotoma | albigula|
-| 1977 | 7 | 16 | Dipodomys | merriami|
-|...||||||
 
 Many databases, including SQLite, also support a join through the `WHERE` clause of a query.  
 For example, you may see the query above written without an explicit JOIN.

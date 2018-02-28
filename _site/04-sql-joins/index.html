@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-24 14:40:24 -0600">
+    <meta http-equiv="last-modified" content="2018-02-27 20:44:07 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -134,7 +134,7 @@
 
   <div class="row">
     <div class="col-md-3">
-      <strong>Teaching:</strong> 15 min
+      <strong>Teaching:</strong> 40 min
       <br/>
       <strong>Exercises:</strong> 10 min
     </div>
@@ -180,14 +180,18 @@ the <code class="highlighter-rouge">FROM</code> command.</p>
 the first table is paired with each row in the second table. Usually this is not
 what is desired when combining two tables with data that is related in some way.</p>
 
+<p>An example of cross product: <br />
+Not very helpful right? <br />
+<img src="../img/join.png" alt="alt text" height="300px" /></p>
+
 <p>For that, we need to tell the computer which columns provide the link between the two
 tables using the word <code class="highlighter-rouge">ON</code>.  What we want is to join the data with the same
-species id.</p>
+item id. Try join the invoice_info and item_info table:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM surveys
-JOIN species
-ON surveys.species_id = species.species_id;
+FROM invoice_info
+JOIN item_info
+ON invoice_info.Item_id = item_info.Item_id;
 </code></pre></div></div>
 
 <p><code class="highlighter-rouge">ON</code> is like <code class="highlighter-rouge">WHERE</code>, it filters things out according to a test condition.  We use
@@ -195,159 +199,20 @@ the <code class="highlighter-rouge">table.colname</code> format to tell the mana
 referring to.</p>
 
 <p>The output of the <code class="highlighter-rouge">JOIN</code> command will have columns from the first table plus the
-columns from the second table. For the above command, the output will be a table
-that has the following column names:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>record_id</th>
-      <th>month</th>
-      <th>day</th>
-      <th>year</th>
-      <th>plot_id</th>
-      <th>species_id</th>
-      <th>sex</th>
-      <th>hindfoot_length</th>
-      <th>weight</th>
-      <th>species_id</th>
-      <th>genus</th>
-      <th>species</th>
-      <th>taxa</th>
-      <th> </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>…</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>96</td>
-      <td>8</td>
-      <td>20</td>
-      <td>1997</td>
-      <td>12</td>
-      <td><strong>DM</strong></td>
-      <td>M</td>
-      <td>36</td>
-      <td>41</td>
-      <td><strong>DM</strong></td>
-      <td>Dipodomys</td>
-      <td>merriami</td>
-      <td>Rodent</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>…</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-  </tbody>
-</table>
+columns from the second table. For the above command, you will see two item_id columns.</p>
 
 <p>Alternatively, we can use the word <code class="highlighter-rouge">USING</code>, as a short-hand. <code class="highlighter-rouge">USING</code> only 
 works on columns which share the same name. In this case we are
-telling the manager that we want to combine <code class="highlighter-rouge">surveys</code> with <code class="highlighter-rouge">species</code> and that
-the common column is <code class="highlighter-rouge">species_id</code>.</p>
+telling the manager that we want to combine <code class="highlighter-rouge">invoice_info</code> with <code class="highlighter-rouge">item_info</code> and that
+the common column is <code class="highlighter-rouge">item_id</code>.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
-FROM surveys
-JOIN species
-USING (species_id);
+FROM invoice_info
+JOIN item_info
+USING (item_id);
 </code></pre></div></div>
 
-<p>The output will only have one <strong>species_id</strong> column</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>record_id</th>
-      <th>month</th>
-      <th>day</th>
-      <th>year</th>
-      <th>plot_id</th>
-      <th>species_id</th>
-      <th>sex</th>
-      <th>hindfoot_length</th>
-      <th>weight</th>
-      <th>genus</th>
-      <th>species</th>
-      <th>taxa</th>
-      <th> </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>…</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>96</td>
-      <td>8</td>
-      <td>20</td>
-      <td>1997</td>
-      <td>12</td>
-      <td>DM</td>
-      <td>M</td>
-      <td>36</td>
-      <td>41</td>
-      <td>Dipodomys</td>
-      <td>merriami</td>
-      <td>Rodent</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>…</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-  </tbody>
-</table>
+<p>The output will only have one <strong>item_id</strong> column</p>
 
 <p>We often won’t want all of the fields from both tables, so anywhere we would
 have used a field name in a non-join query, we can use <code class="highlighter-rouge">table.colname</code>.</p>
@@ -361,53 +226,6 @@ FROM surveys
 JOIN species
 ON surveys.species_id = species.species_id;
 </code></pre></div></div>
-
-<table>
-  <thead>
-    <tr>
-      <th>year</th>
-      <th>month</th>
-      <th>day</th>
-      <th>genus</th>
-      <th>species</th>
-      <th> </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>…</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>1977</td>
-      <td>7</td>
-      <td>16</td>
-      <td>Neotoma</td>
-      <td>albigula</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>1977</td>
-      <td>7</td>
-      <td>16</td>
-      <td>Dipodomys</td>
-      <td>merriami</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>…</td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-      <td> </td>
-    </tr>
-  </tbody>
-</table>
 
 <p>Many databases, including SQLite, also support a join through the <code class="highlighter-rouge">WHERE</code> clause of a query.<br />
 For example, you may see the query above written without an explicit JOIN.</p>

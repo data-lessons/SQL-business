@@ -68,8 +68,7 @@ Here are all the attributes in the database:
 | County_id           | INTEGER        | Unique id for each county                                  | county, store_info        |
 | County_Name         | TEXT           | Name of county                                             | county                    |
 | City_Name           | TEXT           | Name of the city that the county is in                     | county                    |
-| Category_id         | VARCHAR(20)    | Unique id for each category                                | category, item_info       |
-| Category_Name       | TEXT           | Name of the category	    						        | category                  |
+| Category            | VARCHAR(20)    | Category of soda                                           | item_info                 |
 | Vendor_id           | INTEGER        | Unique id for each vendor                                  | vendor, invoice_info      |
 | Vendor_Name         | TEXT           | Name of the vendor 							            | vendor                    |
 | Store_id            | INTEGER        | Unique id for each store                                   | store_info, invoice_info  |
@@ -86,6 +85,8 @@ Here are all the attributes in the database:
 | Date                | TEXT           | Date of the invoice                                        | invoice_info              |
 | Bottle_Sold         | INTEGER        | Number of bottle sold in the invoice                       | invoice_info              |
 
+To have a better understanding of Primary keys and Foreign keys discussed in previous session, lets look at the tables and their relationships:  
+![alt text](../img/schema.png){:height="500px"}
 
 ## <a name="datatypes"></a> Data types
 

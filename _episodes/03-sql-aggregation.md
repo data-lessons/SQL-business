@@ -51,7 +51,7 @@ If we want to group by multiple fields, we give `GROUP BY` a comma separated lis
 >
 > What is the most expensive soda in each category? 
 > Use the item_info table, write queries that return:
-> Item_Description, Category_id, max Bottle_Retail_Price 
+> Item_Description, Category, max Bottle_Retail_Price 
 >
 {: .challenge}
 
@@ -96,8 +96,9 @@ of these groups (`HAVING`).
 
 > ## Challenge
 >
-> Write a query that returns, from the `species` table, the number of
-> `genus` in each `taxa`, only for the `taxa` with more than 10 `genus`.
+> What sodas were sold more than 100000 bottles from 2012 to 2017?  
+> In another word, write a query that returns item_id in invoice_info table
+> Where the total bottles sold is more than 100000
 {: .challenge}
 
 ## Saving Queries for Future Use
@@ -152,7 +153,7 @@ Let's try the following two queries:
 SELECT COUNT(*) FROM item_info;
 ```
 ```
-SELECT COUNT(Category_id) FROM item_info;
+SELECT COUNT(Category) FROM item_info;
 ```
 
 Why did they return different result? <br>
@@ -165,21 +166,21 @@ missing in that field.  So here is one example where NULLs can be tricky:
 To find the soda that does not have a category, you can use `IS NULL` statement. Note that you cannot do `== NULL`.  
 ```
 SELECT * FROM item_info 
-WHERE Category_id IS NULL;
+WHERE Category IS NULL;
 ```
 
 Another case is when we use a "negative" query.  Let's count all the
-soda with category id "C0001":
+soda with category "Blueberry Soda":
 
     SELECT COUNT(*) 
     FROM item_info 
-    WHERE Category_id == "C0001";
+    WHERE Category == "Blueberry Soda";
 
 Now let's count all the soda with categories other than "C0001":
 
     SELECT COUNT(*) 
     FROM item_info 
-    WHERE Category_id != "C0001";
+    WHERE Category != "Blueberry Soda";
 
 But if we compare those two numbers with the total:
 
@@ -196,4 +197,4 @@ case, we'd need to change our query to:
 
     SELECT COUNT(*)
     FROM item_info 
-    WHERE Category_id != "C0001" OR Category_id IS NULL;
+    WHERE Category != "Blueberry Soda" OR Category IS NULL;
