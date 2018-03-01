@@ -139,7 +139,7 @@ be `Bottle_Volume_ml > '500'`. We can use more sophisticated conditions by combi
 with `AND` and `OR`.  
 For example, suppose we want all the energy drink (category id = 'Energy Drink') with volume larger than 500ml:
 
-    ELECT * FROM item_info
+    SELECT * FROM item_info
     WHERE Bottle_Volume_ml > 500 AND Category = 'Energy Drink';  
 
 Note that the parentheses are not needed, but again, they help with
@@ -149,7 +149,7 @@ in the way that we intend.
 If we wanted to get data for 3 categories of soda, which have
 category id of `Energy Drink`, `Blueberry Soda`, and `Cherry Soda`, we could combine the tests using OR:
 
-    ELECT * FROM item_info
+    SELECT * FROM item_info
     WHERE Category = 'Energy Drink' OR Category = 'Blueberry Soda' OR Category = 'Cherry Soda';  
 
 This looks messy, right? We can do the same thing by using 'IN': 
