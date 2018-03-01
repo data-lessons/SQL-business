@@ -41,6 +41,9 @@ The data was originated from a real dataset. We have modofied the dataset for th
 import sqlite3 as sql
 import pandas as pd
 ```
+
+`sqlite3` will be included within a standard Python installation.  `pandas` is not part of the [Python Standard Library](https://docs.python.org/3/library/index.html), but will normally be bundled with Anaconda.
+
 2. in the next cell, create a connection to the database called conn  
 ```
 conn = sql.connect('soda.db')
@@ -51,7 +54,7 @@ q = '''
 SELECT * FROM item_info;
 '''
 ```
-4. python has a built in function to [read sql](http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql.html)
+4. The pandas package in Python has a built in function to [read sql](http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql.html).
 The following code will execute the query and assign the result to a DataFrame variable called "df", and show the result (use .head(10) to show first 10 result, you can remove that part to show the full result): 
 ```
 df = pd.read_sql(q, conn)
