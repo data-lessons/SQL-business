@@ -16,4 +16,4 @@ All participants should agree to abide by the [Software Carpentry Code of Conduc
 
 Please cite as:
 
-Library Carpentry. SQL Lesson for Business. April 2018. https://github.com/data-lessons/SQL-business.
+Data Carpentry. SQL Lesson for Business. April 2018. https://github.com/data-lessons/SQL-business.
