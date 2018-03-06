@@ -97,9 +97,6 @@ functions. For example, we could round the values.
     SELECT Item_Description, ROUND(Bottle_Volume_ml/1000,1) AS Bottle_Volume_L
     FROM item_info;
 
-    SELECT Item_Description, Bottle_Volume_ml, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin
-    FROM item_info;
-
 > ## Challenge
 >
 > - We have the cost and price of each soda, write a query that returns the profit margin of each soda, 
