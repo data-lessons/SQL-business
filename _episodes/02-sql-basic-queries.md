@@ -191,8 +191,47 @@ To truly be alphabetical, we might want to order by genus then species.
 > ## Challenge
 >
 > - Write a query that returns Item_Description, Bottle_Cost, volume and retail price
-> of the soda, sorted firstly with retail price in ascending order, then with volume in descending order.  
+> of the soda, sorted firstly with retail price in descending order, then with volume in ascending order.  
 {: .challenge}
+
+## Dealing with dates  
+Firstly, we take a look at the `invoice_info` table  
+```
+SELECT * FROM invoice_info;
+```
+The date in sqlite3 can be stored as multiple string formats: 
+```
+    YYYY-MM-DD
+    YYYY-MM-DD HH:MM
+    YYYY-MM-DD HH:MM:SS
+    YYYY-MM-DD HH:MM:SS.SSS
+    YYYY-MM-DDTHH:MM
+    YYYY-MM-DDTHH:MM:SS
+    YYYY-MM-DDTHH:MM:SS.SSS
+    HH:MM
+    HH:MM:SS
+    HH:MM:SS.SSS
+    now
+    DDDDDDDDDD 
+```
+In our database, the date were stored as "YYYY-MM-DD" format. We can extract the year/month/date with `strftime` function. For example: 
+```
+Select *, strftime('%Y', Date) AS YEAR
+FROM invoice_info; 
+```
+For month and day, simply replace `%Y` with `%m` or `%d`. You can also do `%Y-%m` to get the year and month. 
+You can get all invoice after 2017 by: 
+```
+SELECT * FROM invoice_info
+WHERE Date >= "2017-01-01";
+```
+You can get a invoice from a range of time by:  
+```
+SELECT * FROM invoice_info
+WHERE Date BETWEEN "2017-01-01" AND "2017-02-27"; 
+```
+Note that `BETWEEN` is inclusive, that is, invoices at 2017-01-01 and 2017-02-27 will be returned  
+If you are interested at more cool things you can do with dates, heres the [Documentation](https://www.sqlite.org/lang_datefunc.html)
 
 ## Order of execution
 
@@ -221,7 +260,7 @@ we recommend to put each clause on its own line.
 > ## Challenge
 >
 > - Let's try to combine what we've learned so far in a single
-> query.  Using the **item_info** table write a query to display the three date fields,
+> query.  Using the **item_info** table write a query to display the three data fields,
 > `Item_Description`, `Bottle_Volume_ml` and Retail Price for 6 packs (give it an alias `Six_Pack_Price`), for
 > all sodas that are usually sold in 6 packs, ordered firstly by `Six_Pack_Price`, then alphabetically by the `Item_Description`.
 > - Write the query as a single line, then put each clause on its own line, and

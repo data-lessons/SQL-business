@@ -1,7 +1,7 @@
 ---
 title: "Getting to know your data"
 teaching: 30
-exercises: 5
+exercises: 0
 questions:
 - "How to connect to database with python?"
 - "What is in the database?"
@@ -22,7 +22,7 @@ keypoints:
 
 _Note: this should have been done by participants before the start of the workshop._
 
-See [Setup](/sql-ecology-lesson/setup/) for
+See [Setup](../setup/) for
 instructions on how to download the data, and also how to install and open SQLite Manager.
 
 ## Import

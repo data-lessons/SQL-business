@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-28 12:14:48 -0600">
+    <meta http-equiv="last-modified" content="2018-03-06 13:07:07 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -60,7 +60,7 @@
             
             <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
             
-            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
+            <li><a href="../01-sql-data/">Getting to know your data</a></li>
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
@@ -182,7 +182,7 @@ what is desired when combining two tables with data that is related in some way.
 
 <p>An example of cross product: <br />
 Not very helpful right? <br />
-<img src="../img/join.png" alt="alt text" height="300px" /></p>
+<img src="../img/joinx.png" alt="cross product" height="300px" /></p>
 
 <p>For that, we need to tell the computer which columns provide the link between the two
 tables using the word <code class="highlighter-rouge">ON</code>.  What we want is to join the data with the same
@@ -217,22 +217,13 @@ USING (item_id);
 <p>We often won’t want all of the fields from both tables, so anywhere we would
 have used a field name in a non-join query, we can use <code class="highlighter-rouge">table.colname</code>.</p>
 
-<p>For example, what if we wanted information on when individuals of each
-species were captured, but instead of their species ID we wanted their
-actual species names.</p>
+<p>For example, what if we wanted only the invoice_id, Item_Description, Bottle_Volume_ml, Bottle_Retail_Price? 
+Sometimes table names are very long, it is handy to give alias to table names.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT surveys.year, surveys.month, surveys.day, species.genus, species.species
-FROM surveys
-JOIN species
-ON surveys.species_id = species.species_id;
-</code></pre></div></div>
-
-<p>Many databases, including SQLite, also support a join through the <code class="highlighter-rouge">WHERE</code> clause of a query.<br />
-For example, you may see the query above written without an explicit JOIN.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT surveys.year, surveys.month, surveys.day, species.genus, species.species
-FROM surveys, species
-WHERE surveys.species_id = species.species_id;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT inv.Invoice_id, ite.Item_Description, ite.Bottle_Volume_ml, ite.Bottle_Retail_Price
+FROM invoice_info AS inv
+JOIN item_info AS ite
+USING (item_id);
 </code></pre></div></div>
 
 <p>For the remainder of this lesson, we’ll stick with the explicit use of the <code class="highlighter-rouge">JOIN</code> keyword for 
@@ -242,50 +233,58 @@ joining tables in SQL.</p>
   <h2 id="challenge">Challenge:</h2>
 
   <ul>
-    <li>Write a query that returns the genus, the species, and the weight
-of every individual captured at the site</li>
+    <li>Write a query that returns the Store_id, Store_Name, County_Name and City_Name
+of every stores</li>
   </ul>
 </blockquote>
 
 <h3 id="different-join-types">Different join types</h3>
+<p>There are few types of joins:<br />
+In your future work, <code class="highlighter-rouge">INNER JOIN</code> and <code class="highlighter-rouge">LEFT (RIGHT) JOIN</code> are likely to be used more often. Make sure to fully understant these two kinds of joins. <br />
+<code class="highlighter-rouge">CROSS JOIN</code> are not very often used, it returns weird things… <br />
+<img src="../img/join.png" alt="join" height="500px" /> <br /></p>
 
-<p>We can count the number of records returned by our original join query.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
-FROM surveys
-JOIN species
-USING (species_id);
+<p>Note that RIGHT JOIN and FULL OUTER JOIN is not supported in sqlite3 <br />
+If you need to do RIGHT JOIN, you can just swap the table names  <br />
+If you need to do FULL OUTER JOIN, you need to do two queries and use <code class="highlighter-rouge">UNION ALL</code> to put them together <br />
+Suppose you have two tables, table A with attribute ab and a, table B with attribute ab and b</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
+FROM A
+LEFT JOIN B USING(ab)
+UNION ALL
+SELECT *
+FROM B
+LEFT JOIN A USING(ab)
+WHERE A.ab IS NULL; 
 </code></pre></div></div>
-
-<p>Notice that this number is smaller than the number of records present in the
-survey data.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) FROM surveys;
-</code></pre></div></div>
-
-<p>This is because, by default, SQL only returns records where the joining value
-is present in the joined columns of both tables (i.e. it takes the <em>intersection</em>
-of the two join columns). This joining behaviour is known as an <code class="highlighter-rouge">INNER JOIN</code>.
-In fact the <code class="highlighter-rouge">JOIN</code> command is simply shorthand for <code class="highlighter-rouge">INNER JOIN</code> and the two
-terms can be used interchangably as they will produce the same result.</p>
-
-<p>We can also tell the computer that we wish to keep all the records in the first
-table by using the command <code class="highlighter-rouge">LEFT OUTER JOIN</code>, or <code class="highlighter-rouge">LEFT JOIN</code> for short.</p>
-
 <blockquote class="challenge">
   <h2 id="challenge-1">Challenge:</h2>
-
-  <ul>
-    <li>Re-write the original query to keep all the entries present in the <code class="highlighter-rouge">surveys</code>
-table. How many records are returned by this query?</li>
-  </ul>
+  <p>Think about this query, what does each SELECT statement do? How was the full outer join achieved?</p>
 </blockquote>
+
+<p>We can count the number of records returned by a join query with item and invoice table.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
+FROM item_info as ite
+INNER JOIN invoice_info as inv
+ON ite.item_id = inv.item_id;
+</code></pre></div></div>
+
+<p>Notice that this number is larger than left join.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
+FROM item_info as ite
+LEFT JOIN invoice_info as inv
+ON ite.item_id = inv.item_id;
+</code></pre></div></div>
+
+<p>What does that tell you? Consider the difference between INNER JOIN and LEFT JOIN?<br />
+Yes, there is one item that was never sold!</p>
 
 <blockquote class="challenge">
   <h2 id="challenge-2">Challenge:</h2>
   <ul>
-    <li>Count the number of records in the <code class="highlighter-rouge">surveys</code> table that have a <code class="highlighter-rouge">NULL</code> value
-in the <code class="highlighter-rouge">species_id</code> column.</li>
+    <li>Find the item’s name that was never sold.</li>
   </ul>
 </blockquote>
 
@@ -294,32 +293,74 @@ second table because <code class="highlighter-rouge">NULL</code> is not equal to
 
 <h3 id="combining-joins-with-sorting-and-aggregation">Combining joins with sorting and aggregation</h3>
 
-<p>Joins can be combined with sorting, filtering, and aggregation. So, if we
-wanted average mass of the individuals on each different type of treatment, we
-could do something like</p>
+<p>Ok, now we mash everything together. 
+Lets try to see which store has the most number of successful sales (number of invoices) in 2015 
+We want the Store_Name, Store_Name, Address, County_Name, number of invoices for each store in 2015, and then
+sort the result by number of invoices at descending order. Try slowly build the query step by step.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT plots.plot_type, AVG(surveys.weight)
-FROM surveys
-JOIN plots
-ON surveys.plot_id = plots.plot_id
-GROUP BY plots.plot_type;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT st.Store_Name, st.Address, County_Name, count(invoice_id) AS Num_Invoice
+FROM store_info as st
+INNER JOIN County as ct 
+ON st.County_id = ct.County_id
+INNER JOIN invoice_info as inv
+ON st.Store_id = inv.Store_id
+WHERE strftime('%Y', Date)  == '2015'
+GROUP BY st.Store_id
+ORDER BY Num_Invoice DESC;
 </code></pre></div></div>
 
 <blockquote class="challenge">
   <h2 id="challenge-3">Challenge:</h2>
 
   <ul>
-    <li>Write a query that returns the number of genus of the animals caught in each plot in descending order.</li>
+    <li>Which 5 monthes have the largest sales in dollar from 2013 to 2017?</li>
+    <li>Hint 1: use bottle cost and bottles sold to calculate sales</li>
+    <li>Hint 2: group by year-month combination</li>
   </ul>
 </blockquote>
 
-<blockquote class="challenge">
-  <h2 id="challenge-4">Challenge:</h2>
+<!--- SELECT strftime('%Y-%m', Date) as month, sum(Bottles_sold*Bottle_Cost) AS Dollar_Sale
+        FROM invoice_info as inv
+        INNER JOIN item_info as ite ON inv.item_id = ite.item_id 
+        WHERE month BETWEEN '2013-01-01' AND '2016-12-31'
+        GROUP BY month
+        ORDER BY Dollar_Sale DESC; -->
 
-  <ul>
-    <li>Write a query that finds the average weight of each rodent species (i.e., only include species with Rodent in the taxa field).</li>
-  </ul>
-</blockquote>
+<h2 id="subqueries">Subqueries</h2>
+<p>Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which stores sales items that does not have a category (those specialties):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
+FROM Store_info 
+WHERE Store_id IN 
+(SELECT Store_id 
+    FROM invoice_info 
+    INNER JOIN item_info USING (item_id)
+    WHERE Category IS NULL
+);
+</code></pre></div></div>
+
+<p>You can also Join a subquery, or give a subquery alias. For example, if you want to see not only which stores sales items that does not have a category, but also want to see how many these items were sold in each store. Try it yourself!<br />
+It is a little long. We can break it down with few steps:</p>
+<ul>
+  <li>Select Store_id, Item_Description, Bottles_Sold from invoice_info and item_info table</li>
+  <li>Constraint it with WHERE statement, limit to the items that does not have category</li>
+  <li>Now you have a subquery that has all sales records of the specialties. Join it with Store_info table</li>
+  <li>Calculate the total bottles sold with SUM</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT s.Store_Name, sub.Item_Description, SUM(sub.Bottles_Sold) AS Bottles_Sold
+FROM Store_info AS s 
+INNER JOIN 
+    (SELECT Store_id, Item_Description, Bottles_Sold
+        FROM invoice_info 
+        INNER JOIN item_info USING (item_id)
+        WHERE item_info.Category IS NULL
+    ) AS sub
+USING (Store_id)
+GROUP BY Store_id;
+</code></pre></div></div>
+
+<p>If you will use the subquery frequently, you can create a view in the database. More detailes were provided in lesson 3.</p>
 
 <h2 id="functions-ifnull-and-nullif-and-more">Functions <code class="highlighter-rouge">IFNULL</code> and <code class="highlighter-rouge">NULLIF</code> and more</h2>
 
@@ -329,63 +370,58 @@ that operate on individual values as well. Probably the most important of these
 are <code class="highlighter-rouge">IFNULL</code> and <code class="highlighter-rouge">NULLIF</code>. <code class="highlighter-rouge">IFNULL</code> allows us to specify a value to use in
 place of <code class="highlighter-rouge">NULL</code>.</p>
 
-<p>We can represent unknown sexes with <code class="highlighter-rouge">'U'</code> instead of <code class="highlighter-rouge">NULL</code>:</p>
+<p>Remember the ones that does not have a category? Let’s replace the “None” with “Specialties”</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT species_id, sex, IFNULL(sex, 'U')
-FROM surveys;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_id, Item_Description, IFNULL(Category, "Specialties") AS Category, Pack, 
+    Bottle_Volume_ml, Bottle_Cost, Bottle_Retail_Price
+FROM item_info;
 </code></pre></div></div>
 
-<p>The lone “sex” column is only included in the query above to illustrate where
-<code class="highlighter-rouge">IFNULL</code> has changed values; this isn’t a usage requirement.</p>
+<p>Keep in mind that this does not change the database, it is still just a query. So if you exclude the IFNULL, the query will still return None.<br />
+Our database is very clean, so unfortunately, there are not much null values to play with…<br />
+<code class="highlighter-rouge">IFNULL</code> can be particularly useful in <code class="highlighter-rouge">JOIN</code>. Even if there is no NULL value in any tables, sometimes a LEFT JOIN could result in NULL values.</p>
 
 <blockquote class="challenge">
-  <h2 id="challenge-5">Challenge:</h2>
+  <h2 id="challenge-4">Challenge:</h2>
 
   <ul>
-    <li>Write a query that returns 30 instead of <code class="highlighter-rouge">NULL</code> for values in the
-<code class="highlighter-rouge">hindfoot_length</code> column.</li>
+    <li>How many bottles of each energy drink were sold in 2015?</li>
+    <li>Return the Item_Description and total bottles sold (give it an alias <code class="highlighter-rouge">Totle_Bottles</code>) for each energy drink. Sort by <code class="highlighter-rouge">Totle_Bottles</code> in descending order. Include <strong>ALL ENERGY DRINKS</strong> from the database. If a energy drink has no sale in 2015, return 0.
+      <ul>
+        <li>HINT 1: If you just try to left join <code class="highlighter-rouge">item_info</code> and <code class="highlighter-rouge">invoice_info</code> (show as following)
+          <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   SELECT item_info.Item_Description, SUM(Bottles_Sold) AS Totle_Bottles
+   FROM item_info
+   LEFT JOIN 
+   invoice_info Using (item_id)
+   WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
+       AND Category = "Energy Drink"
+   GROUP BY item_id
+   ORDER BY Totle_Bottles DESC
+</code></pre></div>          </div>
+          <p>You will not get all the energy drink from the database. This is because the <code class="highlighter-rouge">LEFT JOIN</code> happens before the <code class="highlighter-rouge">WHERE</code> statement. Probablly you can filter out the item_id that were sold in 2015 first as subq… (shh, enough hint)</p>
+        </li>
+        <li>HINT 2: use IFNULL to replace the None after join</li>
+      </ul>
+    </li>
   </ul>
 </blockquote>
 
-<blockquote class="challenge">
-  <h2 id="challenge-6">Challenge:</h2>
-
-  <ul>
-    <li>Write a query that calculates the average hind-foot length of each species,
-assuming that unknown lengths are 30 (as above).</li>
-  </ul>
-</blockquote>
-
-<p><code class="highlighter-rouge">IFNULL</code> can be particularly useful in <code class="highlighter-rouge">JOIN</code>. When joining the <code class="highlighter-rouge">species</code> and
-<code class="highlighter-rouge">surveys</code> tables earlier, some results were excluded because the <code class="highlighter-rouge">species_id</code>
-was <code class="highlighter-rouge">NULL</code> in the surveys table. We can use <code class="highlighter-rouge">IFNULL</code> to include them again, re-writing the <code class="highlighter-rouge">NULL</code> to
-a valid joining value:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT surveys.year, surveys.month, surveys.day, species.genus, species.species
-FROM surveys
-JOIN species
-ON IFNULL(surveys.species_id,'AB') = species.species_id;
-</code></pre></div></div>
-
-<blockquote class="challenge">
-  <h2 id="challenge-7">Challenge:</h2>
-
-  <ul>
-    <li>Write a query that returns the number of genus of the animals caught in each
-plot, using <code class="highlighter-rouge">IFNULL</code> to assume that unknown species are all of the genus
-“Rodent”.</li>
-  </ul>
-</blockquote>
+<!---
+    SELECT item_info.Item_Description, IFNULL(sub.Totle_Bottles, 0) AS Totle_Bottles
+        FROM item_info
+        LEFT JOIN 
+            (SELECT item_id, SUM(Bottles_Sold) as Totle_Bottles
+            FROM invoice_info
+            WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
+            GROUP BY Item_id) as sub
+        Using (item_id)
+        WHERE Category = "Energy Drink"
+        ORDER BY Totle_Bottles DESC;
+-->
 
 <p>The inverse of <code class="highlighter-rouge">IFNULL</code> is <code class="highlighter-rouge">NULLIF</code>. This returns <code class="highlighter-rouge">NULL</code> if the first argument
 is equal to the second argument. If the two are not equal, the first argument
 is returned. This is useful for “nulling out” specific values.</p>
-
-<p>We can “null out” plot 7:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT species_id, plot_id, NULLIF(plot_id, 7)
-FROM surveys;
-</code></pre></div></div>
 
 <p>Some more functions which are common to SQL databases are listed in the table
 below:</p>
@@ -460,87 +496,25 @@ table below:</p>
 </table>
 
 <blockquote class="challenge">
-  <h2 id="challenge-8">Challenge:</h2>
+  <h2 id="final-challenge">FINAL Challenge:</h2>
 
-  <p>Write a query that returns genus names, sorted from longest genus name down
-to shortest.</p>
+  <p>Suppose you are a retail store owner in Davenport and want to get some soda in inventory. You want the soda that can generate profit for you. <br />
+Find the soda that generated most profit after 2015 in Davenport (City_Name = “DAVENPORT”). Sort by total profit. <br />
+A few soda’s “Bottle_Retail_Price” is empty, replace those with Bottle_Cost * 1.8, shich is average profit margin.</p>
+
 </blockquote>
 
-<p>As we saw before, aliases make things clearer, and are especially useful when joining tables.</p>
+<!--- SELECT Item_id, Item_Description, SUM((IFNULL(Bottle_Retail_Price, Bottle_Cost*1.8) - Bottle_Cost) * Bottles_Sold) AS Profit
+        FROM invoice_info
+        INNER JOIN item_info USING (item_id)
+        INNER JOIN store_info USING (Store_id)
+        INNER JOIN county USING (County_id)
+        WHERE Date > "2015-01-01" AND City_Name = "DAVENPORT"
+        GROUP BY item_id
+        ORDER BY Profit DESC;
+-->
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT surv.year AS yr, surv.month AS mo, surv.day AS day, sp.genus AS gen, sp.species AS sp
-FROM surveys AS surv
-JOIN species AS sp
-ON surv.species_id = sp.species_id;
-</code></pre></div></div>
-
-<p>To practice we have some optional challenges for you.</p>
-
-<blockquote class="challenge">
-  <h2 id="challenge-optional">Challenge (optional):</h2>
-
-  <p>SQL queries help us <em>ask</em> specific <em>questions</em> which we want to answer about our data. The real skill with SQL is to know how to translate our scientific questions into a sensible SQL query (and subsequently visualize and interpret our results).</p>
-
-  <p>Have a look at the following questions; these questions are written in plain English. Can you translate them to <em>SQL queries</em> and give a suitable answer?</p>
-
-  <ol>
-    <li>
-      <p>How many plots from each type are there?</p>
-    </li>
-    <li>
-      <p>How many specimens are of each sex are there for each year?</p>
-    </li>
-    <li>
-      <p>How many specimens of each species were captured in each type of plot?</p>
-    </li>
-    <li>
-      <p>What is the average weight of each taxa?</p>
-    </li>
-    <li>
-      <p>What is the percentage of each species in each taxa?</p>
-    </li>
-    <li>
-      <p>What are the minimum, maximum and average weight for each species of Rodent?</p>
-    </li>
-    <li>
-      <p>What is the average hindfoot length for male and female rodent of each species? Is there a Male / Female difference?</p>
-    </li>
-    <li>
-      <p>What is the average weight of each rodent species over the course of the years? Is there any noticeable trend for any of the species?</p>
-    </li>
-  </ol>
-
-  <blockquote class="solution">
-    <h2 id="proposed-solutions">Proposed solutions:</h2>
-
-    <ol>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT plot_type, count(*) AS num_plots  FROM plots  GROUP BY plot_type  ORDER BY num_plots DESC</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT year, sex, count(*) AS num_animal  FROM surveys  WHERE sex IS NOT null  GROUP BY sex, year</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT species_id, plot_type, count(*) FROM surveys JOIN plots ON surveys.plot_id=plots.plot_id WHERE species_id IS NOT null GROUP BY species_id, plot_type</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT taxa, AVG(weight) FROM surveys JOIN species ON species.species_id=surveys.species_id GROUP BY taxa</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT taxa, 100.0*count(*)/(SELECT count(*) FROM surveys) FROM surveys JOIN species ON surveys.species_id=species.species_id GROUP BY taxa</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT surveys.species_id, MIN(weight) as min_weight, MAX(weight) as max_weight, AVG(weight) as mean_weight FROM surveys JOIN species ON surveys.species_id=species.species_id WHERE taxa = 'Rodent' GROUP BY surveys.species_id</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT surveys.species_id, sex, AVG(hindfoot_length) as mean_foot_length  FROM surveys JOIN species ON surveys.species_id=species.species_id WHERE taxa = 'Rodent' AND sex IS NOT NULL GROUP BY surveys.species_id, sex</code></p>
-      </li>
-      <li>
-        <p>Solution: <code class="highlighter-rouge">SELECT surveys.species_id, year, AVG(weight) as mean_weight FROM surveys JOIN species ON surveys.species_id=species.species_id WHERE taxa = 'Rodent' GROUP BY surveys.species_id, year</code></p>
-      </li>
-    </ol>
-  </blockquote>
-</blockquote>
+<p>Cong! You just completed the SQL lesson. Yes, there are a lot of stuff, it’s difficult to memorize everything. Keep practicing! Here is a <a href="../sql_cheat_sheet.md">cheat sheet</a> for you.</p>
 
 
 <blockquote class="keypoints">

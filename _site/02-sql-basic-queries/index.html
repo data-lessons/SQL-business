@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-28 12:14:48 -0600">
+    <meta http-equiv="last-modified" content="2018-03-06 13:07:07 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -60,7 +60,7 @@
             
             <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
             
-            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
+            <li><a href="../01-sql-data/">Getting to know your data</a></li>
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
@@ -109,7 +109,7 @@
   <div class="col-md-1">
     <h3>
       
-      <a href="../01-sql-intro2/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      <a href="../01-sql-data/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
       
     </h3>
   </div>
@@ -407,9 +407,43 @@ ORDER BY Item_Description, Bottle_Cost;
 
   <ul>
     <li>Write a query that returns Item_Description, Bottle_Cost, volume and retail price
-of the soda, sorted firstly with retail price in ascending order, then with volume in descending order.</li>
+of the soda, sorted firstly with retail price in descending order, then with volume in ascending order.</li>
   </ul>
 </blockquote>
+
+<h2 id="dealing-with-dates">Dealing with dates</h2>
+<p>Firstly, we take a look at the <code class="highlighter-rouge">invoice_info</code> table</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info;
+</code></pre></div></div>
+<p>The date in sqlite3 can be stored as multiple string formats:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    YYYY-MM-DD
+    YYYY-MM-DD HH:MM
+    YYYY-MM-DD HH:MM:SS
+    YYYY-MM-DD HH:MM:SS.SSS
+    YYYY-MM-DDTHH:MM
+    YYYY-MM-DDTHH:MM:SS
+    YYYY-MM-DDTHH:MM:SS.SSS
+    HH:MM
+    HH:MM:SS
+    HH:MM:SS.SSS
+    now
+    DDDDDDDDDD 
+</code></pre></div></div>
+<p>In our database, the date were stored as “YYYY-MM-DD” format. We can extract the year/month/date with <code class="highlighter-rouge">strftime</code> function. For example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Select *, strftime('%Y', Date) AS YEAR
+FROM invoice_info; 
+</code></pre></div></div>
+<p>For month and day, simply replace <code class="highlighter-rouge">%Y</code> with <code class="highlighter-rouge">%m</code> or <code class="highlighter-rouge">%d</code>. You can also do <code class="highlighter-rouge">%Y-%m</code> to get the year and month. 
+You can get all invoice after 2017 by:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info
+WHERE Date &gt;= "2017-01-01";
+</code></pre></div></div>
+<p>You can get a invoice from a range of time by:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info
+WHERE Date BETWEEN "2017-01-01" AND "2017-02-27"; 
+</code></pre></div></div>
+<p>Note that <code class="highlighter-rouge">BETWEEN</code> is inclusive, that is, invoices at 2017-01-01 and 2017-02-27 will be returned<br />
+If you are interested at more cool things you can do with dates, heres the <a href="https://www.sqlite.org/lang_datefunc.html">Documentation</a></p>
 
 <h2 id="order-of-execution">Order of execution</h2>
 
@@ -443,7 +477,7 @@ we recommend to put each clause on its own line.</p>
 
   <ul>
     <li>Let’s try to combine what we’ve learned so far in a single
-query.  Using the <strong>item_info</strong> table write a query to display the three date fields,
+query.  Using the <strong>item_info</strong> table write a query to display the three data fields,
 <code class="highlighter-rouge">Item_Description</code>, <code class="highlighter-rouge">Bottle_Volume_ml</code> and Retail Price for 6 packs (give it an alias <code class="highlighter-rouge">Six_Pack_Price</code>), for
 all sodas that are usually sold in 6 packs, ordered firstly by <code class="highlighter-rouge">Six_Pack_Price</code>, then alphabetically by the <code class="highlighter-rouge">Item_Description</code>.</li>
     <li>Write the query as a single line, then put each clause on its own line, and
@@ -477,7 +511,7 @@ see how more legible the query becomes!</li>
   <div class="col-md-1">
     <h3>
       
-      <a href="../01-sql-intro2/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
+      <a href="../01-sql-data/"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><span class="sr-only">previous episode</span></a>
       
     </h3>
   </div>

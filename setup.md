@@ -25,18 +25,16 @@ permalink: /setup/
 > - Type `cd Desktop` and hit enter (this will go to your desktop. You can use other directory as well)
 > - Type `mkdir sql_workshop` and hit enter (this will create an folder named "sql_workshop" on your desktop, you can change the name if you want)
 > - Type `cd sql_workshop` and hit enter to go to the folder you just created  
-> - Type `jupyter notebook` to open the notebook! It will automatically open your browser. If not, copy the link that shows up on the > terminal and paste it into your browser. 
+> - Type `jupyter notebook` to open the notebook! It will automatically open your browser. If not, copy the link that shows up on the terminal and paste it into your browser. 
 > 
 > **Now you successfully have the notebook open!**  
 {: .prereq}
 
 > ## Data
-> **Download** this data to your computer: [tbd](http://www.nyan.cat). Click on **Download all** to download the zip file. Unzip it to a >>> location that you can easily find on your computer. Save your data in the same folder as the jupyter notebook.  
+> **Download** this data to your computer: [tbd](https://github.com/data-lessons/SQL-business/tree/gh-pages/data)    
 >
 > #### About the data
 > The data for this lesson is a part of the Data Carpentry Business workshop. 
-> It is a teaching version of the Portal Database data. 
->
 > The original data for this lesson and the workshop are collected from the 
 > [State of Iowa](https://data.iowa.gov/browse?category=Economy) 
 > It is open for public use, we have modified the data for the workshop  

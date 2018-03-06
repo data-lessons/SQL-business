@@ -96,8 +96,8 @@ of these groups (`HAVING`).
 
 > ## Challenge
 >
-> What sodas were sold more than 100000 bottles from 2012 to 2017?  
-> In another word, write a query that returns item_id in invoice_info table
+> What sodas were sold more than 100000 bottles in the whole database?  
+> In another word, write a query that returns item_id and total bottles sold in invoice_info table
 > Where the total bottles sold is more than 100000
 {: .challenge}
 
