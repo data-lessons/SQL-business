@@ -110,7 +110,7 @@ criteria.  For example, let’s say we only want data for an energy drink called
 _Nozomi Power Injection_.  We need to add a `WHERE` clause to our query: <br>
 Note that we can use `=` or `==` for equal, `!=` or `<>` for not equal.  
 
-[//]: <> (![alt text](../img/np.gif){:height="100px"} <br>) 
+<!--- ![alt text](../img/np.gif){:height="100px"} <br>  -->  
 
     SELECT * 
     FROM item_info
