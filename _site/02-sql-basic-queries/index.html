@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-03-06 13:07:07 -0600">
+    <meta http-equiv="last-modified" content="2018-03-07 12:17:01 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -296,9 +296,6 @@ functions. For example, we could round the values.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, ROUND(Bottle_Volume_ml/1000,1) AS Bottle_Volume_L
 FROM item_info;
-
-SELECT Item_Description, Bottle_Volume_ml, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin
-FROM item_info;
 </code></pre></div></div>
 
 <blockquote class="challenge">
@@ -316,6 +313,8 @@ FROM item_info;
 criteria.  For example, let’s say we only want data for an energy drink called
 <em>Nozomi Power Injection</em>.  We need to add a <code class="highlighter-rouge">WHERE</code> clause to our query: <br />
 Note that we can use <code class="highlighter-rouge">=</code> or <code class="highlighter-rouge">==</code> for equal, <code class="highlighter-rouge">!=</code> or <code class="highlighter-rouge">&lt;&gt;</code> for not equal.</p>
+
+<!--- ![alt text](../img/np.gif){:height="100px"} <br>  -->
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
 FROM item_info
@@ -344,7 +343,7 @@ be <code class="highlighter-rouge">Bottle_Volume_ml &gt; '500'</code>. We can us
 with <code class="highlighter-rouge">AND</code> and <code class="highlighter-rouge">OR</code>.<br />
 For example, suppose we want all the energy drink (category id = ‘Energy Drink’) with volume larger than 500ml:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ELECT * FROM item_info
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info
 WHERE Bottle_Volume_ml &gt; 500 AND Category = 'Energy Drink';  
 </code></pre></div></div>
 

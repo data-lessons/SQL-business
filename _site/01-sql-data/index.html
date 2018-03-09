@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-03-06 13:07:07 -0600">
+    <meta http-equiv="last-modified" content="2018-03-07 12:17:01 -0600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -206,6 +206,11 @@ The data was originated from a real dataset. We have modofied the dataset for th
 import pandas as pd
 </code></pre></div>    </div>
   </li>
+</ol>
+
+<p><code class="highlighter-rouge">sqlite3</code> will be included within a standard Python installation.  <code class="highlighter-rouge">pandas</code> is not part of the <a href="https://docs.python.org/3/library/index.html">Python Standard Library</a>, but will normally be bundled with Anaconda.</p>
+
+<ol>
   <li>in the next cell, create a connection to the database called conn
     <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conn = sql.connect('soda.db')
 </code></pre></div>    </div>
@@ -216,7 +221,7 @@ SELECT * FROM item_info;
 '''
 </code></pre></div>    </div>
   </li>
-  <li>python has a built in function to <a href="http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql.html">read sql</a>
+  <li>The pandas package in Python has a built in function to <a href="http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql.html">read sql</a>.
 The following code will execute the query and assign the result to a DataFrame variable called “df”, and show the result (use .head(10) to show first 10 result, you can remove that part to show the full result):
     <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df = pd.read_sql(q, conn)
 df.head(10)
