@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-03-07 12:17:01 -0600">
+    <meta http-equiv="last-modified" content="2018-04-01 14:09:18 -0500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -197,8 +197,8 @@ We’ll need the following file:</p>
 
 <h2 id="dataset-description">Dataset Description</h2>
 
-<p>The data we will be using soda sells data. It contains invoice information about soda purchase from soda makers (vendors) by retail stores. 
-The data was originated from a real dataset. We have modofied the dataset for this workshop. For example, soda names are completely fictitious, and price was also normalized.</p>
+<p>The data we will be using is soda sells data. It contains invoice information about soda purchase from soda makers (vendors) by retail stores. 
+The data was originated from a real dataset. We have modified the dataset for this workshop. For example, soda names are completely fictitious, and price was also normalized.</p>
 
 <ol>
   <li>In an jupyter notebook cell, put in the following code to import sqlite3 and pandas modules:
@@ -215,7 +215,7 @@ import pandas as pd
     <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conn = sql.connect('soda.db')
 </code></pre></div>    </div>
   </li>
-  <li>In the next cell, write your query as string called “q” (you can call it whatever you want). The follwing example is to select everything in a table called item:
+  <li>In the next cell, write your query as string called “q” (you can call it whatever you want). The following example is to select everything in a table called item_info:
     <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>q = '''
 SELECT * FROM item_info;
 '''
@@ -223,14 +223,22 @@ SELECT * FROM item_info;
   </li>
   <li>The pandas package in Python has a built in function to <a href="http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql.html">read sql</a>.
 The following code will execute the query and assign the result to a DataFrame variable called “df”, and show the result (use .head(10) to show first 10 result, you can remove that part to show the full result):
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df = pd.read_sql(q, conn)
-df.head(10)
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c"># df or print(df) can show the whole result  </span>
 </code></pre></div>    </div>
   </li>
-  <li>To run a diffierent query, you can just change the query string between <code class="highlighter-rouge">''' '''</code> and run the code above again.</li>
+  <li>To run a different query, you can just change the query string between <code class="highlighter-rouge">''' '''</code> and run the code above again.<br />
+For example,
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">q</span> <span class="o">=</span> <span class="s">'''
+SELECT * FROM invoice_info;
+'''</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> 
+</code></pre></div>    </div>
+    <p>You just ran your first SQL query! Now, lets see what’s in the database</p>
+  </li>
 </ol>
-
-<p>You just ran your first SQL query! Now, lets see what’s in the database</p>
 
 <p>Here are all the attributes in the database:</p>
 
@@ -325,7 +333,7 @@ df.head(10)
     <tr>
       <td>Bottle_Volume_ml</td>
       <td style="text-align: left">DOUBLE</td>
-      <td>Volumn of the soda in ml</td>
+      <td>Volume of the soda in ml</td>
       <td>item_info</td>
     </tr>
     <tr>
@@ -366,7 +374,11 @@ df.head(10)
 
 <h2 id="-data-types"><a name="datatypes"></a> Data types</h2>
 
-<p>Common SQL datatypes:</p>
+<p>Here are few common SQL datatypes (just FYI):</p>
+
+<ul>
+  <li>Note that SQLite does not have a separate storage class for storing dates and/or times, but SQLite is capable of storing dates and times as TEXT, REAL or INTEGER values. In the database we used today, the date attribute is stored as text in “YYYY-MM-DD” format. We will talk about this later.</li>
+</ul>
 
 <table>
   <thead>
@@ -467,8 +479,6 @@ df.head(10)
   </tbody>
 </table>
 
-<p>*SQLite does not have a separate storage class for storing dates and/or times, but SQLite is capable of storing dates and times as TEXT, REAL or INTEGER values. In the database we used today, the date attribute is stored as text in “YYYY-MM-DD” format.</p>
-
 <h2 id="-sql-data-type-quick-reference"><a name="datatypediffs"></a> SQL Data Type Quick Reference</h2>
 
 <p>Different databases offer different choices for the data type definition.</p>
@@ -551,13 +561,13 @@ df.head(10)
   <h2>Key Points</h2>
   <ul>
     
-    <li><p>SQL allows us to select and group subsets of data, do math and other calculations, and combine data.</p>
+    <li><p>We can import sqlite3 to work with relational database in python</p>
 </li>
     
-    <li><p>A relational database is made up of tables which are related to each other by shared keys.</p>
+    <li><p>Primary key uniquely identifies each rows in a table. A foreign key in one table refers to a primary key in another table.</p>
 </li>
     
-    <li><p>Different database management systems (DBMS) use slightly different vocabulary, but they are all based on the same ideas.</p>
+    <li><p>Common data types in SQL are are integer, varchar, char, text, double, etc.</p>
 </li>
     
   </ul>

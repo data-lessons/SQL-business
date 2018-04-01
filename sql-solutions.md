@@ -18,7 +18,7 @@ We have the cost and price of each soda, write a query that returns the profit m
 
 **SOLUTION**
 
-	SSELECT *, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin 
+	SELECT *, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin 
 	FROM item_info;
 
 **EXERCISE**

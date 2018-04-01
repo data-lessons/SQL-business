@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-03-07 12:17:01 -0600">
+    <meta http-equiv="last-modified" content="2018-04-01 14:09:18 -0500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -186,7 +186,7 @@ Not very helpful right? <br />
 
 <p>For that, we need to tell the computer which columns provide the link between the two
 tables using the word <code class="highlighter-rouge">ON</code>.  What we want is to join the data with the same
-item id. Try join the invoice_info and item_info table:</p>
+item id. For example, try join the invoice_info and item_info table:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
 FROM invoice_info
@@ -214,8 +214,7 @@ USING (item_id);
 
 <p>The output will only have one <strong>item_id</strong> column</p>
 
-<p>We often won’t want all of the fields from both tables, so anywhere we would
-have used a field name in a non-join query, we can use <code class="highlighter-rouge">table.colname</code>.</p>
+<p>We often won’t want all of the fields from both tables, we can select the columns by using <code class="highlighter-rouge">table.colname</code>.</p>
 
 <p>For example, what if we wanted only the invoice_id, Item_Description, Bottle_Volume_ml, Bottle_Retail_Price? 
 Sometimes table names are very long, it is handy to give alias to table names.</p>
@@ -226,9 +225,6 @@ JOIN item_info AS ite
 USING (item_id);
 </code></pre></div></div>
 
-<p>For the remainder of this lesson, we’ll stick with the explicit use of the <code class="highlighter-rouge">JOIN</code> keyword for 
-joining tables in SQL.</p>
-
 <blockquote class="challenge">
   <h2 id="challenge">Challenge:</h2>
 
@@ -236,6 +232,16 @@ joining tables in SQL.</p>
     <li>Write a query that returns the Store_id, Store_Name, County_Name and City_Name
 of every stores</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Store_id, Store_Name, County_Name, City_Name
+FROM Store_info
+JOIN County USING (County_id);
+
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 <h3 id="different-join-types">Different join types</h3>
@@ -247,7 +253,7 @@ In your future work, <code class="highlighter-rouge">INNER JOIN</code> and <code
 <p>Note that RIGHT JOIN and FULL OUTER JOIN is not supported in sqlite3 <br />
 If you need to do RIGHT JOIN, you can just swap the table names  <br />
 If you need to do FULL OUTER JOIN, you need to do two queries and use <code class="highlighter-rouge">UNION ALL</code> to put them together <br />
-Suppose you have two tables, table A with attribute ab and a, table B with attribute ab and b</p>
+Suppose you have two tables, table A with attribute “ab” and “a”, table B with attribute “ab” and “b”, and the join column is “ab”,</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
 FROM A
 LEFT JOIN B USING(ab)
@@ -260,9 +266,18 @@ WHERE A.ab IS NULL;
 <blockquote class="challenge">
   <h2 id="challenge-1">Challenge:</h2>
   <p>Think about this query, what does each SELECT statement do? How was the full outer join achieved?</p>
+
+  <blockquote class="solution">
+    <h2 id="solution-1">Solution</h2>
+
+    <p>First select statement selects “in A but not in B” and “both in A and in B” <br /> 
+This is different from SELECT * FROM A; because it identifies what’s in A but not in B <br />
+Second select statement selects “in B but not in A” <br /></p>
+
+  </blockquote>
 </blockquote>
 
-<p>We can count the number of records returned by a join query with item and invoice table.</p>
+<p>We can count the number of records returned by a join query with item_info and invoice_info table.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*)
 FROM item_info as ite
@@ -286,6 +301,18 @@ Yes, there is one item that was never sold!</p>
   <ul>
     <li>Find the item’s name that was never sold.</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution-2">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description 
+FROM item_info as ite
+LEFT JOIN invoice_info as inv
+ON ite.item_id = inv.item_id
+WHERE invoice_id IS NULL;
+</code></pre></div>    </div>
+
+  </blockquote>
 </blockquote>
 
 <p>Remember: In SQL a <code class="highlighter-rouge">NULL</code> value in one table can never be joined to a <code class="highlighter-rouge">NULL</code> value in a
@@ -294,7 +321,7 @@ second table because <code class="highlighter-rouge">NULL</code> is not equal to
 <h3 id="combining-joins-with-sorting-and-aggregation">Combining joins with sorting and aggregation</h3>
 
 <p>Ok, now we mash everything together. 
-Lets try to see which store has the most number of successful sales (number of invoices) in 2015 
+Lets try to see which stores have the most number of purchases from vendor (number of invoices) in 2015 
 We want the Store_Name, Store_Name, Address, County_Name, number of invoices for each store in 2015, and then
 sort the result by number of invoices at descending order. Try slowly build the query step by step.</p>
 
@@ -313,21 +340,27 @@ ORDER BY Num_Invoice DESC;
   <h2 id="challenge-3">Challenge:</h2>
 
   <ul>
-    <li>Which 5 monthes have the largest sales in dollar from 2013 to 2017?</li>
+    <li>Which 5 months have the largest sales in dollar from 2013 to 2017?</li>
     <li>Hint 1: use bottle cost and bottles sold to calculate sales</li>
     <li>Hint 2: group by year-month combination</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution-3">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT strftime('%Y-%m', Date) as month, sum(Bottles_sold*Bottle_Cost) AS Dollar_Sale
+FROM invoice_info as inv
+INNER JOIN item_info as ite ON inv.item_id = ite.item_id 
+WHERE month BETWEEN '2013-01-01' AND '2016-12-31'
+GROUP BY month
+ORDER BY Dollar_Sale DESC;  
+</code></pre></div>    </div>
+
+  </blockquote>
 </blockquote>
 
-<!--- SELECT strftime('%Y-%m', Date) as month, sum(Bottles_sold*Bottle_Cost) AS Dollar_Sale
-        FROM invoice_info as inv
-        INNER JOIN item_info as ite ON inv.item_id = ite.item_id 
-        WHERE month BETWEEN '2013-01-01' AND '2016-12-31'
-        GROUP BY month
-        ORDER BY Dollar_Sale DESC; -->
-
 <h2 id="subqueries">Subqueries</h2>
-<p>Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which stores sales items that does not have a category (those specialties):</p>
+<p>Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which stores sale items that does not have a category (those specialties):</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
 FROM Store_info 
@@ -339,7 +372,7 @@ WHERE Store_id IN
 );
 </code></pre></div></div>
 
-<p>You can also Join a subquery, or give a subquery alias. For example, if you want to see not only which stores sales items that does not have a category, but also want to see how many these items were sold in each store. Try it yourself!<br />
+<p>You can also Join a subquery, or give a subquery an alias. For example, if you want to see not only which stores sale items that does not have a category, but also want to see how many of these items were sold in each store. Try it yourself!<br />
 It is a little long. We can break it down with few steps:</p>
 <ul>
   <li>Select Store_id, Item_Description, Bottles_Sold from invoice_info and item_info table</li>
@@ -360,7 +393,7 @@ USING (Store_id)
 GROUP BY Store_id;
 </code></pre></div></div>
 
-<p>If you will use the subquery frequently, you can create a view in the database. More detailes were provided in lesson 3.</p>
+<p>If you will use the subquery frequently, you can create a view in the database. More details were provided in lesson 3.</p>
 
 <h2 id="functions-ifnull-and-nullif-and-more">Functions <code class="highlighter-rouge">IFNULL</code> and <code class="highlighter-rouge">NULLIF</code> and more</h2>
 
@@ -386,7 +419,7 @@ Our database is very clean, so unfortunately, there are not much null values to 
 
   <ul>
     <li>How many bottles of each energy drink were sold in 2015?</li>
-    <li>Return the Item_Description and total bottles sold (give it an alias <code class="highlighter-rouge">Totle_Bottles</code>) for each energy drink. Sort by <code class="highlighter-rouge">Totle_Bottles</code> in descending order. Include <strong>ALL ENERGY DRINKS</strong> from the database. If a energy drink has no sale in 2015, return 0.
+    <li>Return the Item_Description and total bottles sold (give it an alias <code class="highlighter-rouge">Totle_Bottles</code>) for each energy drink. Sort it by <code class="highlighter-rouge">Totle_Bottles</code> in descending order. Include <strong>ALL ENERGY DRINKS</strong> from the database. If a energy drink has no sale in 2015, return 0.
       <ul>
         <li>HINT 1: If you just try to left join <code class="highlighter-rouge">item_info</code> and <code class="highlighter-rouge">invoice_info</code> (show as following)
           <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   SELECT item_info.Item_Description, SUM(Bottles_Sold) AS Totle_Bottles
@@ -398,26 +431,30 @@ Our database is very clean, so unfortunately, there are not much null values to 
    GROUP BY item_id
    ORDER BY Totle_Bottles DESC
 </code></pre></div>          </div>
-          <p>You will not get all the energy drink from the database. This is because the <code class="highlighter-rouge">LEFT JOIN</code> happens before the <code class="highlighter-rouge">WHERE</code> statement. Probablly you can filter out the item_id that were sold in 2015 first as subq… (shh, enough hint)</p>
+          <p>You will not get all the energy drink from the database. This is because the <code class="highlighter-rouge">LEFT JOIN</code> happens before the <code class="highlighter-rouge">WHERE</code> statement. Probably you can filter out the item_id that were sold in 2015 first as subq… (shh, enough hint)</p>
         </li>
         <li>HINT 2: use IFNULL to replace the None after join</li>
       </ul>
     </li>
   </ul>
-</blockquote>
 
-<!---
-    SELECT item_info.Item_Description, IFNULL(sub.Totle_Bottles, 0) AS Totle_Bottles
-        FROM item_info
-        LEFT JOIN 
-            (SELECT item_id, SUM(Bottles_Sold) as Totle_Bottles
-            FROM invoice_info
-            WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
-            GROUP BY Item_id) as sub
-        Using (item_id)
-        WHERE Category = "Energy Drink"
-        ORDER BY Totle_Bottles DESC;
--->
+  <blockquote class="solution">
+    <h2 id="solution-4">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT item_info.Item_Description, IFNULL(sub.Totle_Bottles, 0) AS Totle_Bottles
+FROM item_info
+LEFT JOIN 
+    (SELECT item_id, SUM(Bottles_Sold) as Totle_Bottles
+    FROM invoice_info
+    WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
+    GROUP BY Item_id) as sub
+Using (item_id)
+WHERE Category = "Energy Drink"
+ORDER BY Totle_Bottles DESC;  
+</code></pre></div>    </div>
+
+  </blockquote>
+</blockquote>
 
 <p>The inverse of <code class="highlighter-rouge">IFNULL</code> is <code class="highlighter-rouge">NULLIF</code>. This returns <code class="highlighter-rouge">NULL</code> if the first argument
 is equal to the second argument. If the two are not equal, the first argument
@@ -498,21 +535,26 @@ table below:</p>
 <blockquote class="challenge">
   <h2 id="final-challenge">FINAL Challenge:</h2>
 
-  <p>Suppose you are a retail store owner in Davenport and want to get some soda in inventory. You want the soda that can generate profit for you. <br />
-Find the soda that generated most profit after 2015 in Davenport (City_Name = “DAVENPORT”). Sort by total profit. <br />
-A few soda’s “Bottle_Retail_Price” is empty, replace those with Bottle_Cost * 1.8, shich is average profit margin.</p>
+  <p>Suppose you are a retail store owner in Davenport and want to get some soda in the inventory. You want the sodas that can generate more profit for you. <br />
+Since you don’t have the actual sales data from the stores to individuals, you can only estimate by looking at how much each kind of soda did other stores buy from the vendors. 
+Find the sodas that can potentially generated most profit after 2015 in Davenport (City_Name = “DAVENPORT”). Sort by total profit. <br />
+A few soda’s “Bottle_Retail_Price” is empty, replace those with Bottle_Cost * 1.8, which is average profit margin.</p>
 
+  <blockquote class="solution">
+    <h2 id="solution-5">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_id, Item_Description, SUM((IFNULL(Bottle_Retail_Price, Bottle_Cost*1.8) - Bottle_Cost) * Bottles_Sold) AS Profit
+FROM invoice_info
+INNER JOIN item_info USING (item_id)
+INNER JOIN store_info USING (Store_id)
+INNER JOIN county USING (County_id)
+WHERE Date &gt; "2015-01-01" AND City_Name = "DAVENPORT"
+GROUP BY item_id
+ORDER BY Profit DESC; 
+</code></pre></div>    </div>
+
+  </blockquote>
 </blockquote>
-
-<!--- SELECT Item_id, Item_Description, SUM((IFNULL(Bottle_Retail_Price, Bottle_Cost*1.8) - Bottle_Cost) * Bottles_Sold) AS Profit
-        FROM invoice_info
-        INNER JOIN item_info USING (item_id)
-        INNER JOIN store_info USING (Store_id)
-        INNER JOIN county USING (County_id)
-        WHERE Date > "2015-01-01" AND City_Name = "DAVENPORT"
-        GROUP BY item_id
-        ORDER BY Profit DESC;
--->
 
 <p>Cong! You just completed the SQL lesson. Yes, there are a lot of stuff, it’s difficult to memorize everything. Keep practicing! Here is a <a href="../sql_cheat_sheet.md">cheat sheet</a> for you.</p>
 
@@ -524,7 +566,7 @@ A few soda’s “Bottle_Retail_Price” is empty, replace those with Bottle_Cos
     <li><p>Use the <code class="highlighter-rouge">JOIN</code> command to combine data from two tables—the <code class="highlighter-rouge">ON</code> or <code class="highlighter-rouge">USING</code> keywords specify which columns link the tables.</p>
 </li>
     
-    <li><p>Regular <code class="highlighter-rouge">JOIN</code> returns only matching rows. Other join commands provide different behavior, e.g., <code class="highlighter-rouge">LEFT JOIN</code> retains all rows of the table on the left side of the command.</p>
+    <li><p>Regular <code class="highlighter-rouge">JOIN</code> returns cross product of the two tables. Other join commands provide different behavior, e.g., <code class="highlighter-rouge">LEFT JOIN</code> retains all rows of the table on the left side of the command.</p>
 </li>
     
     <li><p><code class="highlighter-rouge">IFNULL</code> allows you to specify a value to use in place of <code class="highlighter-rouge">NULL</code>, which can help in joins</p>

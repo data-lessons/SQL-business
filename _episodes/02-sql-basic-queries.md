@@ -25,20 +25,22 @@ Let's start by using the **item_info** table. It includes information about all 
 | Category            | VARCHAR(20)    | category of soda                                           |
 | Item_Description    | TEXT           | Name of the item (soda)                                    |
 | Pack                | INTEGER        | Number of bottles that the soda usually sells for          |
-| Bottle_Volume_ml    | DOUBLE         | Volumn of the soda in ml                                   |
+| Bottle_Volume_ml    | DOUBLE         | Volume of the soda in ml                                   |
 | Bottle_Cost         | DOUBLE         | Cost of one bottle                                         |
 | Bottle_Retail_Price | DOUBLE         | Retile price for one bottle                                |
 
 Let’s write an SQL query that selects only the Item_Description column from the
-item_info table. 
+item_info table. You can add comments between `/*` and `*/`.  
 
     SELECT Item_Description 
     FROM item_info;
+    /* you can
+    add comments like this*/
 
 We have capitalized the words SELECT and FROM because they are SQL keywords.
 SQL is case insensitive, but it helps for readability, and is good style.
 
-If we want more information, we can just add a new column to the list of fields,
+If we want more information, we can just add new column names to the list of fields,
 right after SELECT:
 
     SELECT Item_Description, Bottle_Volume_ml, Bottle_Cost  
@@ -61,14 +63,14 @@ you would want to do this if you were working with large databases.
 
 ### Unique values
 
-If we want only the unique values so that we can quickly see what categories have
-been sampled we use `DISTINCT` 
+If you want only the unique values so that you can quickly see what categories have
+been sampled, you can use `DISTINCT` keyword. 
 
     SELECT DISTINCT Category
     FROM item_info;
 
 Well, we can only see the unique ids, and that does not make any sense right? 
-Don't worry, you will learn how to return category names later.  
+Don't worry, you will learn how to return category names later. 
 
 If we select more than one column, then the distinct pairs of values are
 returned
@@ -101,6 +103,15 @@ functions. For example, we could round the values.
 >
 > - We have the cost and price of each soda, write a query that returns the profit margin of each soda, 
     give it alias as 'Margin' and round it to 2 decimal places.  
+>
+>> ## Solution
+>>
+>> ```
+>> SELECT *, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin 
+>> FROM item_info;
+>> 
+>> ```
+> {: .solution}
 {: .challenge}
 
 ## Filtering
@@ -117,27 +128,26 @@ Note that we can use `=` or `==` for equal, `!=` or `<>` for not equal.
     WHERE Item_Description = "Nozomi Power Injection";
 
 We can do the same thing with numbers.
-Here, we only want the soda with more than 500ml:
+For example, if we only want the soda with more than 500ml:
 
     SELECT * FROM item_info
     WHERE Bottle_Volume_ml > 500;
 
-What if your favorite singer's name is 'Honoka' and you want to buy soda that contains 'Honoka' in the name? Use `LIKE` statement:
+What if you want to see soda that contains 'Honoka' in the name? Use the `LIKE` statement:
 
     SELECT * 
     FROM item_info
     WHERE Item_Description LIKE "%Honoka%";
 
-You can use `%` as wild card to search. That means, all soda with name like "aaHonokaaaaa" or "00Honokaxxxx" will be returned. 
+You can use `%` as wild card to search. That means, all soda with name like "Honokaaaaa" or "00Honokaxxxx" will be returned. 
 You can use `_` as wild card for one character. For example, if you replace "%Honoka%" with "Honoka_", only names such as "Honokaa", "Honokax" will be returned. 
 
-If we used the `TEXT` data type for the year the `WHERE` clause should
-be `Bottle_Volume_ml > '500'`. We can use more sophisticated conditions by combining tests
+We can use more sophisticated conditions by combining tests
 with `AND` and `OR`.  
 For example, suppose we want all the energy drink (category id = 'Energy Drink') with volume larger than 500ml:
 
     SELECT * FROM item_info
-    WHERE Bottle_Volume_ml > 500 AND Category = 'Energy Drink';  
+    WHERE (Bottle_Volume_ml > 500) AND (Category = 'Energy Drink');  
 
 Note that the parentheses are not needed, but again, they help with
 readability.  They also ensure that the computer combines `AND` and `OR`
@@ -147,7 +157,7 @@ If we wanted to get data for 3 categories of soda, which have
 category id of `Energy Drink`, `Blueberry Soda`, and `Cherry Soda`, we could combine the tests using OR:
 
     ELECT * FROM item_info
-    WHERE Category = 'Energy Drink' OR Category = 'Blueberry Soda' OR Category = 'Cherry Soda';  
+    WHERE (Category = 'Energy Drink') OR (Category = 'Blueberry Soda') OR (Category = 'Cherry Soda');  
 
 This looks messy, right? We can do the same thing by using 'IN': 
 
@@ -159,6 +169,16 @@ This looks messy, right? We can do the same thing by using 'IN':
 > - Produce a table listing the data for all soda that cost less than $2 and
 > contains the word "lime" in the name, telling us the name, cost, and volume
 > (in litters). 
+> 
+>> ## Solution
+>>
+>> ```
+>> SELECT Item_Description, Bottle_Cost, Bottle_Volume_ml/1000 AS Bottle_Volume_l 
+>> FROM item_info
+>> WHERE Bottle_Cost < 2
+>> AND Item_Description LIKE "%lime%";
+>> ```
+> {: .solution}
 {: .challenge}
 
 ## Sorting
@@ -166,20 +186,19 @@ This looks messy, right? We can do the same thing by using 'IN':
 We can also sort the results of our queries by using `ORDER BY`.
 For simplicity, let’s go back to the **item_info** table and alphabetize it by soda name.
 
-Now let's order it by name (ascending by default).
+Let's order it by name (ascending by default).
 
     SELECT *
     FROM item_info
     ORDER BY Item_Description;
 
-We could alternately use `DESC` to get descending order.
+We could alternately use `DESC` to get the descending order.
 
     SELECT *
     FROM item_info
     ORDER BY Item_Description DESC; 
 
 We can also sort on several fields at once.
-To truly be alphabetical, we might want to order by genus then species.
 
     SELECT *
     FROM item_info
@@ -189,7 +208,17 @@ To truly be alphabetical, we might want to order by genus then species.
 >
 > - Write a query that returns Item_Description, Bottle_Cost, volume and retail price
 > of the soda, sorted firstly with retail price in descending order, then with volume in ascending order.  
+> 
+>> ## Solution
+>>
+>> ```
+>> SELECT Item_Description, Bottle_Cost, Bottle_Volume_ml, Bottle_Retail_Price 
+>> FROM item_info
+>> ORDER BY Bottle_Retail_Price DESC, Bottle_Volume_ml;
+>> ```
+> {: .solution}
 {: .challenge}
+
 
 ## Dealing with dates  
 Firstly, we take a look at the `invoice_info` table  
@@ -217,12 +246,12 @@ Select *, strftime('%Y', Date) AS YEAR
 FROM invoice_info; 
 ```
 For month and day, simply replace `%Y` with `%m` or `%d`. You can also do `%Y-%m` to get the year and month. 
-You can get all invoice after 2017 by: 
+You can get all invoices after 2017 by: 
 ```
 SELECT * FROM invoice_info
 WHERE Date >= "2017-01-01";
 ```
-You can get a invoice from a range of time by:  
+You can get invoices from a range of time by:  
 ```
 SELECT * FROM invoice_info
 WHERE Date BETWEEN "2017-01-01" AND "2017-02-27"; 
@@ -257,10 +286,19 @@ we recommend to put each clause on its own line.
 > ## Challenge
 >
 > - Let's try to combine what we've learned so far in a single
-> query.  Using the **item_info** table write a query to display the three data fields,
+> query.  Use the **item_info** table, write a query to display 
 > `Item_Description`, `Bottle_Volume_ml` and Retail Price for 6 packs (give it an alias `Six_Pack_Price`), for
 > all sodas that are usually sold in 6 packs, ordered firstly by `Six_Pack_Price`, then alphabetically by the `Item_Description`.
-> - Write the query as a single line, then put each clause on its own line, and
-> see how more legible the query becomes!  
+> 
+>> ## Solution
+>>
+>> ```
+>> 
+>> SELECT Item_Description, Bottle_Volume_ml, Bottle_Retail_Price * 6 AS Six_Pack_Price
+>> FROM item_info
+>> WHERE Pack = 6
+>> ORDER BY Six_Pack_Price, Item_Description;
+>> ```
+> {: .solution}
 {: .challenge}
 

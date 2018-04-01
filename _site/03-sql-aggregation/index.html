@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-03-07 12:17:01 -0600">
+    <meta http-equiv="last-modified" content="2018-04-01 14:09:18 -0500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -179,8 +179,7 @@
 
 <h2 id="count-and-group-by">COUNT and GROUP BY</h2>
 
-<p>Aggregation allows us to combine results by grouping records based on value, also it is useful for
-calculating combined values in groups.</p>
+<p>Aggregation allows us to combine results by grouping records based on value, it is useful for calculating combined values in groups.</p>
 
 <p>Let’s go to the <strong>invoice_info</strong> table and find out how many invoices there are.
 Using the wildcard * simply counts the number of records (rows):</p>
@@ -198,7 +197,7 @@ FROM invoice_info;
 <p>There are many other aggregate functions included in SQL, for example:
 <code class="highlighter-rouge">MAX</code>, <code class="highlighter-rouge">MIN</code>, and <code class="highlighter-rouge">AVG</code>.</p>
 
-<p>Now, let’s see how many invoices were for each Store. We do this
+<p>Now, let’s see how many invoices were there for each Store. We do this
 using a <code class="highlighter-rouge">GROUP BY</code> clause</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Store_id, COUNT(*)
@@ -214,8 +213,18 @@ If we want to group by multiple fields, we give <code class="highlighter-rouge">
 
   <p>What is the most expensive soda in each category? 
 Use the item_info table, write queries that return:
-Item_Description, Category, max Bottle_Retail_Price</p>
+Item_Description, Category, max Bottle_Retail_Price 
+of the most expensive soda in each category.</p>
 
+  <blockquote class="solution">
+    <h2 id="solution">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Category, MAX(Bottle_Retail_Price)
+FROM item_info
+GROUP BY Category;
+
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 <h2 id="ordering-aggregated-results">Ordering Aggregated Results</h2>
@@ -232,14 +241,13 @@ ORDER BY COUNT(*);
 
 <h2 id="the-having-keyword">The <code class="highlighter-rouge">HAVING</code> keyword</h2>
 
-<p>In the previous episode, we have seen the keyword <code class="highlighter-rouge">WHERE</code>, allowing to
+<p>You can make the query more readable by using <code class="highlighter-rouge">AS</code> in your query to rename a column. 
+For example, in the above query, we can call the <code class="highlighter-rouge">COUNT(*)</code> by another name, like
+<code class="highlighter-rouge">num_invoices</code>.</p>
+
+<p>In the previous episode, we have seen the keyword <code class="highlighter-rouge">WHERE</code>, allowing us to
 filter the results according to some criteria. SQL offers a mechanism to
 filter the results based on <strong>aggregate functions</strong>, through the <code class="highlighter-rouge">HAVING</code> keyword.</p>
-
-<p>If you use <code class="highlighter-rouge">AS</code> in your query to rename a column, <code class="highlighter-rouge">HAVING</code> you can use this
-information to make the query more readable. For example, in the above
-query, we can call the <code class="highlighter-rouge">COUNT(*)</code> by another name, like
-<code class="highlighter-rouge">num_invoices</code>.</p>
 
 <p>For example, we can request to only return information
 about stores that has more than 1000 invoices.</p>
@@ -252,9 +260,9 @@ ORDER BY num_invoices;
 </code></pre></div></div>
 
 <p>The <code class="highlighter-rouge">HAVING</code> keyword works exactly like the <code class="highlighter-rouge">WHERE</code> keyword, but uses
-aggregate functions instead of database fields to filter.</p>
+aggregated columns instead of database fields to filter.</p>
 
-<p>Note that in both queries, <code class="highlighter-rouge">HAVING</code> comes <em>after</em> <code class="highlighter-rouge">GROUP BY</code>. One way to
+<p>Note that <code class="highlighter-rouge">HAVING</code> comes <em>after</em> <code class="highlighter-rouge">GROUP BY</code>. One way to
 think about this is: the data are retrieved (<code class="highlighter-rouge">SELECT</code>), which can be filtered
 (<code class="highlighter-rouge">WHERE</code>), then joined in groups (<code class="highlighter-rouge">GROUP BY</code>); finally, we can filter again based on some
 of these groups (<code class="highlighter-rouge">HAVING</code>).</p>
@@ -265,6 +273,17 @@ of these groups (<code class="highlighter-rouge">HAVING</code>).</p>
   <p>What sodas were sold more than 100000 bottles in the whole database?<br />
 In another word, write a query that returns item_id and total bottles sold in invoice_info table
 Where the total bottles sold is more than 100000</p>
+
+  <blockquote class="solution">
+    <h2 id="solution-1">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_id, SUM(Bottles_Sold) AS ct
+FROM invoice_info
+GROUP BY Item_id
+HAVING ct &gt; 100000;
+
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 <h2 id="saving-queries-for-future-use">Saving Queries for Future Use</h2>
@@ -277,16 +296,15 @@ think of views is as a table, that can read, aggregate, and filter information
 from several places before showing it to you.</p>
 
 <p>Creating a view from a query requires to add <code class="highlighter-rouge">CREATE VIEW viewname AS</code>
-before the query itself. For example, imagine that my project only covers
-the data gathered during the May of 2017.  That
-query would look like:</p>
+before the query itself. For example, imagine that we are doing a project that only need 
+the data during the May of 2017. We can query by:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info
 WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
 ORDER BY Date;
 </code></pre></div></div>
 
-<p>But we don’t want to have to type that every time we want to ask a
+<p>But we don’t want to type that every time we want to ask a
 question about that particular subset of data. Hence, we can benefit from a view:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE VIEW May_2017 AS
@@ -298,7 +316,7 @@ ORDER BY Date;
 <p>Now if you execute the query with <code class="highlighter-rouge">pd.read_sql()</code>, what happened? It does not work! <br />
 WHY? 
 <img src="../img/q.png" alt="alt text" height="100px" /> <br />
-It is saving something to database, instead of returing the query result. So nothing can be store to the dataframe.<br />
+It is saving something to database, instead of returning the query result. So nothing can be store to the DataFrame.<br />
 Instead, what you can do is to create a cursor object, and execute the statement:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>q2 = '''CREATE VIEW May_2017 AS
     SELECT * FROM invoice_info
@@ -324,13 +342,14 @@ c.execute(q2)
 </code></pre></div></div>
 
 <p>Why did they return different result? <br />
-You probablly noticed from previous exercises that there are one category called “None”. Yes, there are few sodas that does not have a category.</p>
+You probably noticed from previous exercises that there is one category called “None”. Yes, there are few sodas that does not have a category.</p>
 
-<p>When we count the weight field specifically, SQL ignores the records with data
+<p>When we count the Category field specifically, SQL ignores the records with data
 missing in that field.  So here is one example where NULLs can be tricky:
 <code class="highlighter-rouge">COUNT(*)</code> and <code class="highlighter-rouge">COUNT(field)</code> can return different values.</p>
 
-<p>To find the soda that does not have a category, you can use <code class="highlighter-rouge">IS NULL</code> statement. Note that you cannot do <code class="highlighter-rouge">== NULL</code>.</p>
+<p>To find the soda that does not have a category, note that you cannot do <code class="highlighter-rouge">== NULL</code>. In stead, you can use <code class="highlighter-rouge">IS NULL</code> statement.</p>
+
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info 
 WHERE Category IS NULL;
 </code></pre></div></div>
@@ -343,7 +362,7 @@ FROM item_info
 WHERE Category == "Blueberry Soda";
 </code></pre></div></div>
 
-<p>Now let’s count all the soda with categories other than “C0001”:</p>
+<p>Now let’s count all the soda with categories other than “Blueberry Soda”:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT COUNT(*) 
 FROM item_info 
@@ -358,7 +377,7 @@ FROM item_info;
 
 <p>We’ll see that they don’t add up to the total! That’s because SQL
 doesn’t automatically include NULL values in a negative conditional
-statement.  So if we are quering “not x”, then SQL divides our data
+statement.  So if we are querying “not x”, then SQL divides our data
 into three categories: ‘x’, ‘not NULL, not x’ and NULL; then,
 returns the ‘not NULL, not x’ group. Sometimes this may be what we want -
 but sometimes we may want the missing values included as well! In that
@@ -386,7 +405,7 @@ WHERE Category != "Blueberry Soda" OR Category IS NULL;
     <li><p>Use the <code class="highlighter-rouge">HAVING</code> keyword to filter on aggregate properties.</p>
 </li>
     
-    <li><p>Use a <code class="highlighter-rouge">VIEW</code> to access the result of a query as though it was a new table.</p>
+    <li><p>Use a <code class="highlighter-rouge">VIEW</code> to store the result of a query as though it was a new table.</p>
 </li>
     
   </ul>

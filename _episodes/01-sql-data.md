@@ -13,9 +13,9 @@ objectives:
 - "Define SQLite data types."
 
 keypoints:
-- "SQL allows us to select and group subsets of data, do math and other calculations, and combine data."
-- "A relational database is made up of tables which are related to each other by shared keys."
-- "Different database management systems (DBMS) use slightly different vocabulary, but they are all based on the same ideas."
+- "We can import sqlite3 to work with relational database in python"
+- "Primary key uniquely identifies each rows in a table. A foreign key in one table refers to a primary key in another table."
+- "Common data types in SQL are are integer, varchar, char, text, double, etc."
 ---
 
 ## Setup
@@ -33,8 +33,8 @@ We'll need the following file:
 
 ## Dataset Description
 
-The data we will be using soda sells data. It contains invoice information about soda purchase from soda makers (vendors) by retail stores. 
-The data was originated from a real dataset. We have modofied the dataset for this workshop. For example, soda names are completely fictitious, and price was also normalized.  
+The data we will be using is soda sells data. It contains invoice information about soda purchase from soda makers (vendors) by retail stores. 
+The data was originated from a real dataset. We have modified the dataset for this workshop. For example, soda names are completely fictitious, and price was also normalized.  
 
 1. In an jupyter notebook cell, put in the following code to import sqlite3 and pandas modules:  
 ```
@@ -48,7 +48,7 @@ import pandas as pd
 ```
 conn = sql.connect('soda.db')
 ```
-3. In the next cell, write your query as string called "q" (you can call it whatever you want). The follwing example is to select everything in a table called item:  
+3. In the next cell, write your query as string called "q" (you can call it whatever you want). The following example is to select everything in a table called item_info:  
 ```
 q = '''
 SELECT * FROM item_info;
@@ -56,12 +56,20 @@ SELECT * FROM item_info;
 ```
 4.  The pandas package in Python has a built in function to [read sql](http://pandas.pydata.org/pandas-docs/version/0.20/generated/pandas.read_sql.html).
 The following code will execute the query and assign the result to a DataFrame variable called "df", and show the result (use .head(10) to show first 10 result, you can remove that part to show the full result): 
-```
+```python
 df = pd.read_sql(q, conn)
 df.head(10)
+# df or print(df) can show the whole result  
 ``` 
-5. To run a diffierent query, you can just change the query string between `''' '''` and run the code above again.  
-
+5. To run a different query, you can just change the query string between `''' '''` and run the code above again.  
+For example, 
+```python
+q = '''
+SELECT * FROM invoice_info;
+'''
+df = pd.read_sql(q, conn)
+df.head(10) 
+``` 
 You just ran your first SQL query! Now, lets see what's in the database 
 
 Here are all the attributes in the database:  
@@ -81,7 +89,7 @@ Here are all the attributes in the database:
 | Item_id             | INTEGER        | Unique id for each item (soda)                             | item_info, invoice_id     |
 | Item_Description    | TEXT           | Name of the item (soda)                                    | item_info                 |
 | Pack                | INTEGER        | Number of bottles that the soda usually sells for          | item_info                 |
-| Bottle_Volume_ml    | DOUBLE         | Volumn of the soda in ml                                   | item_info                 |
+| Bottle_Volume_ml    | DOUBLE         | Volume of the soda in ml                                   | item_info                 |
 | Bottle_Cost         | DOUBLE         | Cost of one bottle                                         | item_info                 |
 | Bottle_Retail_Price | DOUBLE         | Retile price for one bottle                                | item_info                 |
 | Invoice_id          | VARCHAR(20)    | Unique id for each invoice                                 | invoice_info              |
@@ -93,7 +101,9 @@ To have a better understanding of Primary keys and Foreign keys discussed in pre
 
 ## <a name="datatypes"></a> Data types
 
-Common SQL datatypes: 
+Here are few common SQL datatypes (just FYI): 
+
+* Note that SQLite does not have a separate storage class for storing dates and/or times, but SQLite is capable of storing dates and times as TEXT, REAL or INTEGER values. In the database we used today, the date attribute is stored as text in "YYYY-MM-DD" format. We will talk about this later.  
 
 | Data type                          | Description                                                                                              |
 |------------------------------------|:---------------------------------------------------------------------------------------------------------|
@@ -120,7 +130,6 @@ Common SQL datatypes:
 | MULTISET                           | A variable-length and unordered collection of elements                                                   |
 | XML                                | Stores XML data                                                                                          |
 
-*SQLite does not have a separate storage class for storing dates and/or times, but SQLite is capable of storing dates and times as TEXT, REAL or INTEGER values. In the database we used today, the date attribute is stored as text in "YYYY-MM-DD" format. 
 
 ## <a name="datatypediffs"></a> SQL Data Type Quick Reference
 

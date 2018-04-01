@@ -15,13 +15,12 @@ keypoints:
 - "Functions like `MIN`, `MAX`, `AVERAGE`, `SUM`, `COUNT`, etc. operate on aggregated data."
 - "Aliases can help shorten long queries. To write clear and readible queries, use the `AS` keyword when creating aliases."
 - "Use the `HAVING` keyword to filter on aggregate properties."
-- "Use a `VIEW` to access the result of a query as though it was a new table."
+- "Use a `VIEW` to store the result of a query as though it was a new table."
 ---
 
 ## COUNT and GROUP BY
 
-Aggregation allows us to combine results by grouping records based on value, also it is useful for
-calculating combined values in groups.
+Aggregation allows us to combine results by grouping records based on value, it is useful for calculating combined values in groups.  
 
 Let’s go to the **invoice_info** table and find out how many invoices there are.
 Using the wildcard * simply counts the number of records (rows):
@@ -37,7 +36,7 @@ We can also find out how many total bottles sold:
 There are many other aggregate functions included in SQL, for example:
 `MAX`, `MIN`, and `AVG`.
 
-Now, let's see how many invoices were for each Store. We do this
+Now, let's see how many invoices were there for each Store. We do this
 using a `GROUP BY` clause
 
     SELECT Store_id, COUNT(*)
@@ -52,7 +51,17 @@ If we want to group by multiple fields, we give `GROUP BY` a comma separated lis
 > What is the most expensive soda in each category? 
 > Use the item_info table, write queries that return:
 > Item_Description, Category, max Bottle_Retail_Price 
->
+> of the most expensive soda in each category.  
+> 
+>> ## Solution
+>>
+>> ```
+>> SELECT Item_Description, Category, MAX(Bottle_Retail_Price)
+>> FROM item_info
+>> GROUP BY Category;
+>> 
+>> ```
+> {: .solution}
 {: .challenge}
 
 ## Ordering Aggregated Results
@@ -68,14 +77,13 @@ species captured, ordered by the count:
 
 ## The `HAVING` keyword
 
-In the previous episode, we have seen the keyword `WHERE`, allowing to
+You can make the query more readable by using `AS` in your query to rename a column. 
+For example, in the above query, we can call the `COUNT(*)` by another name, like
+`num_invoices`. 
+
+In the previous episode, we have seen the keyword `WHERE`, allowing us to
 filter the results according to some criteria. SQL offers a mechanism to
 filter the results based on **aggregate functions**, through the `HAVING` keyword.
-
-If you use `AS` in your query to rename a column, `HAVING` you can use this
-information to make the query more readable. For example, in the above
-query, we can call the `COUNT(*)` by another name, like
-`num_invoices`. 
 
 For example, we can request to only return information
 about stores that has more than 1000 invoices. 
@@ -87,9 +95,9 @@ about stores that has more than 1000 invoices.
     ORDER BY num_invoices;
 
 The `HAVING` keyword works exactly like the `WHERE` keyword, but uses
-aggregate functions instead of database fields to filter.
+aggregated columns instead of database fields to filter.
 
-Note that in both queries, `HAVING` comes *after* `GROUP BY`. One way to
+Note that `HAVING` comes *after* `GROUP BY`. One way to
 think about this is: the data are retrieved (`SELECT`), which can be filtered
 (`WHERE`), then joined in groups (`GROUP BY`); finally, we can filter again based on some
 of these groups (`HAVING`).
@@ -99,6 +107,17 @@ of these groups (`HAVING`).
 > What sodas were sold more than 100000 bottles in the whole database?  
 > In another word, write a query that returns item_id and total bottles sold in invoice_info table
 > Where the total bottles sold is more than 100000
+> 
+>> ## Solution
+>>
+>> ```
+>> SELECT Item_id, SUM(Bottles_Sold) AS ct
+>> FROM invoice_info
+>> GROUP BY Item_id
+>> HAVING ct > 100000;
+>> 
+>> ```
+> {: .solution}
 {: .challenge}
 
 ## Saving Queries for Future Use
@@ -111,15 +130,14 @@ think of views is as a table, that can read, aggregate, and filter information
 from several places before showing it to you.
 
 Creating a view from a query requires to add `CREATE VIEW viewname AS`
-before the query itself. For example, imagine that my project only covers
-the data gathered during the May of 2017.  That
-query would look like:
+before the query itself. For example, imagine that we are doing a project that only need 
+the data during the May of 2017. We can query by: 
 
     SELECT * FROM invoice_info
     WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
     ORDER BY Date;
 
-But we don't want to have to type that every time we want to ask a
+But we don't want to type that every time we want to ask a
 question about that particular subset of data. Hence, we can benefit from a view:
 
     CREATE VIEW May_2017 AS
@@ -130,7 +148,7 @@ question about that particular subset of data. Hence, we can benefit from a view
 Now if you execute the query with `pd.read_sql()`, what happened? It does not work! <br>
 WHY? 
 ![alt text](../img/q.png){:height="100px"} <br>
-It is saving something to database, instead of returing the query result. So nothing can be store to the dataframe.<br>
+It is saving something to database, instead of returning the query result. So nothing can be store to the DataFrame.<br>
 Instead, what you can do is to create a cursor object, and execute the statement:  
 ```
 q2 = '''CREATE VIEW May_2017 AS
@@ -161,13 +179,14 @@ SELECT COUNT(Category) FROM item_info;
 ```
 
 Why did they return different result? <br>
-You probablly noticed from previous exercises that there are one category called "None". Yes, there are few sodas that does not have a category. 
+You probably noticed from previous exercises that there is one category called "None". Yes, there are few sodas that does not have a category. 
 
-When we count the weight field specifically, SQL ignores the records with data
+When we count the Category field specifically, SQL ignores the records with data
 missing in that field.  So here is one example where NULLs can be tricky:
 `COUNT(*)` and `COUNT(field)` can return different values.
 
-To find the soda that does not have a category, you can use `IS NULL` statement. Note that you cannot do `== NULL`.  
+To find the soda that does not have a category, note that you cannot do `== NULL`. In stead, you can use `IS NULL` statement. 
+
 ```
 SELECT * FROM item_info 
 WHERE Category IS NULL;
@@ -180,7 +199,7 @@ soda with category "Blueberry Soda":
     FROM item_info 
     WHERE Category == "Blueberry Soda";
 
-Now let's count all the soda with categories other than "C0001":
+Now let's count all the soda with categories other than "Blueberry Soda":
 
     SELECT COUNT(*) 
     FROM item_info 
@@ -193,7 +212,7 @@ But if we compare those two numbers with the total:
 
 We'll see that they don't add up to the total! That's because SQL
 doesn't automatically include NULL values in a negative conditional
-statement.  So if we are quering "not x", then SQL divides our data
+statement.  So if we are querying "not x", then SQL divides our data
 into three categories: 'x', 'not NULL, not x' and NULL; then,
 returns the 'not NULL, not x' group. Sometimes this may be what we want -
 but sometimes we may want the missing values included as well! In that

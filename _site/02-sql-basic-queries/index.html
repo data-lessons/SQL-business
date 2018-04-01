@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-03-07 12:17:01 -0600">
+    <meta http-equiv="last-modified" content="2018-04-01 14:09:18 -0500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -207,7 +207,7 @@
     <tr>
       <td>Bottle_Volume_ml</td>
       <td style="text-align: left">DOUBLE</td>
-      <td>Volumn of the soda in ml</td>
+      <td>Volume of the soda in ml</td>
     </tr>
     <tr>
       <td>Bottle_Cost</td>
@@ -223,16 +223,18 @@
 </table>
 
 <p>Let’s write an SQL query that selects only the Item_Description column from the
-item_info table.</p>
+item_info table. You can add comments between <code class="highlighter-rouge">/*</code> and <code class="highlighter-rouge">*/</code>.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description 
 FROM item_info;
+/* you can
+add comments like this*/
 </code></pre></div></div>
 
 <p>We have capitalized the words SELECT and FROM because they are SQL keywords.
 SQL is case insensitive, but it helps for readability, and is good style.</p>
 
-<p>If we want more information, we can just add a new column to the list of fields,
+<p>If we want more information, we can just add new column names to the list of fields,
 right after SELECT:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Bottle_Volume_ml, Bottle_Cost  
@@ -258,8 +260,8 @@ LIMIT 10;
 
 <h3 id="unique-values">Unique values</h3>
 
-<p>If we want only the unique values so that we can quickly see what categories have
-been sampled we use <code class="highlighter-rouge">DISTINCT</code></p>
+<p>If you want only the unique values so that you can quickly see what categories have
+been sampled, you can use <code class="highlighter-rouge">DISTINCT</code> keyword.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT Category
 FROM item_info;
@@ -305,6 +307,15 @@ FROM item_info;
     <li>We have the cost and price of each soda, write a query that returns the profit margin of each soda, 
   give it alias as ‘Margin’ and round it to 2 decimal places.</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *, ROUND((Bottle_Retail_Price - Bottle_Cost)/Bottle_Cost,2) AS Margin 
+FROM item_info;
+
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 <h2 id="filtering">Filtering</h2>
@@ -322,29 +333,28 @@ WHERE Item_Description = "Nozomi Power Injection";
 </code></pre></div></div>
 
 <p>We can do the same thing with numbers.
-Here, we only want the soda with more than 500ml:</p>
+For example, if we only want the soda with more than 500ml:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info
 WHERE Bottle_Volume_ml &gt; 500;
 </code></pre></div></div>
 
-<p>What if your favorite singer’s name is ‘Honoka’ and you want to buy soda that contains ‘Honoka’ in the name? Use <code class="highlighter-rouge">LIKE</code> statement:</p>
+<p>What if you want to see soda that contains ‘Honoka’ in the name? Use the <code class="highlighter-rouge">LIKE</code> statement:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * 
 FROM item_info
 WHERE Item_Description LIKE "%Honoka%";
 </code></pre></div></div>
 
-<p>You can use <code class="highlighter-rouge">%</code> as wild card to search. That means, all soda with name like “aaHonokaaaaa” or “00Honokaxxxx” will be returned. 
+<p>You can use <code class="highlighter-rouge">%</code> as wild card to search. That means, all soda with name like “Honokaaaaa” or “00Honokaxxxx” will be returned. 
 You can use <code class="highlighter-rouge">_</code> as wild card for one character. For example, if you replace “%Honoka%” with “Honoka_”, only names such as “Honokaa”, “Honokax” will be returned.</p>
 
-<p>If we used the <code class="highlighter-rouge">TEXT</code> data type for the year the <code class="highlighter-rouge">WHERE</code> clause should
-be <code class="highlighter-rouge">Bottle_Volume_ml &gt; '500'</code>. We can use more sophisticated conditions by combining tests
+<p>We can use more sophisticated conditions by combining tests
 with <code class="highlighter-rouge">AND</code> and <code class="highlighter-rouge">OR</code>.<br />
 For example, suppose we want all the energy drink (category id = ‘Energy Drink’) with volume larger than 500ml:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM item_info
-WHERE Bottle_Volume_ml &gt; 500 AND Category = 'Energy Drink';  
+WHERE (Bottle_Volume_ml &gt; 500) AND (Category = 'Energy Drink');  
 </code></pre></div></div>
 
 <p>Note that the parentheses are not needed, but again, they help with
@@ -355,7 +365,7 @@ in the way that we intend.</p>
 category id of <code class="highlighter-rouge">Energy Drink</code>, <code class="highlighter-rouge">Blueberry Soda</code>, and <code class="highlighter-rouge">Cherry Soda</code>, we could combine the tests using OR:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ELECT * FROM item_info
-WHERE Category = 'Energy Drink' OR Category = 'Blueberry Soda' OR Category = 'Cherry Soda';  
+WHERE (Category = 'Energy Drink') OR (Category = 'Blueberry Soda') OR (Category = 'Cherry Soda');  
 </code></pre></div></div>
 
 <p>This looks messy, right? We can do the same thing by using ‘IN’:</p>
@@ -372,6 +382,16 @@ WHERE Category IN (`Energy Drink`, `Blueberry Soda`, `Cherry Soda`);
 contains the word “lime” in the name, telling us the name, cost, and volume
 (in litters).</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution-1">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Bottle_Cost, Bottle_Volume_ml/1000 AS Bottle_Volume_l 
+FROM item_info
+WHERE Bottle_Cost &lt; 2
+AND Item_Description LIKE "%lime%";
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 <h2 id="sorting">Sorting</h2>
@@ -379,22 +399,21 @@ contains the word “lime” in the name, telling us the name, cost, and volume
 <p>We can also sort the results of our queries by using <code class="highlighter-rouge">ORDER BY</code>.
 For simplicity, let’s go back to the <strong>item_info</strong> table and alphabetize it by soda name.</p>
 
-<p>Now let’s order it by name (ascending by default).</p>
+<p>Let’s order it by name (ascending by default).</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
 FROM item_info
 ORDER BY Item_Description;
 </code></pre></div></div>
 
-<p>We could alternately use <code class="highlighter-rouge">DESC</code> to get descending order.</p>
+<p>We could alternately use <code class="highlighter-rouge">DESC</code> to get the descending order.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
 FROM item_info
 ORDER BY Item_Description DESC; 
 </code></pre></div></div>
 
-<p>We can also sort on several fields at once.
-To truly be alphabetical, we might want to order by genus then species.</p>
+<p>We can also sort on several fields at once.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT *
 FROM item_info
@@ -408,6 +427,15 @@ ORDER BY Item_Description, Bottle_Cost;
     <li>Write a query that returns Item_Description, Bottle_Cost, volume and retail price
 of the soda, sorted firstly with retail price in descending order, then with volume in ascending order.</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution-2">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT Item_Description, Bottle_Cost, Bottle_Volume_ml, Bottle_Retail_Price 
+FROM item_info
+ORDER BY Bottle_Retail_Price DESC, Bottle_Volume_ml;
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 <h2 id="dealing-with-dates">Dealing with dates</h2>
@@ -433,11 +461,11 @@ of the soda, sorted firstly with retail price in descending order, then with vol
 FROM invoice_info; 
 </code></pre></div></div>
 <p>For month and day, simply replace <code class="highlighter-rouge">%Y</code> with <code class="highlighter-rouge">%m</code> or <code class="highlighter-rouge">%d</code>. You can also do <code class="highlighter-rouge">%Y-%m</code> to get the year and month. 
-You can get all invoice after 2017 by:</p>
+You can get all invoices after 2017 by:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info
 WHERE Date &gt;= "2017-01-01";
 </code></pre></div></div>
-<p>You can get a invoice from a range of time by:</p>
+<p>You can get invoices from a range of time by:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM invoice_info
 WHERE Date BETWEEN "2017-01-01" AND "2017-02-27"; 
 </code></pre></div></div>
@@ -476,12 +504,21 @@ we recommend to put each clause on its own line.</p>
 
   <ul>
     <li>Let’s try to combine what we’ve learned so far in a single
-query.  Using the <strong>item_info</strong> table write a query to display the three data fields,
+query.  Use the <strong>item_info</strong> table, write a query to display 
 <code class="highlighter-rouge">Item_Description</code>, <code class="highlighter-rouge">Bottle_Volume_ml</code> and Retail Price for 6 packs (give it an alias <code class="highlighter-rouge">Six_Pack_Price</code>), for
 all sodas that are usually sold in 6 packs, ordered firstly by <code class="highlighter-rouge">Six_Pack_Price</code>, then alphabetically by the <code class="highlighter-rouge">Item_Description</code>.</li>
-    <li>Write the query as a single line, then put each clause on its own line, and
-see how more legible the query becomes!</li>
   </ul>
+
+  <blockquote class="solution">
+    <h2 id="solution-3">Solution</h2>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+SELECT Item_Description, Bottle_Volume_ml, Bottle_Retail_Price * 6 AS Six_Pack_Price
+FROM item_info
+WHERE Pack = 6
+ORDER BY Six_Pack_Price, Item_Description;
+</code></pre></div>    </div>
+  </blockquote>
 </blockquote>
 
 

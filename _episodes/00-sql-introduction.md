@@ -32,31 +32,31 @@ These queries can allow you to perform a number of actions such as: insert, upda
 
 > ## Think about this situation
 >
-> Imagine if you are a owner of a convenience store, and you are trying to record your soda purchase. <br>
+> Imagine if you are a owner of a convenience store, and you are trying to record your soda purchases. <br>
 > In each invoice, it contains the following information: <br>
-> Invoice id, Date, Category, Soda name, Volume, Cost, Retail Price, Vendor, Number of bottle purchased <br>
+> Invoice id, Date, Category, Soda name, Volume, Cost, Retail Price, Vendor, Vendor phone number, Number of bottle purchased <br>
 > How would you store the data?  
 {: .challenge}
 
 ## Traditional File Approach 
 If you store all these invoice information in one Excel file, 
 What problem could raise from this approach?  
-<b>Data redundency:</b> <br>
-![alt text](../img/00_1.png){:width="700px"}
+<b>Data redundancy:</b> <br>
+![excel1](../img/00_1.png){:width="700px"}
 <br><br>
-Imagine if you consistantly purchased some Big Dog Cola from LCDM Beverage vendor every day for 5 days, 
+Imagine if you consistently purchased some Big Dog Cola from LCDM Beverage vendor every day for 5 days, 
 Notice these columns: Category, Soda_name, Volume, Cost, Retail_Price, Vendor, Vendor number
-With tranditional file approach, you have to record exact same information in these columns 5 times.  
-<b>Data inconsistancy:</b> <br>
-![alt text](../img/00_2.png){:width="700px"}
+With traditional file approach, you have to record the exact same information in these columns 5 times. 
+<b>Data inconsistency:</b> <br>
+![excel2](../img/00_2.png){:width="700px"}
 <br><br>
 Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
-There are only 5 rows so it might be easy to change everything. If the data size gets large, mistakes are likely to occur.  
+There are only 5 rows here so it might be easy to change everything. However, if the data size gets large, mistakes are likely to occur.  
 
 If you thought about storing these information in few different Excel files, <b>great idea! You are on the right track </b><br>
-However, if you want information from all files at the same time, how do you combine them? If each file contains thoudans of rows, Ah... <br>
-The largest table that Excel can handle is 1,048,576 * 16,384. Excel can be very slow when working with large number of data. Moreover, in the real word, you can easily get 1 million rows of data...   
-![alt text](../img/tuxue.png){:height="100px" width="100px"}
+However, if you want information from all files at the same time, how do you combine them? If each file contains thousands of rows, Ah... <br>
+The largest table that Excel can handle is 1,048,576 * 16,384. Excel can be very slow when working with large number of data. Moreover, in the real word, you can easily get more than 1 million rows of data...   
+![excel3](../img/tuxue.png){:height="100px" width="100px"}
 
 ## Goals
 
@@ -67,7 +67,7 @@ To sum up, these are frequent used data operations:
 * do math and other calculations
 * combine data across spreadsheets
 
-In addition, we don't want to do this manually!  Instead of searching 
+In addition, we don't want to do this manually! Instead of searching 
 for the right pieces of data ourselves, or clicking between spreadsheets, 
 or manually sorting columns, we want to make the computer do the work.  
 
@@ -77,6 +77,8 @@ actually modifying our source data.
 
 Putting our data into a <b>relational database</b> and using SQL will help us achieve these goals.  
 
+# Databases
+
 > ## Definition: *Relational Database*
 >
 > A relational database stores data in *relations* made up of *records* with *fields*.
@@ -85,10 +87,9 @@ Putting our data into a <b>relational database</b> and using SQL will help us ac
 > In most cases, each record will have a unique identifier, called a *key*,
 > which is stored as one of its fields.
 > Records may also contain keys that refer to records in other tables,
-> which enables us to combine information from two or more sources.
+> which enables us to combine information from two or more sources. <br>
+> ![db](../img/db.png){:height="200px"}
 {: .callout}
-
-# Databases
 
 ## Why use relational databases
 
@@ -124,6 +125,7 @@ Top 4 are all Relational Database Management Systems (RDBMS). More and more comp
     * Split into separate tables with one table per class of information
     * Needs an identifier in common between tables – shared column - to
        reconnect (known as a *foreign key*).
+We will explain this later with our database.  
 
 To summarize: 
 
