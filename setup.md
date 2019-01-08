@@ -36,8 +36,6 @@ permalink: /setup/
 > The data for this lesson is a part of the Data Carpentry Business workshop. 
 > The original data for this lesson and the workshop are collected from the 
 > [State of Iowa](https://data.iowa.gov/browse?category=Economy) 
-> It is open for public use, we have modified the data for the workshop  
-{: .prereq}
-
+> It is open for public use, we have modified the data for the workshop
 
 
