@@ -30,7 +30,7 @@ permalink: /setup/
 {: .prereq}
 
 > ## Data
-> **Download** this data to your computer: [tbd](https://github.com/data-lessons/SQL-business/tree/gh-pages/data)    
+> **Download** this data to your computer: [soda.db](https://github.com/data-lessons/SQL-business/raw/gh-pages/data/soda.db) and move it to sql_workshop folder created above    
 >
 > #### About the data
 > The data for this lesson is a part of the Data Carpentry Business workshop. 
