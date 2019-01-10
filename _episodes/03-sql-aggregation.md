@@ -88,8 +88,9 @@ filter the results based on **aggregate functions**, through the `HAVING` keywor
 For example, we can request to only return information
 about stores that has more than 1000 invoices. 
 
-    SELECT Store_id, COUNT(*) AS num_invoice
+    SELECT Store_id, COUNT(*) AS num_invoices
     FROM invoice_info
+    WHERE Bottles_sold > 1
     GROUP BY Store_id
     HAVING num_invoices > 1000
     ORDER BY num_invoices;
@@ -99,7 +100,7 @@ aggregated columns instead of database fields to filter.
 
 Note that `HAVING` comes *after* `GROUP BY`. One way to
 think about this is: the data are retrieved (`SELECT`), which can be filtered
-(`WHERE`), then joined in groups (`GROUP BY`); finally, we can filter again based on some
+(`WHERE`), then combined in groups (`GROUP BY`); finally, we can filter again based on some
 of these groups (`HAVING`).
 
 > ## Challenge
@@ -189,7 +190,7 @@ To find the soda that does not have a category, note that you cannot do `== NULL
 
 ```
 SELECT * FROM item_info 
-WHERE Category IS NULL;
+WHERE Category_id IS NULL;
 ```
 
 Another case is when we use a "negative" query.  Let's count all the
@@ -197,13 +198,13 @@ soda with category "Blueberry Soda":
 
     SELECT COUNT(*) 
     FROM item_info 
-    WHERE Category == "Blueberry Soda";
+    WHERE Category_id == "Blueberry Soda";
 
 Now let's count all the soda with categories other than "Blueberry Soda":
 
     SELECT COUNT(*) 
     FROM item_info 
-    WHERE Category != "Blueberry Soda";
+    WHERE Category_id != "Blueberry Soda";
 
 But if we compare those two numbers with the total:
 
