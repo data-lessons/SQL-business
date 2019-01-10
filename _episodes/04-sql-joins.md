@@ -85,11 +85,42 @@ Sometimes table names are very long, it is handy to give alias to table names.
 
 ### Different join types
 There are few types of joins:  
-In your future work, `INNER JOIN` and `LEFT (RIGHT) JOIN` are likely to be used more often. Make sure to fully understant these two kinds of joins. <br>
-`CROSS JOIN` are not very often used, it returns weird things... <br>
 ![join](../img/join.png){:height="500px"} <br>
+An INNER JOIN is the most common and default type of join. You can use INNER keyword optionally.
+<br>
+We can count the number of records returned by a join query with store_info and county table.
 
-Note that RIGHT JOIN and FULL OUTER JOIN is not supported in sqlite3 <br>
+    SELECT COUNT(*)
+    FROM store_info
+    INNER JOIN county
+    USING(County_id);
+
+Notice that this number is larger than left join.
+
+    SELECT COUNT(*)
+    FROM store_info
+    LEFT JOIN county
+    USING(County_id);
+
+> ## Challenge:
+> - What does that tell you? Consider the difference between INNER JOIN and LEFT JOIN. 
+> 
+>> ## Solution
+>>
+>> ```
+>> There are 2 stores without a County_id
+>>
+>> ```
+>> 
+> {: .solution}
+{: .challenge}
+
+Remember: In SQL a `NULL` value in one table can never be joined to a `NULL` value in a
+second table because `NULL` is not equal to anything, not even itself.
+<br>
+`CROSS JOIN` are not very often used, it returns weird things...
+<br>
+RIGHT JOIN and FULL OUTER JOIN is not supported in sqlite3 <br>
 If you need to do RIGHT JOIN, you can just swap the table names  <br>
 If you need to do FULL OUTER JOIN, you need to do two queries and use `UNION ALL` to put them together <br>
 Suppose you have two tables, table A with attribute "ab" and "a", table B with attribute "ab" and "b", and the join column is "ab",   
@@ -114,42 +145,6 @@ WHERE A.ab IS NULL;
 >> 
 > {: .solution}
 {: .challenge}
-
-We can count the number of records returned by a join query with item_info and invoice_info table.
-
-    SELECT COUNT(*)
-    FROM item_info as ite
-    INNER JOIN invoice_info as inv
-    ON ite.item_id = inv.item_id;
-
-Notice that this number is larger than left join.
-
-    SELECT COUNT(*)
-    FROM item_info as ite
-    LEFT JOIN invoice_info as inv
-    ON ite.item_id = inv.item_id;
-
-What does that tell you? Consider the difference between INNER JOIN and LEFT JOIN?  
-Yes, there is one item that was never sold!   
-
-> ## Challenge:
-> - Find the item's name that was never sold. 
-> 
->> ## Solution
->>
->> ```
->> SELECT Item_Description 
->> FROM item_info as ite
->> LEFT JOIN invoice_info as inv
->> ON ite.item_id = inv.item_id
->> WHERE invoice_id IS NULL;
->> ```
->> 
-> {: .solution}
-{: .challenge}
-
-Remember: In SQL a `NULL` value in one table can never be joined to a `NULL` value in a
-second table because `NULL` is not equal to anything, not even itself. 
 
 ### Combining joins with sorting and aggregation
 
