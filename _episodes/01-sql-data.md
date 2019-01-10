@@ -81,7 +81,7 @@ df = pd.read_sql(q, conn)
 df
 ```
 
-2. List the fields/columns in a table
+2. List the fields/columns in each table
 ```python
 print(df['sql'][0])
 print(df['sql'][1])
