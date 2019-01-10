@@ -72,6 +72,8 @@ df.head(10)
 ``` 
 You just ran your first SQL query! Now, lets see what's in the database 
 
+## Database Organization
+
 1. List all the tables in the soda database
 ```python
 q = '''
