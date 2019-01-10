@@ -170,46 +170,34 @@ SELECT * FROM May_2017;
 ```
 
 ## What About NULL?
-Let's try the following two queries:  
+
+Real-world data is never complete --- there are always holes. Databases represent these holes using a special value called null. null is not zero, False, or the empty string; it is a one-of-a-kind value that means "nothing here". Dealing with null requires a few special tricks and some careful thinking.
+
+To start, let's have a look at the store_info table. Stores with Store_id 5226 and 5249 have no County_id --- or rather, its County_id is null:
+
+To find the Stores that does not have a County, note that you cannot do `== NULL`. In stead, you can use `IS NULL` statement. 
 
 ```
-SELECT COUNT(*) FROM item_info;
-```
-```
-SELECT COUNT(Category) FROM item_info;
+SELECT * FROM store_info 
+WHERE COunty_id IS NULL;
 ```
 
-Why did they return different result? <br>
-You probably noticed from previous exercises that there is one category called "None". Yes, there are few sodas that does not have a category. 
-
-When we count the Category field specifically, SQL ignores the records with data
-missing in that field.  So here is one example where NULLs can be tricky:
-`COUNT(*)` and `COUNT(field)` can return different values.
-
-To find the soda that does not have a category, note that you cannot do `== NULL`. In stead, you can use `IS NULL` statement. 
-
-```
-SELECT * FROM item_info 
-WHERE Category_id IS NULL;
-```
-
-Another case is when we use a "negative" query.  Let's count all the
-soda with category "Blueberry Soda":
+Another case is when we use a "negative" query.  Let's count all the Stores in County_id = 82:
 
     SELECT COUNT(*) 
-    FROM item_info 
-    WHERE Category_id == "Blueberry Soda";
+    FROM store_info 
+    WHERE County_id = 82;
 
-Now let's count all the soda with categories other than "Blueberry Soda":
+Now let's count all the Stores in County_id != 82:
 
     SELECT COUNT(*) 
-    FROM item_info 
-    WHERE Category_id != "Blueberry Soda";
+    FROM store_info 
+    WHERE County_id != 82;
 
 But if we compare those two numbers with the total:
 
     SELECT COUNT(*)
-    FROM item_info;
+    FROM store_info;
 
 We'll see that they don't add up to the total! That's because SQL
 doesn't automatically include NULL values in a negative conditional
@@ -219,6 +207,18 @@ returns the 'not NULL, not x' group. Sometimes this may be what we want -
 but sometimes we may want the missing values included as well! In that
 case, we'd need to change our query to:
 
-    SELECT COUNT(*)
-    FROM item_info 
-    WHERE Category != "Blueberry Soda" OR Category IS NULL;
+> ## Challenge
+>
+> How do you count all the Stores not in County_id 82 to include the missing values?
+> 
+>> ## Solution
+>>
+>> ```
+>> SELECT COUNT(*) 
+>> FROM store_info 
+>> WHERE County_id != 82 OR County_id IS NULL;
+>> 
+>> ```
+> {: .solution}
+{: .challenge}
+
