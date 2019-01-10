@@ -22,7 +22,7 @@ Let's start by using the **item_info** table. It includes information about all 
 | Attributes          | Data Type      | Description                                                |
 |---------------------|:---------------|------------------------------------------------------------|
 | Item_id             | INTEGER        | Unique id for each item (soda)                             |
-| Category            | VARCHAR(20)    | category of soda                                           |
+| Category_id         | VARCHAR(20)    | category of soda                                           |
 | Item_Description    | TEXT           | Name of the item (soda)                                    |
 | Pack                | INTEGER        | Number of bottles that the soda usually sells for          |
 | Bottle_Volume_ml    | DOUBLE         | Volume of the soda in ml                                   |
@@ -75,7 +75,7 @@ you would want to do this if you were working with large databases.
 If you want only the unique values so that you can quickly see what categories have
 been sampled, you can use `DISTINCT` keyword. 
 
-    SELECT DISTINCT Category
+    SELECT DISTINCT Category_id
     FROM item_info;
 
 Well, we can only see the unique ids, and that does not make any sense right? 
@@ -84,7 +84,7 @@ Don't worry, you will learn how to return category names later.
 If we select more than one column, then the distinct pairs of values are
 returned
 
-    SELECT DISTINCT Category, Pack
+    SELECT DISTINCT Category_id, Pack
     FROM item_info;
 
 ### Calculated values
@@ -153,10 +153,14 @@ You can use `_` as wild card for one character. For example, if you replace "%Ho
 
 We can use more sophisticated conditions by combining tests
 with `AND` and `OR`.  
-For example, suppose we want all the energy drink (category id = 'Energy Drink') with volume larger than 500ml:
+For example, suppose we want all the energy drink (category = 'Energy Drink') with volume larger than 500ml. First check the Category_id for 'Energy Drink'
+
+    SELECT * FROM Category;
+
+then
 
     SELECT * FROM item_info
-    WHERE (Bottle_Volume_ml > 500) AND (Category = 'Energy Drink');  
+    WHERE (Bottle_Volume_ml > 500) AND (Category_id = 'C0006');  
 
 Note that the parentheses are not needed, but again, they help with
 readability.  They also ensure that the computer combines `AND` and `OR`
@@ -165,13 +169,13 @@ in the way that we intend.
 If we wanted to get data for 3 categories of soda, which have
 category id of `Energy Drink`, `Blueberry Soda`, and `Cherry Soda`, we could combine the tests using OR:
 
-    ELECT * FROM item_info
-    WHERE (Category = 'Energy Drink') OR (Category = 'Blueberry Soda') OR (Category = 'Cherry Soda');  
+    SELECT * FROM item_info
+    WHERE (Category_id = 'C0006') OR (Category_id = 'C0001') OR (Category_id = 'C0002');  
 
 This looks messy, right? We can do the same thing by using 'IN': 
 
     SELECT * FROM item_info 
-    WHERE Category IN (`Energy Drink`, `Blueberry Soda`, `Cherry Soda`); 
+    WHERE Category_id IN ('C0006', 'C0001', 'C0002'); 
 
 > ## Challenge
 >
