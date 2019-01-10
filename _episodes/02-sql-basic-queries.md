@@ -46,6 +46,15 @@ right after SELECT:
     SELECT Item_Description, Bottle_Volume_ml, Bottle_Cost  
     FROM item_info;
 
+> ## Challenge
+>
+> - How many steps do you need to do this in excel?  
+>
+>> ## Solution
+>>
+> {: .solution}
+{: .challenge}
+
 Or we can select all of the columns in a table using the wildcard *
 
     SELECT *
