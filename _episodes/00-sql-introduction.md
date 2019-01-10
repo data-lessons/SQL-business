@@ -53,7 +53,8 @@ With traditional file approach, you have to record the exact same information in
 <b>Data inconsistency:</b>
 <br>
 Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
-There are only 5 rows here so it might be easy to change everything. However, if the data size gets large, mistakes are likely to occur. 
+There are only 5 rows here so it might be easy to change everything. However, if the data size gets large, mistakes are likely to occur.
+<br>
 ![excel2](../img/00_2.png){:width="700px"}
 <br>
 
