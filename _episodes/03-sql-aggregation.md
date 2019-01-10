@@ -50,15 +50,15 @@ If we want to group by multiple fields, we give `GROUP BY` a comma separated lis
 >
 > What is the most expensive soda in each category? 
 > Use the item_info table, write queries that return:
-> Item_Description, Category, max Bottle_Retail_Price 
+> Item_Description, Category_id, max Bottle_Retail_Price 
 > of the most expensive soda in each category.  
 > 
 >> ## Solution
 >>
 >> ```
->> SELECT Item_Description, Category, MAX(Bottle_Retail_Price)
+>> SELECT Item_Description, Category_id, MAX(Bottle_Retail_Price)
 >> FROM item_info
->> GROUP BY Category;
+>> GROUP BY Category_id;
 >> 
 >> ```
 > {: .solution}
