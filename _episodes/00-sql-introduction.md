@@ -41,7 +41,7 @@ These queries can allow you to perform a number of actions such as: insert, upda
 ## Traditional File Approach 
 If you store all these invoice information in one Excel file, 
 What problem could raise from this approach?  
-<b>Data redundancy:</b>
+* Data redundancy:
 <br>
 Imagine if you consistently purchased some Big Dog Cola from LCDM Beverage vendor every day for 5 days, 
 Notice these columns: Category, Soda_name, Volume, Cost, Retail_Price, Vendor, Vendor number
@@ -50,7 +50,7 @@ With traditional file approach, you have to record the exact same information in
 ![excel1](../img/00_1.png){:width="700px"}
 <br>
 
-<b>Data inconsistency:</b>
+* Data inconsistency:
 <br>
 Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
 There are only 5 rows here so it might be easy to change everything. However, if the data size gets large, mistakes are likely to occur.
@@ -60,6 +60,9 @@ There are only 5 rows here so it might be easy to change everything. However, if
 
 If you thought about storing these information in few different Excel files, <b>great idea! You are on the right track </b><br>
 However, if you want information from all files at the same time, how do you combine them? If each file contains thousands of rows, Ah... <br>
+
+* Slow with large sets of data:
+<br>
 The largest table that Excel can handle is 1,048,576 * 16,384. Excel can be very slow when working with large number of data. Moreover, in the real word, you can easily get more than 1 million rows of data...   
 ![excel3](../img/tuxue.png){:height="100px" width="100px"}
 
