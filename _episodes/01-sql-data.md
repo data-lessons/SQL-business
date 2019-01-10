@@ -41,7 +41,6 @@ The data was originated from a real dataset. We have modified the dataset for th
 import sqlite3 as sql
 import pandas as pd
 ```
-
 `sqlite3` will be included within a standard Python installation.  `pandas` is not part of the [Python Standard Library](https://docs.python.org/3/library/index.html), but will normally be bundled with Anaconda.
 
 2. in the next cell, create a connection to the database called conn  
