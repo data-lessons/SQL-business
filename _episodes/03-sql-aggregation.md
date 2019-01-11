@@ -121,54 +121,6 @@ of these groups (`HAVING`).
 > {: .solution}
 {: .challenge}
 
-## Saving Queries for Future Use
-
-It is not uncommon to repeat the same operation more than once, for example
-for monitoring or reporting purposes. SQL comes with a very powerful mechanism
-to do this by creating views. Views are a form of query that is saved in the database,
-and can be used to look at, filter, and even update information. One way to
-think of views is as a table, that can read, aggregate, and filter information
-from several places before showing it to you.
-
-Creating a view from a query requires to add `CREATE VIEW viewname AS`
-before the query itself. For example, imagine that we are doing a project that only need 
-the data during the May of 2017. We can query by: 
-
-    SELECT * FROM invoice_info
-    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
-    ORDER BY Date;
-
-But we don't want to type that every time we want to ask a
-question about that particular subset of data. Hence, we can benefit from a view:
-
-    CREATE VIEW May_2017 AS
-    SELECT * FROM invoice_info
-    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
-    ORDER BY Date;
-
-Now if you execute the query with `pd.read_sql()`, what happened? It does not work! <br>
-WHY? 
-![alt text](../img/q.png){:height="100px"} <br>
-It is saving something to database, instead of returning the query result. So nothing can be store to the DataFrame.<br>
-Instead, what you can do is to create a cursor object, and execute the statement:  
-```
-q2 = '''CREATE VIEW May_2017 AS
-    SELECT * FROM invoice_info
-    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
-    ORDER BY Date;'''
-c = conn.cursor()
-c.execute(q2)
-```  
-To save changes, you do
-```
-conn.commit() 
-```
-
-Now, you have successfully created the view. `May_2017` view is almost like a table in the database. You can do something like this:  
-```
-SELECT * FROM May_2017;
-```
-
 ## What About NULL?
 
 Real-world data is never complete --- there are always holes. Databases represent these holes using a special value called null. null is not zero, False, or the empty string; it is a one-of-a-kind value that means "nothing here". Dealing with null requires a few special tricks and some careful thinking.
@@ -221,4 +173,52 @@ case, we'd need to change our query to:
 >> ```
 > {: .solution}
 {: .challenge}
+
+## Saving Queries for Future Use
+
+It is not uncommon to repeat the same operation more than once, for example
+for monitoring or reporting purposes. SQL comes with a very powerful mechanism
+to do this by creating views. Views are a form of query that is saved in the database,
+and can be used to look at, filter, and even update information. One way to
+think of views is as a table, that can read, aggregate, and filter information
+from several places before showing it to you.
+
+Creating a view from a query requires to add `CREATE VIEW viewname AS`
+before the query itself. For example, imagine that we are doing a project that only need 
+the data during the May of 2017. We can query by: 
+
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;
+
+But we don't want to type that every time we want to ask a
+question about that particular subset of data. Hence, we can benefit from a view:
+
+    CREATE VIEW May_2017 AS
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;
+
+Now if you execute the query with `pd.read_sql()`, what happened? It does not work! <br>
+WHY? 
+![alt text](../img/q.png){:height="100px"} <br>
+It is saving something to database, instead of returning the query result. So nothing can be store to the DataFrame.<br>
+Instead, what you can do is to create a cursor object, and execute the statement:  
+```
+q2 = '''CREATE VIEW May_2017 AS
+    SELECT * FROM invoice_info
+    WHERE Date BETWEEN "2017-05-01" AND "2017-05-31"
+    ORDER BY Date;'''
+c = conn.cursor()
+c.execute(q2)
+```  
+To save changes, you do
+```
+conn.commit() 
+```
+
+Now, you have successfully created the view. `May_2017` view is almost like a table in the database. You can do something like this:  
+```
+SELECT * FROM May_2017;
+```
 
