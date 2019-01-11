@@ -184,40 +184,18 @@ sort the result by number of invoices at descending order. Try slowly build the 
 {: .challenge}
 
 ## Subqueries  
-Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which stores sale items that does not have a category (those specialties):  
+Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which store name that sell certain items:  
 
 ```
-SELECT * 
-FROM Store_info 
-WHERE Store_id IN 
-(SELECT Store_id 
-    FROM invoice_info 
-    INNER JOIN item_info USING (item_id)
-    WHERE Category IS NULL
+SELECT Store_Name
+FROM store_info
+WHERE Store_id IN
+(SELECT Store_id
+FROM invoice_info
+INNER JOIN item_info
+USING(Item_id)
 );
 ```
-
-You can also Join a subquery, or give a subquery an alias. For example, if you want to see not only which stores sale items that does not have a category, but also want to see how many of these items were sold in each store. Try it yourself!  
-It is a little long. We can break it down with few steps:  
-- Select Store_id, Item_Description, Bottles_Sold from invoice_info and item_info table
-- Constraint it with WHERE statement, limit to the items that does not have category
-- Now you have a subquery that has all sales records of the specialties. Join it with Store_info table
-- Calculate the total bottles sold with SUM 
-
-```
-SELECT s.Store_Name, sub.Item_Description, SUM(sub.Bottles_Sold) AS Bottles_Sold
-FROM Store_info AS s 
-INNER JOIN 
-    (SELECT Store_id, Item_Description, Bottles_Sold
-        FROM invoice_info 
-        INNER JOIN item_info USING (item_id)
-        WHERE item_info.Category IS NULL
-    ) AS sub
-USING (Store_id)
-GROUP BY Store_id;
-```
-
-If you will use the subquery frequently, you can create a view in the database. More details were provided in lesson 3. 
 
 ## Functions `IFNULL` and `NULLIF` and more
 
