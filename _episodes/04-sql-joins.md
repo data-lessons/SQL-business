@@ -149,8 +149,8 @@ WHERE A.ab IS NULL;
 ### Combining joins with sorting and aggregation
 
 Ok, now we mash everything together. 
-Lets try to see which stores have the most number of purchases from vendor (number of invoices) in 2015 
-We want the Store_Name, Store_Name, Address, County_Name, number of invoices for each store in 2015, and then
+Lets try to see which stores have the most number of purchases in 2015. Number of purchases by a store is equal to number of invoices grouped by store_id. 
+We want the Store_Name, Address, County_Name, number of invoices for each store in 2015, and then
 sort the result by number of invoices at descending order. Try slowly build the query step by step. 
 
     SELECT st.Store_Name, st.Address, County_Name, count(invoice_id) AS Num_Invoice
