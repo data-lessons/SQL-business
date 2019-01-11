@@ -227,52 +227,14 @@ that operate on individual values as well. Probably the most important of these
 are `IFNULL` and `NULLIF`. `IFNULL` allows us to specify a value to use in
 place of `NULL`.
 
-Remember the ones that does not have a category? Let's replace the "None" with "Specialties"
+Remember the ones that does not have a County_id? Let's replace the "None" with "Online"
 
-    SELECT Item_id, Item_Description, IFNULL(Category, "Specialties") AS Category, Pack, 
-        Bottle_Volume_ml, Bottle_Cost, Bottle_Retail_Price
-    FROM item_info;
+    SELECT Store_id, Store_Name, IFNULL(County_id, "Online") AS County_id
+    FROM store_info;
 
-Keep in mind that this does not change the database, it is still just a query. So if you exclude the IFNULL, the query will still return None.  
+Keep in mind that this does not change the database, it is still just a query. So if you exclude the IFNULL, the query will still return None.
+`IFNULL` can be particularly useful in `JOIN`. Even if there is no NULL value in any tables, sometimes a LEFT JOIN could result in NULL values.
 Our database is very clean, so unfortunately, there are not much null values to play with...  
-`IFNULL` can be particularly useful in `JOIN`. Even if there is no NULL value in any tables, sometimes a LEFT JOIN could result in NULL values. 
-
-> ## Challenge:
->
-> - How many bottles of each energy drink were sold in 2015? 
-> - Return the Item_Description and total bottles sold (give it an alias `Totle_Bottles`) for each energy drink. Sort it by `Totle_Bottles` in descending order. Include **ALL ENERGY DRINKS** from the database. If a energy drink has no sale in 2015, return 0. 
->   - HINT 1: If you just try to left join `item_info` and `invoice_info` (show as following)  
->       ```
->        SELECT item_info.Item_Description, SUM(Bottles_Sold) AS Totle_Bottles
->        FROM item_info
->        LEFT JOIN 
->        invoice_info Using (item_id)
->        WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
->            AND Category = "Energy Drink"
->        GROUP BY item_id
->        ORDER BY Totle_Bottles DESC
->       ```
->        You will not get all the energy drink from the database. This is because the `LEFT JOIN` happens before the `WHERE` statement. Probably you can filter out the item_id that were sold in 2015 first as subq... (shh, enough hint)
->   - HINT 2: use IFNULL to replace the None after join   
->   
->> ## Solution
->>
->> ```
->> SELECT item_info.Item_Description, IFNULL(sub.Totle_Bottles, 0) AS Totle_Bottles
->> FROM item_info
->> LEFT JOIN 
->>     (SELECT item_id, SUM(Bottles_Sold) as Totle_Bottles
->>     FROM invoice_info
->>     WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
->>     GROUP BY Item_id) as sub
->> Using (item_id)
->> WHERE Category = "Energy Drink"
->> ORDER BY Totle_Bottles DESC;  
->> ```
->> 
-> {: .solution}
-{: .challenge}
-
 
 The inverse of `IFNULL` is `NULLIF`. This returns `NULL` if the first argument
 is equal to the second argument. If the two are not equal, the first argument
@@ -325,4 +287,4 @@ table below:
 > {: .solution}
 {: .challenge}  
 
-Cong! You just completed the SQL lesson. Yes, there are a lot of stuff, it's difficult to memorize everything. Keep practicing! Here is a [cheat sheet](../sql_cheat_sheet.md) for you. 
+Congratulations! You just completed the SQL lesson. Yes, there are a lot of stuff, it's difficult to memorize everything. Keep practicing! Here is a [cheat sheet](../sql_cheat_sheet.md) for you. 
