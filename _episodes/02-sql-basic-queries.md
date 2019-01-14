@@ -232,6 +232,29 @@ We can also sort on several fields at once.
 > {: .solution}
 {: .challenge}
 
+## Order of execution
+
+Another note for ordering. We don’t actually have to display a column to sort by
+it.  For example, let’s say we want the soda with Bottle_Retail_Price under $3 and sort by their id, but
+we only want to see Item_Description and Bottle_Cost.
+
+    SELECT Item_Description, Bottle_Cost
+    FROM item_info
+    WHERE Bottle_Retail_Price < 3
+    ORDER BY item_id;
+
+We can do this because sorting occurs earlier in the computational pipeline than
+field selection.
+
+The computer is basically doing this:
+
+1. Filtering rows according to WHERE
+2. Sorting results according to ORDER BY
+3. Displaying requested columns or expressions.
+
+Clauses are written in a fixed order: `SELECT`, `FROM`, `WHERE`, then `ORDER
+BY`. It is possible to write a query as a single line, but for readability,
+we recommend to put each clause on its own line.
 
 ## Dealing with dates  
 Firstly, we take a look at the `invoice_info` table  
@@ -271,30 +294,6 @@ WHERE Date BETWEEN "2017-01-01" AND "2017-02-27";
 ```
 Note that `BETWEEN` is inclusive, that is, invoices at 2017-01-01 and 2017-02-27 will be returned  
 If you are interested at more cool things you can do with dates, heres the [Documentation](https://www.sqlite.org/lang_datefunc.html)
-
-## Order of execution
-
-Another note for ordering. We don’t actually have to display a column to sort by
-it.  For example, let’s say we want the soda with Bottle_Retail_Price under $3 and sort by their id, but
-we only want to see Item_Description and Bottle_Cost.
-
-    SELECT Item_Description, Bottle_Cost
-    FROM item_info
-    WHERE Bottle_Retail_Price < 3
-    ORDER BY item_id;
-
-We can do this because sorting occurs earlier in the computational pipeline than
-field selection.
-
-The computer is basically doing this:
-
-1. Filtering rows according to WHERE
-2. Sorting results according to ORDER BY
-3. Displaying requested columns or expressions.
-
-Clauses are written in a fixed order: `SELECT`, `FROM`, `WHERE`, then `ORDER
-BY`. It is possible to write a query as a single line, but for readability,
-we recommend to put each clause on its own line.
 
 > ## Challenge
 >
