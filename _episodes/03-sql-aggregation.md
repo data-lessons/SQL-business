@@ -235,3 +235,4 @@ Now, you have successfully created the view. `May_2017` view is almost like a ta
 ```
 SELECT * FROM May_2017;
 ```
+
