@@ -183,20 +183,6 @@ sort the result by number of invoices at descending order. Try slowly build the 
 > {: .solution}
 {: .challenge}
 
-## Subqueries  
-Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which store name that sell certain items:  
-
-```
-SELECT Store_Name
-FROM store_info
-WHERE Store_id IN
-(SELECT Store_id
-FROM invoice_info
-INNER JOIN item_info
-USING(Item_id)
-);
-```
-
 ## Functions `IFNULL` and `NULLIF` and more
 
 SQL includes numerous functions for manipulating data. You've already seen some
@@ -265,4 +251,3 @@ table below:
 > {: .solution}
 {: .challenge}  
 
-Congratulations! You just completed the SQL lesson. Yes, there are a lot of stuff, it's difficult to memorize everything. Keep practicing! Here is a [cheat sheet](../sql_cheat_sheet.md) for you. 
