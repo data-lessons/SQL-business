@@ -251,3 +251,4 @@ table below:
 > {: .solution}
 {: .challenge}  
 
+Congratulations! You just completed the SQL lesson. Yes, there are a lot of stuff, it's difficult to memorize everything. Keep practicing! Here is a [cheat sheet](../sql_cheat_sheet.md) for you. 
