@@ -49,9 +49,7 @@ With traditional file approach, you have to record the exact same information in
 
 * Data inconsistency:<br>
 Imagine if the vendor changed its phone number. Then multiple changes has to be made. 
-There are only 5 rows here so it might be easy to change everything. However, if the data size gets large, mistakes are likely to occur.<br>
-If you thought about storing these information in few different Excel files, <b>great idea! You are on the right track </b><br>
-However, if you want information from all files at the same time, how do you combine them? If each file contains thousands of rows, Ah... <br>
+There are only 5 rows here so it might be easy to change everything. However, if the data size gets large, mistakes are likely to occur. If you thought about storing these information in few different Excel files, <b>great idea! You are on the right track. </b> However, if you want information from all files at the same time, how do you combine them? If each file contains thousands of rows, Ah... <br>
 ![excel2](../img/00_2.png){:width="700px"}
 
 * Slow with large sets of data:<br>
