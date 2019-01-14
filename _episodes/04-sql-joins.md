@@ -85,11 +85,42 @@ Sometimes table names are very long, it is handy to give alias to table names.
 
 ### Different join types
 There are few types of joins:  
-In your future work, `INNER JOIN` and `LEFT (RIGHT) JOIN` are likely to be used more often. Make sure to fully understant these two kinds of joins. <br>
-`CROSS JOIN` are not very often used, it returns weird things... <br>
 ![join](../img/join.png){:height="500px"} <br>
+An INNER JOIN is the most common and default type of join. You can use INNER keyword optionally.
+<br>
+We can count the number of records returned by a join query with store_info and county table.
 
-Note that RIGHT JOIN and FULL OUTER JOIN is not supported in sqlite3 <br>
+    SELECT COUNT(*)
+    FROM store_info
+    INNER JOIN county
+    USING(County_id);
+
+Notice that this number is larger than left join.
+
+    SELECT COUNT(*)
+    FROM store_info
+    LEFT JOIN county
+    USING(County_id);
+
+> ## Challenge:
+> - What does that tell you? Consider the difference between INNER JOIN and LEFT JOIN. 
+> 
+>> ## Solution
+>>
+>> ```
+>> There are 2 stores without a County_id
+>>
+>> ```
+>> 
+> {: .solution}
+{: .challenge}
+
+Remember: In SQL a `NULL` value in one table can never be joined to a `NULL` value in a
+second table because `NULL` is not equal to anything, not even itself.
+<br>
+`CROSS JOIN` are not very often used, it returns weird things...
+<br>
+RIGHT JOIN and FULL OUTER JOIN is not supported in sqlite3 <br>
 If you need to do RIGHT JOIN, you can just swap the table names  <br>
 If you need to do FULL OUTER JOIN, you need to do two queries and use `UNION ALL` to put them together <br>
 Suppose you have two tables, table A with attribute "ab" and "a", table B with attribute "ab" and "b", and the join column is "ab",   
@@ -115,47 +146,11 @@ WHERE A.ab IS NULL;
 > {: .solution}
 {: .challenge}
 
-We can count the number of records returned by a join query with item_info and invoice_info table.
-
-    SELECT COUNT(*)
-    FROM item_info as ite
-    INNER JOIN invoice_info as inv
-    ON ite.item_id = inv.item_id;
-
-Notice that this number is larger than left join.
-
-    SELECT COUNT(*)
-    FROM item_info as ite
-    LEFT JOIN invoice_info as inv
-    ON ite.item_id = inv.item_id;
-
-What does that tell you? Consider the difference between INNER JOIN and LEFT JOIN?  
-Yes, there is one item that was never sold!   
-
-> ## Challenge:
-> - Find the item's name that was never sold. 
-> 
->> ## Solution
->>
->> ```
->> SELECT Item_Description 
->> FROM item_info as ite
->> LEFT JOIN invoice_info as inv
->> ON ite.item_id = inv.item_id
->> WHERE invoice_id IS NULL;
->> ```
->> 
-> {: .solution}
-{: .challenge}
-
-Remember: In SQL a `NULL` value in one table can never be joined to a `NULL` value in a
-second table because `NULL` is not equal to anything, not even itself. 
-
 ### Combining joins with sorting and aggregation
 
 Ok, now we mash everything together. 
-Lets try to see which stores have the most number of purchases from vendor (number of invoices) in 2015 
-We want the Store_Name, Store_Name, Address, County_Name, number of invoices for each store in 2015, and then
+Lets try to see which stores have the most number of purchases in 2015. Number of purchases by a store is equal to number of invoices grouped by store_id. 
+We want the Store_Name, Address, County_Name, number of invoices for each store in 2015, and then
 sort the result by number of invoices at descending order. Try slowly build the query step by step. 
 
     SELECT st.Store_Name, st.Address, County_Name, count(invoice_id) AS Num_Invoice
@@ -188,42 +183,6 @@ sort the result by number of invoices at descending order. Try slowly build the 
 > {: .solution}
 {: .challenge}
 
-## Subqueries  
-Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which stores sale items that does not have a category (those specialties):  
-
-```
-SELECT * 
-FROM Store_info 
-WHERE Store_id IN 
-(SELECT Store_id 
-    FROM invoice_info 
-    INNER JOIN item_info USING (item_id)
-    WHERE Category IS NULL
-);
-```
-
-You can also Join a subquery, or give a subquery an alias. For example, if you want to see not only which stores sale items that does not have a category, but also want to see how many of these items were sold in each store. Try it yourself!  
-It is a little long. We can break it down with few steps:  
-- Select Store_id, Item_Description, Bottles_Sold from invoice_info and item_info table
-- Constraint it with WHERE statement, limit to the items that does not have category
-- Now you have a subquery that has all sales records of the specialties. Join it with Store_info table
-- Calculate the total bottles sold with SUM 
-
-```
-SELECT s.Store_Name, sub.Item_Description, SUM(sub.Bottles_Sold) AS Bottles_Sold
-FROM Store_info AS s 
-INNER JOIN 
-    (SELECT Store_id, Item_Description, Bottles_Sold
-        FROM invoice_info 
-        INNER JOIN item_info USING (item_id)
-        WHERE item_info.Category IS NULL
-    ) AS sub
-USING (Store_id)
-GROUP BY Store_id;
-```
-
-If you will use the subquery frequently, you can create a view in the database. More details were provided in lesson 3. 
-
 ## Functions `IFNULL` and `NULLIF` and more
 
 SQL includes numerous functions for manipulating data. You've already seen some
@@ -232,52 +191,14 @@ that operate on individual values as well. Probably the most important of these
 are `IFNULL` and `NULLIF`. `IFNULL` allows us to specify a value to use in
 place of `NULL`.
 
-Remember the ones that does not have a category? Let's replace the "None" with "Specialties"
+Remember the ones that does not have a County_id? Let's replace the "None" with "Online"
 
-    SELECT Item_id, Item_Description, IFNULL(Category, "Specialties") AS Category, Pack, 
-        Bottle_Volume_ml, Bottle_Cost, Bottle_Retail_Price
-    FROM item_info;
+    SELECT Store_id, Store_Name, IFNULL(County_id, "Online") AS County_id
+    FROM store_info;
 
-Keep in mind that this does not change the database, it is still just a query. So if you exclude the IFNULL, the query will still return None.  
+Keep in mind that this does not change the database, it is still just a query. So if you exclude the IFNULL, the query will still return None.
+`IFNULL` can be particularly useful in `JOIN`. Even if there is no NULL value in any tables, sometimes a LEFT JOIN could result in NULL values.
 Our database is very clean, so unfortunately, there are not much null values to play with...  
-`IFNULL` can be particularly useful in `JOIN`. Even if there is no NULL value in any tables, sometimes a LEFT JOIN could result in NULL values. 
-
-> ## Challenge:
->
-> - How many bottles of each energy drink were sold in 2015? 
-> - Return the Item_Description and total bottles sold (give it an alias `Totle_Bottles`) for each energy drink. Sort it by `Totle_Bottles` in descending order. Include **ALL ENERGY DRINKS** from the database. If a energy drink has no sale in 2015, return 0. 
->   - HINT 1: If you just try to left join `item_info` and `invoice_info` (show as following)  
->       ```
->        SELECT item_info.Item_Description, SUM(Bottles_Sold) AS Totle_Bottles
->        FROM item_info
->        LEFT JOIN 
->        invoice_info Using (item_id)
->        WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
->            AND Category = "Energy Drink"
->        GROUP BY item_id
->        ORDER BY Totle_Bottles DESC
->       ```
->        You will not get all the energy drink from the database. This is because the `LEFT JOIN` happens before the `WHERE` statement. Probably you can filter out the item_id that were sold in 2015 first as subq... (shh, enough hint)
->   - HINT 2: use IFNULL to replace the None after join   
->   
->> ## Solution
->>
->> ```
->> SELECT item_info.Item_Description, IFNULL(sub.Totle_Bottles, 0) AS Totle_Bottles
->> FROM item_info
->> LEFT JOIN 
->>     (SELECT item_id, SUM(Bottles_Sold) as Totle_Bottles
->>     FROM invoice_info
->>     WHERE Date BETWEEN "2015-01-01" AND "2015-12-31"
->>     GROUP BY Item_id) as sub
->> Using (item_id)
->> WHERE Category = "Energy Drink"
->> ORDER BY Totle_Bottles DESC;  
->> ```
->> 
-> {: .solution}
-{: .challenge}
-
 
 The inverse of `IFNULL` is `NULLIF`. This returns `NULL` if the first argument
 is equal to the second argument. If the two are not equal, the first argument
@@ -330,4 +251,4 @@ table below:
 > {: .solution}
 {: .challenge}  
 
-Cong! You just completed the SQL lesson. Yes, there are a lot of stuff, it's difficult to memorize everything. Keep practicing! Here is a [cheat sheet](../sql_cheat_sheet.md) for you. 
+Congratulations! You just completed the SQL lesson. Yes, there are a lot of stuff, it's difficult to memorize everything. Keep practicing! Here is a [cheat sheet](../sql_cheat_sheet.md) for you. 

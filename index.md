@@ -3,10 +3,6 @@ layout: lesson
 root: .
 ---
 
-<p align="center">
-  <img src="../img/nyan.gif" height="100px" title="cat">
-</p>
-
 Databases are useful for both storing and using data effectively. Using a relational database serves several purposes.
 
 - It keeps your data separate from your analysis. This means there’s no risk of accidentally changing data when you analyze it.

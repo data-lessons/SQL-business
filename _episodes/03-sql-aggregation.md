@@ -50,15 +50,15 @@ If we want to group by multiple fields, we give `GROUP BY` a comma separated lis
 >
 > What is the most expensive soda in each category? 
 > Use the item_info table, write queries that return:
-> Item_Description, Category, max Bottle_Retail_Price 
+> Item_Description, Category_id, max Bottle_Retail_Price 
 > of the most expensive soda in each category.  
 > 
 >> ## Solution
 >>
 >> ```
->> SELECT Item_Description, Category, MAX(Bottle_Retail_Price)
+>> SELECT Item_Description, Category_id, MAX(Bottle_Retail_Price)
 >> FROM item_info
->> GROUP BY Category;
+>> GROUP BY Category_id;
 >> 
 >> ```
 > {: .solution}
@@ -88,8 +88,9 @@ filter the results based on **aggregate functions**, through the `HAVING` keywor
 For example, we can request to only return information
 about stores that has more than 1000 invoices. 
 
-    SELECT Store_id, COUNT(*) AS num_invoice
+    SELECT Store_id, COUNT(*) AS num_invoices
     FROM invoice_info
+    WHERE Bottles_sold > 1
     GROUP BY Store_id
     HAVING num_invoices > 1000
     ORDER BY num_invoices;
@@ -99,7 +100,7 @@ aggregated columns instead of database fields to filter.
 
 Note that `HAVING` comes *after* `GROUP BY`. One way to
 think about this is: the data are retrieved (`SELECT`), which can be filtered
-(`WHERE`), then joined in groups (`GROUP BY`); finally, we can filter again based on some
+(`WHERE`), then combined in groups (`GROUP BY`); finally, we can filter again based on some
 of these groups (`HAVING`).
 
 > ## Challenge
@@ -119,6 +120,73 @@ of these groups (`HAVING`).
 >> ```
 > {: .solution}
 {: .challenge}
+
+## What About NULL?
+
+Real-world data is never complete --- there are always holes. Databases represent these holes using a special value called null. null is not zero, False, or the empty string; it is a one-of-a-kind value that means "nothing here". Dealing with null requires a few special tricks and some careful thinking.
+
+To start, let's have a look at the store_info table. Stores with Store_id 5226 and 5249 have no County_id --- or rather, its County_id is null:
+
+To find the Stores that does not have a County, note that you cannot do `== NULL`. In stead, you can use `IS NULL` statement. 
+
+```
+SELECT * FROM store_info 
+WHERE COunty_id IS NULL;
+```
+
+Another case is when we use a "negative" query.  Let's count all the Stores in County_id = 82:
+
+    SELECT COUNT(*) 
+    FROM store_info 
+    WHERE County_id = 82;
+
+Now let's count all the Stores in County_id != 82:
+
+    SELECT COUNT(*) 
+    FROM store_info 
+    WHERE County_id != 82;
+
+But if we compare those two numbers with the total:
+
+    SELECT COUNT(*)
+    FROM store_info;
+
+We'll see that they don't add up to the total! That's because SQL
+doesn't automatically include NULL values in a negative conditional
+statement.  So if we are querying "not x", then SQL divides our data
+into three categories: 'x', 'not NULL, not x' and NULL; then,
+returns the 'not NULL, not x' group. Sometimes this may be what we want -
+but sometimes we may want the missing values included as well! In that
+case, we'd need to change our query to:
+
+> ## Challenge
+>
+> How do you count all the Stores not in County_id 82 to include the missing values?
+> 
+>> ## Solution
+>>
+>> ```
+>> SELECT COUNT(*) 
+>> FROM store_info 
+>> WHERE County_id != 82 OR County_id IS NULL;
+>> 
+>> ```
+> {: .solution}
+{: .challenge}
+
+## Subqueries  
+Another way to combine the data from two tables is subqueries. You can use the result of a query as a table. For example, you can find which store name that sell certain items:  
+
+```
+SELECT Store_Name
+FROM store_info
+WHERE Store_id IN
+(SELECT Store_id
+FROM invoice_info
+INNER JOIN item_info
+USING(Item_id)
+);
+```
 
 ## Saving Queries for Future Use
 
@@ -168,56 +236,3 @@ Now, you have successfully created the view. `May_2017` view is almost like a ta
 SELECT * FROM May_2017;
 ```
 
-## What About NULL?
-Let's try the following two queries:  
-
-```
-SELECT COUNT(*) FROM item_info;
-```
-```
-SELECT COUNT(Category) FROM item_info;
-```
-
-Why did they return different result? <br>
-You probably noticed from previous exercises that there is one category called "None". Yes, there are few sodas that does not have a category. 
-
-When we count the Category field specifically, SQL ignores the records with data
-missing in that field.  So here is one example where NULLs can be tricky:
-`COUNT(*)` and `COUNT(field)` can return different values.
-
-To find the soda that does not have a category, note that you cannot do `== NULL`. In stead, you can use `IS NULL` statement. 
-
-```
-SELECT * FROM item_info 
-WHERE Category IS NULL;
-```
-
-Another case is when we use a "negative" query.  Let's count all the
-soda with category "Blueberry Soda":
-
-    SELECT COUNT(*) 
-    FROM item_info 
-    WHERE Category == "Blueberry Soda";
-
-Now let's count all the soda with categories other than "Blueberry Soda":
-
-    SELECT COUNT(*) 
-    FROM item_info 
-    WHERE Category != "Blueberry Soda";
-
-But if we compare those two numbers with the total:
-
-    SELECT COUNT(*)
-    FROM item_info;
-
-We'll see that they don't add up to the total! That's because SQL
-doesn't automatically include NULL values in a negative conditional
-statement.  So if we are querying "not x", then SQL divides our data
-into three categories: 'x', 'not NULL, not x' and NULL; then,
-returns the 'not NULL, not x' group. Sometimes this may be what we want -
-but sometimes we may want the missing values included as well! In that
-case, we'd need to change our query to:
-
-    SELECT COUNT(*)
-    FROM item_info 
-    WHERE Category != "Blueberry Soda" OR Category IS NULL;

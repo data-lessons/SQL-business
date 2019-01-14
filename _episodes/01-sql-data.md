@@ -41,7 +41,6 @@ The data was originated from a real dataset. We have modified the dataset for th
 import sqlite3 as sql
 import pandas as pd
 ```
-
 `sqlite3` will be included within a standard Python installation.  `pandas` is not part of the [Python Standard Library](https://docs.python.org/3/library/index.html), but will normally be bundled with Anaconda.
 
 2. in the next cell, create a connection to the database called conn  
@@ -72,6 +71,32 @@ df.head(10)
 ``` 
 You just ran your first SQL query! Now, lets see what's in the database 
 
+## Database Organization
+
+1. List all the tables in the soda database
+```python
+q = '''
+SELECT * FROM sqlite_master;
+'''
+df = pd.read_sql(q, conn)
+df
+```
+
+2. List the fields/columns in each table
+```python
+print(df['sql'][0])
+print(df['sql'][1])
+print(df['sql'][3])
+print(df['sql'][4])
+print(df['sql'][5])
+print(df['sql'][6])
+```
+
+To have a better understanding of Primary keys and Foreign keys discussed in previous session, lets look at the tables and their relationships:  
+![alt text](../img/schema.png){:height="500px"}
+
+## <a name="datatypes"></a> Data types
+
 Here are all the attributes in the database:  
 
 | Attributes          | Data Type      | Description                                                | Table(s)                  |
@@ -96,10 +121,6 @@ Here are all the attributes in the database:
 | Date                | TEXT           | Date of the invoice                                        | invoice_info              |
 | Bottle_Sold         | INTEGER        | Number of bottle sold in the invoice                       | invoice_info              |
 
-To have a better understanding of Primary keys and Foreign keys discussed in previous session, lets look at the tables and their relationships:  
-![alt text](../img/schema.png){:height="500px"}
-
-## <a name="datatypes"></a> Data types
 
 Here are few common SQL datatypes (just FYI): 
 
