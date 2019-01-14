@@ -97,7 +97,6 @@ To have a better understanding of Primary keys and Foreign keys discussed in pre
 
 ## <a name="datatypes"></a> Data types
 
-
 Here are all the attributes in the database:  
 
 | Attributes          | Data Type      | Description                                                | Table(s)                  |
