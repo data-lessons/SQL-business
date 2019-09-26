@@ -101,4 +101,17 @@ As a new contribution to the Data Carpentry curriculum, Data Carpentry for Busin
 |       | 30 minutes  | Python for Business | 12 - Case Study 1 - Titanic                 |
 |       | 240 minutes | Python for Business | 13 - Case Study 2 - Chicago Yellow Cab      |
 
+# Appendix - Derived contents   
+| Our Section                                               | Derived From                                                        | Content Derived                                                                                                      |  
+|-------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| SQL Lessons - 1. Introduction to SQL    | SQL for Ecology -  1. Databases using SQL        |  Definitions of concepts are borrowed from SQL for Ecology                                                                                                | 
+| SQL Lessons - 2. Getting to know your data    | SQL for Ecology -  1. Databases using SQL  |  Chart of data types in SQL                                                                                                                               | 
+| SQL Lessons - 3. Basic Queries    | SQL for Ecology -   2. Basic Queries                   |  Definitions of concepts are borrowed from SQL for Ecology                                                                                                | 
+| SQL Lessons - 4. SQL Aggregation    | SQL for Ecology -   3. SQL Aggregation and aliases   |  The structure is inspired from SQL for Ecology (main idea and flow), but we used different examples and descriptions.                                    | 
+| SQL Lessons - 5. Joins    | SQL for Ecology -  4. Joins                                    |  The structure is inspired from SQL for Ecology (main idea and flow), but we used different examples and descriptions.                                    | 
+| Python Lessons - 7. Extra - Errors and Exceptions     | Python Novice Inflammation - 7. Errors and Exceptions               | Entire section                                                                                                           |   
+| Python Lessons - 8. Extra - Debugging                 | Python Novice Inflammation - 9. Debugging                           | Entire section                                                                                                           |  
+| Python Lessons - 2. Python basics 1 - Intro to Python | Python for Ecology - 2. Short Introduction to Programming in Python | The structure is inspired from Python for Ecology (main idea and flow), but we used different examples and descriptions. | 
+| Python Lessons - 4. Python basics 3 - Functions and Modules | Python Novice Inflammation -  6. Creating Functions | The structure is inspired from Python Novice Inflammation (main idea and flow), but we used different examples and descriptions.   | 
+
 # References
