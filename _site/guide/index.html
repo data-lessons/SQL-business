@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-28 12:14:48 -0600">
+    <meta http-equiv="last-modified" content="2018-04-01 14:09:18 -0500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -60,7 +60,7 @@
             
             <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
             
-            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
+            <li><a href="../01-sql-data/">Getting to know your data</a></li>
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
@@ -117,28 +117,9 @@
 </ul>
 
 <h2 id="data">Data</h2>
-<p>As for all of the <a href="https://github.com/datacarpentry?utf8=%E2%9C%93&amp;query=ecology">Data Carpentry ecology lessons</a>, this
-lesson uses the Portal Project Teaching Database. The data is available at http://dx.doi.org/10.6084/m9.figshare.1314459 and the download includes a
-SQLite database file (portal_mammals.sqlite) as well as three .csv files
-(species.csv, plots.csv, surveys.csv) that can be imported into SQLite.</p>
-
-<p><strong>Note</strong> that the figshare download is an archive (.zip) file that rudely explodes all of the files into your current directory.</p>
-
-<h2 id="instructors-setup-notes">Instructor’s setup notes</h2>
-
-<p>By default SQLite Manager opens in a separate window and it is not possible to
-zoom in to enlarge the font
-so that it is more readable, especially for students in the back rows.</p>
-
-<p>The way to fix this is to:</p>
-
-<ol>
-  <li>Open the SQLite Manager</li>
-  <li>Click on the <img src="../img/options_button.png" alt="Options" /><em>Options</em> button .</li>
-  <li>Chose <em>Start SQLite Manager: in a new tab</em>.</li>
-</ol>
-
-<p>You can then use <strong>Ctrl - +</strong> to zoom just like any other web page.</p>
+<p>As for all of the <a href="https://github.com/data-lessons/SQL-business">SQL for business lessons</a>, this
+lesson uses the data.iowa.gov database. The original data is available at https://data.iowa.gov/Economy/Iowa-Liquor-Sales/m3tr-qhgy, the modified database we use for this workshop is avaliable at https://github.com/data-lessons/SQL-business/tree/gh-pages/data
+It is named as <code class="highlighter-rouge">soda.db</code>, it can be imported into SQLite.</p>
 
 <h2 id="motivation-and-framing">Motivation and Framing</h2>
 
@@ -157,47 +138,52 @@ split-apply-combine)</li>
 clean data -&gt; import and analyze -&gt; results -&gt; visualization), it can be 
 helpful to identify that you’re now somewhere between clean data and analysis.</p>
 
+<p>You can also describe few scenario when SQL was used in business environment. For example, auditors often have to access clients’ database.</p>
+
 <h2 id="lesson-outline">Lesson outline</h2>
 
 <h3 id="00-sql-introduction">00-sql-introduction</h3>
 <ul>
-  <li>Introduce relational databases, database management systems, the SQLite
-Firefox plugin, and the Portal dataset</li>
-  <li>Import .csv files into sqlite</li>
-  <li>Structuring data for database import</li>
-  <li>Discuss the different SQL data types</li>
-</ul>
-
-<p><strong>Tips</strong></p>
-
-<ul>
-  <li><strong>Changing data type</strong>: There is a step on import where you have to select the data type for the field. Some people select the wrong type or nothing at all and wonder what they can do to change it. If you right click or Control click on the column name in the Structure tab, then there’s an Edit Column option and you can type in a new data type. When you go to save it, it does warn you that this is dangerous behavior, so people are being warned, but it might be nice to show this option and also to say why it’s not generally a good idea to change data types.</li>
-  <li><strong>Importing data</strong>: Note how cleanly the csv files import into SQL. If you have also taught the spreadsheet lesson, it would be a good idea to compare the format of the csv files with the messy spreadsheet and ask “Remember that messy spreadsheet? What would have happened if we tried to load that in to SQL?”</li>
+  <li>Show what might be a problem to store data in Excel (scalability, redundancy, update error)</li>
+  <li>Introduce relational databases, database management systems, SQLite</li>
+  <li>Explain Primary Keys and Foreign Keys</li>
 </ul>
 
 <h3 id="00-supplement-database-designmd">00-supplement-database-design.md</h3>
 <p>(optional)
 The first lesson includes a brief introduction to data design and choosing database systems. This material expands on the database design in the first section.</p>
 
-<h3 id="01-sql-basic-queries">01-sql-basic-queries</h3>
+<h3 id="01-sql-data">01-sql-data</h3>
+<ul>
+  <li>Download data, import data</li>
+  <li>Show how to show query output</li>
+  <li>Talk about what data are in the database</li>
+  <li>Explain the relationship between tables with the digram</li>
+  <li>Discuss different datatypes</li>
+</ul>
+
+<h3 id="02-sql-basic-queries">02-sql-basic-queries</h3>
 <ul>
   <li>Write basic queries using SELECT and FROM</li>
   <li>Filter results using DISTINCT, WHERE</li>
   <li>Change how results are displayed using ORDER BY and by doing calculations on results</li>
 </ul>
 
-<h3 id="02-sql-aggregation">02-sql-aggregation</h3>
+<h3 id="03-sql-aggregation">03-sql-aggregation</h3>
 <ul>
   <li>Combine results using COUNT and GROUP BY</li>
   <li>Filtering based on aggregation with HAVING</li>
   <li>Saving queries using VIEW</li>
+  <li>Dealing with NULL</li>
 </ul>
 
-<h3 id="03-sql-joins-aliases">03-sql-joins-aliases</h3>
+<h3 id="04-sql-joins">04-sql-joins</h3>
 <ul>
   <li>combining data from two tables using JOIN, ON, USING</li>
   <li>depending on time, could introduce different types of JOINs</li>
   <li>using aliases with AS to simplify queries</li>
+  <li>Talk about subqueries</li>
+  <li>When query getting complex, show students how to slowly build up the query by parts</li>
 </ul>
 
 <h2 id="alternative-activities">Alternative activities</h2>

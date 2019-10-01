@@ -6,7 +6,7 @@ The '[SQL Lessons for Business](https://github.com/data-lessons/SQL-business)' w
 
 ## Background
 
-SQL Lessons for Business is a software skills training programme aimed at business students. It helps business students learn about relational database and develop basic SQL querying skills. It builds on the work of [Data Carpentry](http://www.datacarpentry.org/). It used [SQL for Ecology](http://www.datacarpentry.org/sql-ecology-lesson/) as basis. 
+SQL Lessons for Business is a software skills training programme aimed at business students. It helps business students learn about relational database and develop basic SQL querying skills. It builds on the work of [Data Carpentry](http://www.datacarpentry.org). It used [SQL for Ecology](https://github.com/datacarpentry/sql-ecology-lesson) as basis. 
 
 ## Code of Conduct
 
@@ -16,4 +16,4 @@ All participants should agree to abide by the [Software Carpentry Code of Conduc
 
 Please cite as:
 
-Library Carpentry. SQL Lesson for Business. April 2018. https://github.com/data-lessons/SQL-business.
+Data Carpentry. SQL Lesson for Business. April 2018. https://github.com/data-lessons/SQL-business.

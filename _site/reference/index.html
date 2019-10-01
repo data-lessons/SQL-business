@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="last-modified" content="2018-02-28 12:14:48 -0600">
+    <meta http-equiv="last-modified" content="2018-04-01 14:09:18 -0500">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- meta "search-domain" used for google site search function google_search() -->
     <meta name="search-domain" value="">
@@ -60,7 +60,7 @@
             
             <li><a href="../00-sql-introduction/">Introduction to SQL</a></li>
             
-            <li><a href="../01-sql-intro2/">Getting to know your data</a></li>
+            <li><a href="../01-sql-data/">Getting to know your data</a></li>
             
             <li><a href="../02-sql-basic-queries/">Basic Queries</a></li>
             
@@ -136,18 +136,18 @@
   
     <tr>
       <td class="col-md-3">
-        <a href="../01-sql-intro2/">Getting to know your data</a>
+        <a href="../01-sql-data/">Getting to know your data</a>
       </td>
       <td class="col-md-9">
         <ul>
         
-        <li><p>SQL allows us to select and group subsets of data, do math and other calculations, and combine data.</p>
+        <li><p>We can import sqlite3 to work with relational database in python</p>
 </li>
         
-        <li><p>A relational database is made up of tables which are related to each other by shared keys.</p>
+        <li><p>Primary key uniquely identifies each rows in a table. A foreign key in one table refers to a primary key in another table.</p>
 </li>
         
-        <li><p>Different database management systems (DBMS) use slightly different vocabulary, but they are all based on the same ideas.</p>
+        <li><p>Common data types in SQL are are integer, varchar, char, text, double, etc.</p>
 </li>
         
         </ul>
@@ -200,7 +200,7 @@
         <li><p>Use the <code class="highlighter-rouge">HAVING</code> keyword to filter on aggregate properties.</p>
 </li>
         
-        <li><p>Use a <code class="highlighter-rouge">VIEW</code> to access the result of a query as though it was a new table.</p>
+        <li><p>Use a <code class="highlighter-rouge">VIEW</code> to store the result of a query as though it was a new table.</p>
 </li>
         
         </ul>
@@ -219,7 +219,7 @@
         <li><p>Use the <code class="highlighter-rouge">JOIN</code> command to combine data from two tables—the <code class="highlighter-rouge">ON</code> or <code class="highlighter-rouge">USING</code> keywords specify which columns link the tables.</p>
 </li>
         
-        <li><p>Regular <code class="highlighter-rouge">JOIN</code> returns only matching rows. Other join commands provide different behavior, e.g., <code class="highlighter-rouge">LEFT JOIN</code> retains all rows of the table on the left side of the command.</p>
+        <li><p>Regular <code class="highlighter-rouge">JOIN</code> returns cross product of the two tables. Other join commands provide different behavior, e.g., <code class="highlighter-rouge">LEFT JOIN</code> retains all rows of the table on the left side of the command.</p>
 </li>
         
         <li><p><code class="highlighter-rouge">IFNULL</code> allows you to specify a value to use in place of <code class="highlighter-rouge">NULL</code>, which can help in joins</p>
