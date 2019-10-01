@@ -160,7 +160,7 @@ For example, suppose we want all the energy drink (category = 'Energy Drink') wi
 then
 
     SELECT * FROM item_info
-    WHERE (Bottle_Volume_ml > 500) AND (Category_id = 'C0006');  
+    WHERE Bottle_Volume_ml > 500 AND Category = 'Energy Drink';  
 
 Note that the parentheses are not needed, but again, they help with
 readability.  They also ensure that the computer combines `AND` and `OR`
@@ -170,7 +170,7 @@ If we wanted to get data for 3 categories of soda, which have
 category id of `Energy Drink`, `Blueberry Soda`, and `Cherry Soda`, we could combine the tests using OR:
 
     SELECT * FROM item_info
-    WHERE (Category_id = 'C0006') OR (Category_id = 'C0001') OR (Category_id = 'C0002');  
+    WHERE Category = 'Energy Drink' OR Category = 'Blueberry Soda' OR Category = 'Cherry Soda';  
 
 This looks messy, right? We can do the same thing by using 'IN': 
 
